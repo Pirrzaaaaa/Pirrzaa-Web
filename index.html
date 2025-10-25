@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ryuuzaaa</title>
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+    *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;transition:0.3s ease}
+    body{
+      background:#e9f2ff;
+      display:flex;
+      justify-content:center;
+      align-items:flex-start;
+      min-height:100vh;
+      padding:25px;
+      color:#111;
+    }
+    .dark{
+      background:#0f0f15;
+      color:#f0f0f0;
+    }
+    .container{
+      width:90%;
+      max-width:420px;
+      text-align:center;
+      animation:fade 0.8s ease;
+    }
+    @keyframes fade{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0)}}
+    img.pfp{
+      width:120px;height:120px;border-radius:50%;
+      border:3px solid #2a72ff;
+      object-fit:cover;
+      margin-bottom:8px;
+      box-shadow:0 0 10px #2a72ff;
+      animation: float 3s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    .name{font-size:22px;font-weight:600;margin-top:10px}
+    .bio{font-size:13px;opacity:.8;margin-bottom:20px;padding:0 10px}
+    a.btn{
+      display:block;
+      background:#2a72ff;
+      color:#fff;text-decoration:none;
+      padding:12px;border-radius:12px;
+      margin:10px 0;font-weight:500;
+      border:2px solid #2a72ff;
+      position: relative;
+      overflow: hidden;
+    }
+    a.btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      transition: 0.5s;
+    }
+    a.btn:hover::before {
+      left: 100%;
+    }
+    a.btn:hover{
+      background:transparent;
+      color:#2a72ff;
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(42, 114, 255, 0.3);
+    }
+    .dark a.btn:hover{color:#fff;border-color:#fff}
+    .dark a.btn{background:#1b1c2b;border-color:#4f5bff}
+    .icons{margin:15px 0}
+    .icons a{
+      font-size:26px;
+      margin:0 10px;
+      color:#2a72ff;
+      text-decoration:none;
+      display: inline-block;
+      transition: 0.3s;
+    }
+    .icons a:hover {
+      transform: scale(1.2) rotate(5deg);
+      color: #ff6b6b;
+    }
+    .dark .icons a{color:#4f8fff}
+    .toggle-dark{
+      position:fixed;top:15px;right:15px;
+      padding:8px;background:#2a72ff;color:#fff;
+      border-radius:50%;cursor:pointer;font-size:20px;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+    /* GALLERY */
+    .gallery {
+      margin: 20px 0;
+    }
+    .gallery img{
+      width:80px;height:80px;
+      border-radius:10px;object-fit:cover;
+      margin:6px;border:2px solid #2a72ff;cursor:pointer;
+      transition: 0.3s;
+    }
+    .gallery img:hover {
+      transform: scale(1.1) rotate(2deg);
+      box-shadow: 0 5px 15px rgba(42, 114, 255, 0.5);
+    }
+    .modal{
+      position:fixed;top:0;left:0;width:100%;
+      height:100%;background:rgba(0,0,0,0.7);
+      display:none;justify-content:center;
+      align-items:center;
+      animation: fadeIn 0.3s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    .modal img{
+      width:80%;
+      max-width:350px;
+      border-radius:10px;
+      animation: zoomIn 0.3s ease;
+    }
+    @keyframes zoomIn {
+      from { transform: scale(0.8); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    
+    /* SPOTIFY-LIKE MUSIC PLAYER */
+    .music-player {
+      background: linear-gradient(135deg, #2a72ff, #8a2be2);
+      border-radius: 15px;
+      padding: 15px;
+      margin: 20px 0;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+      color: white;
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      animation: slideUp 0.5s ease;
+    }
+    @keyframes slideUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    
+    .music-info {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    
+    .album-art {
+      width: 80px;
+      height: 80px;
+      border-radius: 10px;
+      object-fit: cover;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      animation: rotate 20s linear infinite;
+      animation-play-state: paused;
+    }
+    .album-art.playing {
+      animation-play-state: running;
+    }
+    @keyframes rotate {
+      from { transform: rotate(0); }
+      to { transform: rotate(360deg); }
+    }
+    
+    .song-details {
+      flex: 1;
+    }
+    
+    .song-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+    
+    .song-artist {
+      font-size: 13px;
+      opacity: 0.8;
+    }
+    
+    .progress-container {
+      width: 100%;
+      background: rgba(255,255,255,0.3);
+      height: 6px;
+      border-radius: 3px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .progress-bar {
+      height: 100%;
+      background: white;
+      border-radius: 3px;
+      width: 0%;
+      transition: width 0.1s linear;
+      position: relative;
+    }
+    .progress-bar::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 10px;
+      height: 10px;
+      background: white;
+      border-radius: 50%;
+      transform: translate(50%, -2px);
+      box-shadow: 0 0 5px rgba(0,0,0,0.5);
+    }
+    
+    .time-info {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      opacity: 0.8;
+      margin-top: 5px;
+    }
+    
+    .controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+    }
+    
+    .control-btn {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      transition: all 0.3s;
+    }
+    
+    .control-btn:hover {
+      background: rgba(255,255,255,0.2);
+      transform: scale(1.1);
+    }
+    
+    .play-btn {
+      background: white;
+      color: #2a72ff;
+      font-size: 24px;
+      width: 50px;
+      height: 50px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+    
+    .play-btn:hover {
+      transform: scale(1.1);
+      background: white;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+    }
+    
+    .volume-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    
+    .volume-slider {
+      flex: 1;
+      height: 4px;
+      background: rgba(255,255,255,0.3);
+      border-radius: 2px;
+      outline: none;
+      -webkit-appearance: none;
+      cursor: pointer;
+    }
+    
+    .volume-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: white;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .volume-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+    }
+    
+    .dark .music-player {
+      background: linear-gradient(135deg, #1b1c2b, #4f5bff);
+    }
+    
+    /* Floating particles animation */
+    .particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -1;
+    }
+    
+    .particle {
+      position: absolute;
+      background: rgba(42, 114, 255, 0.3);
+      border-radius: 50%;
+      animation: floatParticle 15s infinite linear;
+    }
+    
+    @keyframes floatParticle {
+      0% {
+        transform: translateY(100vh) rotate(0deg);
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+      }
+      90% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-100px) rotate(360deg);
+        opacity: 0;
+      }
+    }
+    
+    /* Heart animation when clicking */
+    .heart {
+      position: fixed;
+      pointer-events: none;
+      font-size: 20px;
+      animation: heartFloat 1s ease-out forwards;
+      z-index: 1000;
+    }
+    
+    @keyframes heartFloat {
+      0% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-100px) scale(1.5);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Floating particles -->
+<div class="particles" id="particles"></div>
+
+<button class="toggle-dark" id="darkBtn"><i class='bx bx-moon'></i></button>
+
+<div class="container">
+  <img src="https://cdn.yupra.my.id/yp/4vg61dch.jpg" class="pfp">
+
+  <div class="name">Ryuuzaaa (Pirrzaaa)</div>
+  <div class="bio">
+    The sky is not always clear, sometimes even rain can bring disaster
+    and feelings can also often hurt 🌧️💙
+  </div>
+
+  <!-- LINKS -->
+  <a href="https://t.me/nicetryzaa" class="btn"><i class='bx bxl-telegram'></i> Telegram</a>
+  <a href="https://whatsapp.com/channel/0029VbB0n5N05MUf9cs2WR1L" class="btn"><i class='bx bxl-whatsapp'></i> WA Channel</a>
+  <a href="https://chat.whatsapp.com/DyoaIjzP4irAJ37A1qRGpo?mode=wwt" class="btn"><i class='bx bxl-whatsapp'></i> Group WhatsApp</a>
+  <a href="https://www.instagram.com/nicetry.zaa._?igsh=MXJia3NscDk1ZG55Zw==" class="btn"><i class='bx bxl-instagram'></i> Instagram</a>
+  <a href="https://vm.tiktok.com/ZSHvVphFgaJyv-yjgNV/" class="btn"><i class='bx bxl-tiktok'></i> TikTok</a>
+
+  <!-- ICONS -->
+  <div class="icons">
+    <a href="https://t.me/nicetryzaa"><i class='bx bxl-telegram'></i></a>
+    <a href="https://wa.me/6289517185039"><i class='bx bxl-whatsapp'></i></a>
+    <a href="https://www.instagram.com/nicetry.zaa._"><i class='bx bxl-instagram'></i></a>
+    <a href="https://vm.tiktok.com/ZSHvVphFgaJyv-yjgNV/"><i class='bx bxl-tiktok'></i></a>
+  </div>
+
+  <!-- SPOTIFY-LIKE MUSIC PLAYER -->
+  <div class="music-player">
+    <div class="music-info">
+      <img src="https://i.scdn.co/image/ab67616d00001e02ff9ca10b55ce82ae553c8228" class="album-art" alt="Album Art">
+      <div class="song-details">
+        <div class="song-title">Blinding Lights</div>
+        <div class="song-artist">The Weeknd</div>
+      </div>
+    </div>
+    
+    <div class="progress-area">
+      <div class="progress-container" id="progressContainer">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+      <div class="time-info">
+        <span id="currentTime">0:00</span>
+        <span id="duration">0:00</span>
+      </div>
+    </div>
+    
+    <div class="controls">
+      <button class="control-btn" id="prevBtn"><i class='bx bx-skip-previous'></i></button>
+      <button class="control-btn play-btn" id="playBtn"><i class='bx bx-play' id="playIcon"></i></button>
+      <button class="control-btn" id="nextBtn"><i class='bx bx-skip-next'></i></button>
+    </div>
+    
+    <div class="volume-container">
+      <i class='bx bx-volume-full'></i>
+      <input type="range" min="0" max="100" value="70" class="volume-slider" id="volumeSlider">
+    </div>
+  </div>
+
+  <!-- AUDIO ELEMENT -->
+  <audio id="music">
+    <source src="https://cdn.yupra.my.id/yp/jriwjwdm.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+
+  <!-- Gallery -->
+  <h3 style="margin-top:15px;">📸 Gallery</h3>
+  <div class="gallery">
+    <img src="https://cdn.yupra.my.id/yp/4vg61dch.jpg">
+    <img src="https://i.pinimg.com/736x/3f/e7/c3/3fe7c325fa6531e1f033cb52795d5a9b.jpg">
+    <img src="https://i.pinimg.com/564x/03/f3/ea/03f3ea2eab381aea3c91c6fba8809302.jpg">
+  </div>
+
+  <div class="modal" id="modal">
+    <img id="modalImg">
+  </div>
+</div>
+
+<script>
+  // Create floating particles
+  function createParticles() {
+    const particlesContainer = document.getElementById('particles');
+    const colors = ['#2a72ff', '#8a2be2', '#ff6b6b', '#4f5bff'];
+    
+    for (let i = 0; i < 15; i++) {
+      const particle = document.createElement('div');
+      particle.classList.add('particle');
+      
+      const size = Math.random() * 20 + 5;
+      particle.style.width = `${size}px`;
+      particle.style.height = `${size}px`;
+      particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+      particle.style.left = `${Math.random() * 100}vw`;
+      particle.style.animationDelay = `${Math.random() * 15}s`;
+      particle.style.animationDuration = `${15 + Math.random() * 10}s`;
+      
+      particlesContainer.appendChild(particle);
+    }
+  }
+
+  // Heart animation when clicking
+  function createHeart(x, y) {
+    const heart = document.createElement('div');
+    heart.classList.add('heart');
+    heart.innerHTML = '🥶';
+    heart.style.left = `${x}px`;
+    heart.style.top = `${y}px`;
+    
+    document.body.appendChild(heart);
+    
+    setTimeout(() => {
+      heart.remove();
+    }, 1000);
+  }
+
+  // Add click animation to entire page
+  document.addEventListener('click', function(e) {
+    createHeart(e.clientX, e.clientY);
+  });
+
+  // Initialize particles
+  createParticles();
+
+  const darkBtn = document.getElementById("darkBtn");
+  const body = document.body;
+  darkBtn.onclick = ()=>{
+    body.classList.toggle("dark");
+    darkBtn.innerHTML = body.classList.contains("dark")
+      ? "<i class='bx bx-sun'></i>" : "<i class='bx bx-moon'></i>";
+  }
+
+  // Music Player Functionality
+  const music = document.getElementById("music");
+  const playBtn = document.getElementById("playBtn");
+  const playIcon = document.getElementById("playIcon");
+  const prevBtn = document.getElementById("prevBtn");
+  const nextBtn = document.getElementById("nextBtn");
+  const progressBar = document.getElementById("progressBar");
+  const progressContainer = document.getElementById("progressContainer");
+  const currentTimeEl = document.getElementById("currentTime");
+  const durationEl = document.getElementById("duration");
+  const volumeSlider = document.getElementById("volumeSlider");
+  const albumArt = document.querySelector('.album-art');
+  
+  let isPlaying = false;
+  
+  // Play/Pause functionality
+  function togglePlay() {
+    if (isPlaying) {
+      pauseMusic();
+    } else {
+      playMusic();
+    }
+  }
+  
+  function playMusic() {
+    isPlaying = true;
+    playIcon.classList.remove('bx-play');
+    playIcon.classList.add('bx-pause');
+    albumArt.classList.add('playing');
+    music.play();
+  }
+  
+  function pauseMusic() {
+    isPlaying = false;
+    playIcon.classList.remove('bx-pause');
+    playIcon.classList.add('bx-play');
+    albumArt.classList.remove('playing');
+    music.pause();
+  }
+  
+  // Update progress bar
+  function updateProgress(e) {
+    const { duration, currentTime } = e.srcElement;
+    const progressPercent = (currentTime / duration) * 100;
+    progressBar.style.width = `${progressPercent}%`;
+    
+    // Update time display
+    const durationMinutes = Math.floor(duration / 60);
+    const durationSeconds = Math.floor(duration % 60);
+    const currentMinutes = Math.floor(currentTime / 60);
+    const currentSeconds = Math.floor(currentTime % 60);
+    
+    durationEl.textContent = `${durationMinutes}:${durationSeconds < 10 ? '0' : ''}${durationSeconds}`;
+    currentTimeEl.textContent = `${currentMinutes}:${currentSeconds < 10 ? '0' : ''}${currentSeconds}`;
+  }
+  
+  // Set progress when clicking on progress bar
+  function setProgress(e) {
+    const width = this.clientWidth;
+    const clickX = e.offsetX;
+    const duration = music.duration;
+    
+    music.currentTime = (clickX / width) * duration;
+  }
+  
+  // Volume control
+  function setVolume() {
+    music.volume = volumeSlider.value / 100;
+  }
+  
+  // Next/Previous song (placeholder functionality)
+  function nextSong() {
+    // In a real implementation, you would switch to the next song in a playlist
+    music.currentTime = 0;
+    if (isPlaying) {
+      playMusic();
+    }
+  }
+  
+  function prevSong() {
+    // In a real implementation, you would switch to the previous song in a playlist
+    music.currentTime = 0;
+    if (isPlaying) {
+      playMusic();
+    }
+  }
+  
+  // Event Listeners
+  playBtn.addEventListener('click', togglePlay);
+  prevBtn.addEventListener('click', prevSong);
+  nextBtn.addEventListener('click', nextSong);
+  music.addEventListener('timeupdate', updateProgress);
+  music.addEventListener('ended', () => {
+    isPlaying = false;
+    playIcon.classList.remove('bx-pause');
+    playIcon.classList.add('bx-play');
+    albumArt.classList.remove('playing');
+  });
+  progressContainer.addEventListener('click', setProgress);
+  volumeSlider.addEventListener('input', setVolume);
+  
+  // Set initial volume
+  setVolume();
+
+  // Gallery Modal
+  const modal = document.getElementById("modal");
+  const modalImg = document.getElementById("modalImg");
+
+  document.querySelectorAll('.gallery img').forEach(img=>{
+    img.onclick = ()=>{
+      modal.style.display = "flex";
+      modalImg.src = img.src;
+    }
+  });
+  modal.onclick = ()=> modal.style.display = "none";
+</script>
+
+</body>
+</html>
