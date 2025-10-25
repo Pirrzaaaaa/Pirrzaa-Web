@@ -19,9 +19,15 @@
       --primary: #2a72ff;
       --secondary: #8a2be2;
       --accent: #ff6b6b;
+      --success: #00d26a;
       --light: #e9f2ff;
+      --light-bg: #ffffff;
+      --light-text: #111;
+      --light-card: rgba(255, 255, 255, 0.95);
       --dark: #0f0f15;
-      --card-bg: rgba(255, 255, 255, 0.1);
+      --dark-bg: #1a1a2e;
+      --dark-text: #f0f0f0;
+      --dark-card: rgba(30, 30, 45, 0.95);
       --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
     }
     
@@ -32,24 +38,25 @@
       align-items: flex-start;
       min-height: 100vh;
       padding: 25px;
-      color: #111;
+      color: var(--light-text);
       overflow-x: hidden;
       opacity: 0;
       animation: bodyFadeIn 1s ease forwards;
+      transition: background 0.5s ease, color 0.5s ease;
+    }
+    
+    body.dark {
+      background: linear-gradient(135deg, var(--dark) 0%, var(--dark-bg) 100%);
+      color: var(--dark-text);
     }
     
     @keyframes bodyFadeIn {
       to { opacity: 1; }
     }
     
-    .dark {
-      background: linear-gradient(135deg, var(--dark) 0%, #1a1a2e 100%);
-      color: #f0f0f0;
-    }
-    
     .container {
       width: 90%;
-      max-width: 480px;
+      max-width: 520px;
       text-align: center;
       opacity: 0;
       transform: translateY(30px);
@@ -142,45 +149,50 @@
     
     /* Stats Cards */
     .stats-container {
-      display: flex;
-      justify-content: space-between;
-      gap: 15px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
       margin: 25px 0;
       opacity: 0;
       animation: fadeInUp 0.8s ease 1.1s forwards;
     }
     
     .stat-card {
-      flex: 1;
-      background: var(--card-bg);
+      background: var(--light-card);
       backdrop-filter: blur(10px);
-      padding: 15px;
+      padding: 15px 10px;
       border-radius: 15px;
       border: 1px solid rgba(42, 114, 255, 0.2);
-      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+      transition: var(--transition);
+    }
+    
+    .dark .stat-card {
+      background: var(--dark-card);
+      border-color: rgba(79, 143, 255, 0.3);
+    }
+    
+    .stat-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(42, 114, 255, 0.15);
     }
     
     .stat-number {
-      font-size: 24px;
+      font-size: 22px;
       font-weight: 700;
       color: var(--primary);
       margin-bottom: 5px;
     }
     
     .stat-label {
-      font-size: 12px;
+      font-size: 11px;
       opacity: 0.7;
     }
     
-    .dark .stat-card {
-      background: rgba(30, 30, 45, 0.5);
-      border-color: rgba(79, 143, 255, 0.2);
-    }
-    
-    /* Buttons */
+    /* Buttons Grid */
     .links-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(2, 1fr);
       gap: 12px;
       margin: 20px 0;
       opacity: 0;
@@ -195,7 +207,7 @@
       background: linear-gradient(45deg, var(--primary), var(--secondary));
       color: #fff;
       text-decoration: none;
-      padding: 14px;
+      padding: 14px 10px;
       border-radius: 12px;
       font-weight: 500;
       border: none;
@@ -205,6 +217,7 @@
       transition: var(--transition);
       opacity: 0;
       transform: translateY(20px);
+      font-size: 14px;
     }
     
     a.btn:nth-child(odd) {
@@ -250,7 +263,7 @@
     }
     
     .dark a.btn {
-      background: linear-gradient(45deg, #1b1c2b, #4f5bff);
+      background: linear-gradient(45deg, var(--primary), var(--secondary));
     }
     
     /* Music Player */
@@ -282,12 +295,12 @@
     .music-info {
       display: flex;
       align-items: center;
-      gap: 18px;
+      gap: 15px;
     }
     
     .album-art {
-      width: 80px;
-      height: 80px;
+      width: 70px;
+      height: 70px;
       border-radius: 12px;
       object-fit: cover;
       box-shadow: 0 8px 20px rgba(0,0,0,0.3);
@@ -351,20 +364,20 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 20px;
+      gap: 15px;
     }
     
     .control-btn {
       background: none;
       border: none;
       color: white;
-      font-size: 20px;
+      font-size: 18px;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 40px;
-      height: 40px;
+      width: 35px;
+      height: 35px;
       border-radius: 50%;
       transition: var(--transition);
     }
@@ -377,9 +390,9 @@
     .play-btn {
       background: white;
       color: var(--primary);
-      font-size: 24px;
-      width: 50px;
-      height: 50px;
+      font-size: 20px;
+      width: 45px;
+      height: 45px;
       box-shadow: 0 5px 15px rgba(0,0,0,0.2);
     }
     
@@ -390,8 +403,8 @@
     .volume-container {
       display: flex;
       align-items: center;
-      gap: 10px;
-      margin-top: 10px;
+      gap: 8px;
+      margin-top: 8px;
     }
     
     .volume-slider {
@@ -413,38 +426,90 @@
       cursor: pointer;
     }
     
-    .dark .music-player {
-      background: linear-gradient(135deg, #1b1c2b, #4f5bff);
-    }
-    
-    /* Gallery */
-    .gallery-section {
-      margin: 30px 0;
+    /* Skills Grid */
+    .skills-section {
+      margin: 25px 0;
       opacity: 0;
       animation: fadeInUp 0.8s ease 1.9s forwards;
     }
     
-    .gallery {
+    .skills-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 10px;
       margin-top: 15px;
     }
     
-    .gallery img {
-      width: 100%;
-      height: 100px;
+    .skill-item {
+      background: var(--light-card);
+      backdrop-filter: blur(10px);
+      padding: 15px 10px;
       border-radius: 12px;
-      object-fit: cover;
-      border: 2px solid var(--primary);
-      cursor: pointer;
+      border: 1px solid rgba(42, 114, 255, 0.2);
       transition: var(--transition);
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      text-align: center;
     }
     
-    .gallery img:hover {
+    .dark .skill-item {
+      background: var(--dark-card);
+      border-color: rgba(79, 143, 255, 0.3);
+    }
+    
+    .skill-item:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(42, 114, 255, 0.15);
+    }
+    
+    .skill-icon {
+      font-size: 24px;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+    
+    .skill-name {
+      font-size: 12px;
+      font-weight: 500;
+    }
+    
+    /* Gallery - 6 Grid */
+    .gallery-section {
+      margin: 25px 0;
+      opacity: 0;
+      animation: fadeInUp 0.8s ease 2.1s forwards;
+    }
+    
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 15px;
+    }
+    
+    .gallery-item {
+      position: relative;
+      border-radius: 12px;
+      overflow: hidden;
+      aspect-ratio: 1;
+      cursor: pointer;
+      transition: var(--transition);
+      border: 2px solid transparent;
+    }
+    
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: var(--transition);
+    }
+    
+    .gallery-item:hover {
       transform: scale(1.05);
-      box-shadow: 0 8px 20px rgba(42, 114, 255, 0.3);
+      box-shadow: 0 8px 25px rgba(42, 114, 255, 0.3);
+      border-color: var(--primary);
+    }
+    
+    .gallery-item:hover img {
+      transform: scale(1.1);
     }
     
     /* Footer */
@@ -453,7 +518,7 @@
       padding: 20px;
       border-top: 1px solid rgba(42, 114, 255, 0.2);
       opacity: 0;
-      animation: fadeInUp 0.8s ease 2.1s forwards;
+      animation: fadeInUp 0.8s ease 2.3s forwards;
     }
     
     .footer-text {
@@ -461,7 +526,7 @@
       opacity: 0.7;
     }
     
-    /* Dark Mode Toggle */
+    /* Dark Mode Toggle - Fixed Position */
     .toggle-dark {
       position: fixed;
       top: 25px;
@@ -478,7 +543,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 5px 20px rgba(42, 114, 255, 0.4);
+      box-shadow: 0 5px 20px rgba(42, 114, 255, 0.6);
       z-index: 1000;
       opacity: 0;
       animation: fadeIn 0.8s ease 0.8s forwards;
@@ -487,6 +552,7 @@
     
     .toggle-dark:hover {
       transform: scale(1.1) rotate(15deg);
+      box-shadow: 0 8px 25px rgba(42, 114, 255, 0.8);
     }
     
     /* Modal */
@@ -496,7 +562,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0,0,0,0.9);
+      background: rgba(0,0,0,0.95);
       display: none;
       justify-content: center;
       align-items: center;
@@ -509,11 +575,12 @@
     }
     
     .modal img {
-      width: 85%;
+      width: 90%;
       max-width: 400px;
       border-radius: 15px;
       transform: scale(0.8);
       animation: modalZoomIn 0.3s ease 0.1s forwards;
+      box-shadow: 0 0 50px rgba(42, 114, 255, 0.5);
     }
     
     @keyframes modalZoomIn {
@@ -539,19 +606,68 @@
       color: #4f8fff;
     }
     
+    /* Gallery Navigation */
+    .gallery-nav {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 15px;
+    }
+    
+    .gallery-nav-btn {
+      background: var(--light-card);
+      border: 1px solid rgba(42, 114, 255, 0.2);
+      color: var(--primary);
+      padding: 8px 15px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: var(--transition);
+      font-size: 12px;
+      font-weight: 500;
+    }
+    
+    .dark .gallery-nav-btn {
+      background: var(--dark-card);
+      border-color: rgba(79, 143, 255, 0.3);
+      color: #4f8fff;
+    }
+    
+    .gallery-nav-btn:hover {
+      background: var(--primary);
+      color: white;
+      transform: translateY(-2px);
+    }
+    
     /* Responsive */
     @media (max-width: 480px) {
       .links-grid {
         grid-template-columns: 1fr;
       }
       
-      .stats-container {
-        flex-direction: column;
-        gap: 10px;
+      .stats-container,
+      .skills-grid,
+      .gallery-grid {
+        grid-template-columns: repeat(2, 1fr);
       }
       
-      .gallery {
-        grid-template-columns: repeat(2, 1fr);
+      .container {
+        max-width: 100%;
+      }
+      
+      .toggle-dark {
+        top: 15px;
+        right: 15px;
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+      }
+    }
+    
+    @media (max-width: 360px) {
+      .stats-container,
+      .skills-grid,
+      .gallery-grid {
+        grid-template-columns: 1fr;
       }
     }
   </style>
@@ -567,7 +683,7 @@
       <div class="profile-ring"></div>
       <img src="https://cdn.yupra.my.id/yp/4vg61dch.jpg" class="pfp" alt="Pirrrzaaa">
     </div>
-    <div class="name">Pirrrzaaa</div>
+    <div class="name">Ryuuzaaa (Pirrrzaaa)</div>
     <div class="bio">
       The sky is not always clear, sometimes even rain can bring disaster
       and feelings can also often hurt 🌧️💙
@@ -578,15 +694,19 @@
   <div class="stats-container">
     <div class="stat-card">
       <div class="stat-number" id="visitCount">1</div>
-      <div class="stat-label">Visitors</div>
+      <div class="stat-label">Visitors Today</div>
     </div>
     <div class="stat-card">
       <div class="stat-number">7</div>
       <div class="stat-label">Social Links</div>
     </div>
     <div class="stat-card">
-      <div class="stat-number">3</div>
-      <div class="stat-label">Gallery</div>
+      <div class="stat-number">6</div>
+      <div class="stat-label">Gallery Photos</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">6</div>
+      <div class="stat-label">My Skills</div>
     </div>
   </div>
 
@@ -603,6 +723,40 @@
     <a href="https://www.threads.com/@nicetry.zaa._" class="btn"><i class='bx bx-message-rounded'></i> Threads</a>
     <a href="https://www.instagram.com/nicetry.zaa._?igsh=MXJia3NscDk1ZG55Zw==" class="btn"><i class='bx bxl-instagram'></i> Instagram</a>
     <a href="https://vm.tiktok.com/ZSHvVphFgaJyv-yjgNV/" class="btn"><i class='bx bxl-tiktok'></i> TikTok</a>
+  </div>
+
+  <!-- Skills Section -->
+  <div class="skills-section">
+    <div class="section-title">
+      <i class='bx bx-star'></i>
+      My Skills
+    </div>
+    <div class="skills-grid">
+      <div class="skill-item">
+        <div class="skill-icon"><i class='bx bx-code-alt'></i></div>
+        <div class="skill-name">Web Dev</div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-icon"><i class='bx bx-palette'></i></div>
+        <div class="skill-name">Design</div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-icon"><i class='bx bx-camera'></i></div>
+        <div class="skill-name">Photography</div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-icon"><i class='bx bx-edit'></i></div>
+        <div class="skill-name">Writing</div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-icon"><i class='bx bx-music'></i></div>
+        <div class="skill-name">Music</div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-icon"><i class='bx bx-video'></i></div>
+        <div class="skill-name">Video Edit</div>
+      </div>
+    </div>
   </div>
 
   <!-- Music Player -->
@@ -643,27 +797,46 @@
 
   <!-- Audio Element -->
   <audio id="music">
-    <source src="https://cdn.yupra.my.id/yp/jriwjwdm.mp3" type="audio/mpeg">
+    <source src="https://cdn.yupra.my.id/yp/lhqcfxy1.m4a" type="audio/mpeg">
     Your browser does not support the audio element.
   </audio>
 
-  <!-- Gallery -->
+  <!-- Gallery - 6 Grid -->
   <div class="gallery-section">
     <div class="section-title">
       <i class='bx bx-photo-album'></i>
       My Gallery
     </div>
-    <div class="gallery">
-      <img src="https://cdn.yupra.my.id/yp/4vg61dch.jpg" alt="Photo 1">
-      <img src="https://i.pinimg.com/736x/3f/e7/c3/3fe7c325fa6531e1f033cb52795d5a9b.jpg" alt="Photo 2">
-      <img src="https://i.pinimg.com/564x/03/f3/ea/03f3ea2eab381aea3c91c6fba8809302.jpg" alt="Photo 3">
+    <div class="gallery-grid">
+      <div class="gallery-item">
+        <img src="https://cdn.yupra.my.id/yp/4vg61dch.jpg" alt="Photo 1">
+      </div>
+      <div class="gallery-item">
+        <img src="https://cdn.yupra.my.id/yp/1sp0asp8.jpg" alt="Photo 2">
+      </div>
+      <div class="gallery-item">
+        <img src="https://cdn.yupra.my.id/yp/u1a2m3j3.jpg" alt="Photo 3">
+      </div>
+      <div class="gallery-item">
+        <img src="https://cdn.yupra.my.id/yp/g1ddlfjf.jpg" alt="Photo 4">
+      </div>
+      <div class="gallery-item">
+        <img src="https://cdn.yupra.my.id/yp/28k0fbyj.jpg" alt="Photo 5">
+      </div>
+      <div class="gallery-item">
+        <img src="https://cdn.yupra.my.id/yp/cynx6xaz.jpg" alt="Photo 6">
+      </div>
+    </div>
+    <div class="gallery-nav">
+      <button class="gallery-nav-btn" onclick="viewAllPhotos()">View All</button>
+      <button class="gallery-nav-btn" onclick="downloadPhotos()">Download</button>
     </div>
   </div>
 
   <!-- Footer -->
   <div class="footer">
     <div class="footer-text">
-      Made with ❤️ by Pirrrzaaa • © 2024
+      Made with ❤️ by Pirrrzaaa • © 2025
     </div>
   </div>
 
@@ -680,13 +853,24 @@
   localStorage.setItem('visitCount', visitCount);
   document.getElementById('visitCount').textContent = visitCount;
 
-  // Dark Mode Toggle
+  // Dark Mode Toggle - Fixed
   const darkBtn = document.getElementById("darkBtn");
   const body = document.body;
+  
+  // Check for saved theme or prefer color scheme
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const savedTheme = localStorage.getItem('theme');
+  
+  if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+    body.classList.add('dark');
+    darkBtn.innerHTML = "<i class='bx bx-sun'></i>";
+  }
+  
   darkBtn.onclick = () => {
     body.classList.toggle("dark");
-    darkBtn.innerHTML = body.classList.contains("dark")
-      ? "<i class='bx bx-sun'></i>" : "<i class='bx bx-moon'></i>";
+    const isDark = body.classList.contains("dark");
+    darkBtn.innerHTML = isDark ? "<i class='bx bx-sun'></i>" : "<i class='bx bx-moon'></i>";
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
     
     darkBtn.style.transform = 'scale(1.2)';
     setTimeout(() => {
@@ -790,7 +974,7 @@
   const modal = document.getElementById("modal");
   const modalImg = document.getElementById("modalImg");
 
-  document.querySelectorAll('.gallery img').forEach(img => {
+  document.querySelectorAll('.gallery-item img').forEach(img => {
     img.onclick = () => {
       modal.style.display = "flex";
       modalImg.src = img.src;
@@ -798,6 +982,15 @@
   });
   
   modal.onclick = () => modal.style.display = "none";
+
+  // Gallery Functions
+  function viewAllPhotos() {
+    alert('Viewing all photos! In a real implementation, this would open a full gallery view.');
+  }
+
+  function downloadPhotos() {
+    alert('Download feature! In a real implementation, this would allow downloading photos.');
+  }
 </script>
 
 </body>
