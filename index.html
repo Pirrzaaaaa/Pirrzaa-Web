@@ -1,1325 +1,2479 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pirrrzaaa</title>
-  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Request • Stickers ʚfirz</title>
+  
+  <!-- Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+  
+  <!-- Confetti Effect -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+  
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
-    
+    /* ===== VARIABLES ===== */
+    :root {
+      --pink: #ff69b4;
+      --pink-light: #ffb6c1;
+      --pink-dark: #ff529b;
+      --pink-soft: #fff0f6;
+      --strawberry: #ff4757;
+      --strawberry-light: #ff6b81;
+      --strawberry-dark: #ff3742;
+      --bg-color: #fff8fb;
+      --card-bg: #ffffff;
+      --text-color: #333;
+      --text-light: #666;
+      --text-lighter: #999;
+      --border-color: #fce4f0;
+      --shadow: 0 20px 50px rgba(255, 105, 180, 0.08);
+      --shadow-light: 0 10px 30px rgba(255, 105, 180, 0.05);
+      --ease: cubic-bezier(0.4, 0, 0.2, 1);
+      --radius: 20px;
+      --radius-sm: 14px;
+    }
+
+    .dark-mode {
+      --pink: #ff85c2;
+      --pink-light: #ffa8d1;
+      --pink-dark: #ff3d94;
+      --pink-soft: #2a1a22;
+      --strawberry: #ff6b7a;
+      --strawberry-light: #ff8fa3;
+      --strawberry-dark: #ff5561;
+      --bg-color: #1a1a1a;
+      --card-bg: #2d2d2d;
+      --text-color: #f0f0f0;
+      --text-light: #cccccc;
+      --text-lighter: #999999;
+      --border-color: #444444;
+      --shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+      --shadow-light: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    /* ===== RESET & BASE STYLES ===== */
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: 'Poppins', sans-serif;
     }
-    
-    :root {
-      --primary: #2a72ff;
-      --secondary: #8a2be2;
-      --light: #e9f2ff;
-      --light-bg: #ffffff;
-      --light-text: #111;
-      --light-card: rgba(255, 255, 255, 0.95);
-      --transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+    html {
+      scroll-behavior: smooth;
+      height: 100%;
     }
-    
+
     body {
-      background: linear-gradient(135deg, var(--light) 0%, #d6e4ff 100%);
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, var(--bg-color), #ffffff);
+      color: var(--text-color);
+      line-height: 1.6;
       min-height: 100vh;
       padding: 15px;
-      color: var(--light-text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: all 0.5s var(--ease);
+      position: relative;
       overflow-x: hidden;
-      opacity: 0;
-      animation: bodyFadeIn 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-      transition: background 0.3s ease;
     }
-    
-    @keyframes bodyFadeIn {
-      to { opacity: 1; }
-    }
-    
-    .container {
+
+    /* Strawberry Background */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
       width: 100%;
-      max-width: 520px;
-      text-align: center;
-      opacity: 0;
-      transform: translateY(15px);
-      animation: containerSlideIn 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.2s forwards;
-      padding-bottom: 80px;
-    }
-    
-    @keyframes containerSlideIn {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-    
-    /* Enhanced Scroll Animation */
-    [data-scroll] {
-      opacity: 0;
-      transform: translateY(20px) scale(0.98);
-      transition: opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-      will-change: opacity, transform;
+      height: 100%;
+      background-image: 
+        url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 15c-3-4.5-9-4.5-12 0-3 4.5-3 10.5 0 15 3 4.5 9 7.5 12 12 3-4.5 9-7.5 12-12 3-4.5 3-10.5 0-15-3-4.5-9-4.5-12 0z' fill='%23ff4757' fill-opacity='0.03'/%3E%3C/svg%3E"),
+        url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 5c-1.5-2.25-4.5-2.25-6 0-1.5 2.25-1.5 5.25 0 7.5 1.5 2.25 4.5 3.75 6 6 1.5-2.25 4.5-3.75 6-6 1.5-2.25 1.5-5.25 0-7.5-1.5-2.25-4.5-2.25-6 0z' fill='%23ff69b4' fill-opacity='0.03'/%3E%3C/svg%3E");
+      background-size: 120px 120px, 80px 80px;
+      animation: float 30s infinite linear;
+      z-index: -1;
     }
 
-    [data-scroll].visible {
+    @keyframes float {
+      0% { transform: translate(0, 0) rotate(0deg); }
+      100% { transform: translate(-120px, -120px) rotate(360deg); }
+    }
+
+    body.loaded {
       opacity: 1;
-      transform: translateY(0) scale(1);
     }
 
-    /* Header Section */
-    .header {
-      margin-bottom: 25px;
+    /* ===== RESPONSIVE CONTAINER ===== */
+    .responsive-container {
+      width: 100%;
+      max-width: 500px;
+      margin: 0 auto;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
-    
-    .profile-container {
-      display: inline-block;
+
+    /* ===== PRELOADER ===== */
+    #preloader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: var(--bg-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      transition: opacity 0.9s var(--ease), visibility 0.9s var(--ease);
     }
-    
-    img.pfp {
-      width: 140px;
-      height: 140px;
-      border-radius: 50%;
-      border: 3px solid var(--primary);
-      object-fit: cover;
-      box-shadow: 0 4px 20px rgba(42, 114, 255, 0.3);
+
+    #preloader.hide {
       opacity: 0;
-      transform: scale(0.9);
-      animation: profileAppear 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.1s forwards;
-      max-width: 100%;
-      height: auto;
-      will-change: transform, opacity;
+      visibility: hidden;
     }
-    
-    @keyframes profileAppear {
+
+    .loader {
+      width: 50px;
+      height: 50px;
+      border: 4px solid var(--pink-soft);
+      border-top-color: var(--pink);
+      border-radius: 50%;
+      animation: spin 1s var(--ease) infinite;
+    }
+
+    @keyframes spin {
       to {
-        opacity: 1;
-        transform: scale(1);
+        transform: rotate(360deg);
       }
     }
-    
-    .name {
-      font-size: 26px;
-      font-weight: 600;
-      margin-top: 15px;
-      background: linear-gradient(45deg, var(--primary), var(--secondary));
+
+    /* ===== TOGGLE BUTTONS ===== */
+    .theme-toggle, .admin-toggle, .sound-toggle, .music-toggle {
+      position: fixed;
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      background: var(--card-bg);
+      border: 2px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 1000;
+      transition: all 0.3s var(--ease);
+      box-shadow: var(--shadow-light);
+    }
+
+    .theme-toggle {
+      top: 15px;
+      right: 15px;
+    }
+
+    .admin-toggle {
+      top: 70px;
+      right: 15px;
+    }
+
+    .sound-toggle {
+      top: 125px;
+      right: 15px;
+    }
+
+    .music-toggle {
+      top: 180px;
+      right: 15px;
+    }
+
+    .theme-toggle:hover, .admin-toggle:hover, .sound-toggle:hover, .music-toggle:hover {
+      transform: scale(1.1) rotate(5deg);
+      border-color: var(--pink);
+    }
+
+    .theme-toggle i, .admin-toggle i, .sound-toggle i, .music-toggle i {
+      font-size: 18px;
+      color: var(--pink);
+      transition: all 0.3s var(--ease);
+    }
+
+    .sound-toggle.muted i, .music-toggle.muted i {
+      color: var(--text-lighter);
+    }
+
+    /* ===== MAIN CARD ===== */
+    .card {
+      width: 100%;
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow);
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 1.2s var(--ease) 0.3s;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    body.loaded .card {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ===== HEADER SECTION ===== */
+    .header {
+      text-align: center;
+      padding: 30px 25px 25px;
+      background: linear-gradient(135deg, var(--pink-soft), var(--card-bg));
+      border-bottom: 1px solid var(--border-color);
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .header::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--pink-light), var(--pink), var(--pink-light));
+    }
+
+    .profile-container {
+      position: relative;
+      width: 90px;
+      height: 90px;
+      margin: 0 auto 15px;
+    }
+
+    .profile {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 4px solid var(--card-bg);
+      box-shadow: 0 6px 20px rgba(255, 105, 180, 0.15);
+      transition: all 0.6s var(--ease);
+      position: relative;
+      z-index: 2;
+      background-color: var(--card-bg);
+      object-fit: cover;
+    }
+
+    .profile-container::after {
+      content: "";
+      position: absolute;
+      top: -4px;
+      left: -4px;
+      right: -4px;
+      bottom: -4px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--pink-light), var(--pink), var(--pink-dark));
+      z-index: 1;
+      animation: rotate 10s linear infinite;
+    }
+
+    .profile:hover {
+      transform: scale(1.05) rotate(2deg);
+    }
+
+    @keyframes rotate {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    h1 {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      background: linear-gradient(135deg, var(--pink), var(--pink-dark));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      opacity: 0;
-      transform: translateY(15px) scale(0.98);
-      animation: fadeInUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.3s forwards;
-      overflow: hidden;
-      white-space: nowrap;
-      will-change: width, opacity, transform;
     }
-    
-    .name.typing::after {
-      content: '|';
-      animation: blink 0.8s infinite;
-      color: var(--primary);
-    }
-    
-    .bio {
+
+    .tagline {
       font-size: 14px;
-      opacity: 0.85;
-      margin: 15px 0 20px 0;
-      padding: 0 15px;
-      line-height: 1.5;
-      opacity: 0;
-      transform: translateY(15px) scale(0.98);
-      animation: fadeInUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.5s forwards;
-      will-change: opacity, transform;
+      color: var(--pink);
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
     }
-    
-    @keyframes blink {
-      0%, 50% { opacity: 1; }
-      51%, 100% { opacity: 0; }
+
+    /* ===== CONTENT SECTION ===== */
+    .content {
+      padding: 25px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
     }
-    
-    @keyframes fadeInUp {
-      to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-      }
+
+    .scrollable-content {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding-right: 5px;
     }
-    
-    /* Quote Section */
-    .quote-section {
-      background: var(--light-card);
-      padding: 15px;
+
+    /* Custom Scrollbar */
+    .scrollable-content::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .scrollable-content::-webkit-scrollbar-track {
+      background: var(--pink-soft);
+      border-radius: 10px;
+    }
+
+    .scrollable-content::-webkit-scrollbar-thumb {
+      background: var(--pink);
+      border-radius: 10px;
+    }
+
+    .desc {
+      margin-bottom: 20px;
+      text-align: center;
+      color: var(--text-light);
+      font-size: 14px;
+    }
+
+    /* ===== FORM STYLES ===== */
+    .form-group {
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--text-color);
+    }
+
+    label i {
+      color: var(--strawberry);
+      width: 16px;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 14px 16px;
+      border: 1.5px solid var(--border-color);
       border-radius: 12px;
-      margin: 15px 0;
-      border: 1px solid rgba(42, 114, 255, 0.15);
-      opacity: 0;
-      transform: translateY(15px) scale(0.98);
-      animation: fadeInUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.7s forwards;
-      will-change: opacity, transform;
+      background: var(--card-bg);
+      font-family: inherit;
+      font-size: 14px;
+      transition: all 0.4s var(--ease);
+      color: var(--text-color);
     }
-    
-    .quote-text {
+
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: var(--strawberry);
+      box-shadow: 0 0 0 4px rgba(255, 71, 87, 0.1);
+    }
+
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    /* ===== UPLOAD AREA ===== */
+    .upload {
+      border: 2px dashed var(--border-color);
+      border-radius: 12px;
+      padding: 25px 15px;
+      text-align: center;
+      cursor: pointer;
+      background: var(--card-bg);
+      transition: all 0.5s var(--ease);
+    }
+
+    .upload:hover {
+      border-color: var(--strawberry);
+      background: var(--pink-soft);
+    }
+
+    .upload i {
+      font-size: 35px;
+      color: var(--text-lighter);
+      margin-bottom: 10px;
+    }
+
+    .upload p {
+      color: var(--text-light);
+      font-size: 14px;
+      margin-bottom: 0;
+    }
+
+    #preview {
+      max-width: 100%;
+      max-height: 150px;
+      margin-top: 12px;
+      border-radius: 10px;
+      display: none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    #preview.loaded {
+      opacity: 1;
+    }
+
+    /* ===== BUTTONS ===== */
+    .submit {
+      position: relative;
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, var(--strawberry), var(--strawberry-dark));
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 12px;
+      transition: all 0.5s var(--ease);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .submit:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 25px rgba(255, 71, 87, 0.3);
+    }
+
+    .spinner {
+      display: none;
+      width: 16px;
+      height: 16px;
+      border: 2px solid #fff5;
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    /* ===== WHATSAPP CHANNEL LINK ===== */
+    .channel {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px;
+      background: linear-gradient(135deg, #25D366, #128C7E);
+      color: white;
+      text-decoration: none;
+      border-radius: var(--radius-sm);
+      margin: 20px 0;
+      transition: all 0.3s var(--ease);
+      font-weight: 600;
+    }
+
+    .channel:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(37, 211, 102, 0.3);
+    }
+
+    /* ===== HISTORY SECTION ===== */
+    .history-section {
+      margin-top: 25px;
+      border-top: 1px solid var(--border-color);
+      padding-top: 20px;
+    }
+
+    .history-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .history-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-color);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .history-list {
+      max-height: 300px;
+      overflow-y: auto;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 8px;
+      background: var(--card-bg);
+    }
+
+    .history-item {
+      padding: 12px;
+      border-bottom: 1px solid var(--border-color);
       font-size: 13px;
-      font-style: italic;
-      opacity: 0.85;
+      position: relative;
+      background: var(--card-bg);
+      border-radius: 8px;
+      margin-bottom: 8px;
+    }
+
+    .history-item:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+    }
+
+    .history-item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 8px;
+    }
+
+    .history-name {
+      font-weight: 600;
+      color: var(--strawberry);
+      font-size: 14px;
+    }
+
+    .history-theme {
+      color: var(--text-light);
+      font-size: 12px;
+      background: var(--pink-soft);
+      padding: 2px 8px;
+      border-radius: 10px;
+      display: inline-block;
+      margin: 4px 0;
+    }
+
+    .history-desc {
+      color: var(--text-color);
+      font-size: 13px;
+      margin: 8px 0;
       line-height: 1.4;
     }
-    
-    .quote-author {
-      font-size: 11px;
+
+    .history-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       margin-top: 8px;
-      opacity: 0.7;
-      font-weight: 500;
-    }
-    
-    /* Scroll Progress Bar (Simplified) */
-    .scroll-progress {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 3px;
-      background: rgba(42, 114, 255, 0.2);
-      z-index: 999;
-      opacity: 0;
-      transition: opacity 0.2s ease;
-    }
-    
-    .scroll-progress.visible {
-      opacity: 1;
-    }
-    
-    .scroll-progress-bar {
-      height: 100%;
-      background: linear-gradient(90deg, var(--primary), var(--secondary));
-      width: 0%;
-      transition: width 0.05s ease;
-    }
-    
-    /* Stats Cards */
-    .stats-container {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
-      margin: 20px 0;
-      opacity: 0;
-      transform: translateY(15px) scale(0.98);
-      animation: fadeInUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.9s forwards;
-      will-change: opacity, transform;
-    }
-    
-    .stat-card {
-      background: var(--light-card);
-      padding: 12px 8px;
-      border-radius: 12px;
-      border: 1px solid rgba(42, 114, 255, 0.15);
-      box-shadow: 0 3px 10px rgba(0,0,0,0.05);
-      transition: var(--transition);
-      will-change: transform, box-shadow;
-    }
-    
-    .stat-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 15px rgba(42, 114, 255, 0.1);
-    }
-    
-    .stat-number {
-      font-size: 20px;
-      font-weight: 600;
-      color: var(--primary);
-      margin-bottom: 4px;
-    }
-    
-    .stat-label {
-      font-size: 10px;
-      opacity: 0.75;
-    }
-    
-    /* Buttons Grid */
-    .links-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-      margin: 15px 0;
-      opacity: 0;
-      transform: translateY(15px) scale(0.98);
-      animation: fadeInUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 1.1s forwards;
-      will-change: opacity, transform;
-    }
-    
-    a.btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      background: linear-gradient(45deg, var(--primary), var(--secondary));
-      color: #fff;
-      text-decoration: none;
-      padding: 12px 8px;
-      border-radius: 10px;
-      font-weight: 500;
-      border: none;
-      position: relative;
-      overflow: hidden;
-      box-shadow: 0 3px 10px rgba(42, 114, 255, 0.2);
-      transition: var(--transition);
-      opacity: 0;
-      transform: translateY(15px) scale(0.98);
-      font-size: 13px;
-      min-height: 48px;
-      will-change: transform, box-shadow;
-    }
-    
-    a.btn:nth-child(1) { animation: fadeInUp 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) 1.2s forwards; }
-    a.btn:nth-child(2) { animation: fadeInUp 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) 1.25s forwards; }
-    a.btn:nth-child(3) { animation: fadeInUp 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) 1.3s forwards; }
-    a.btn:nth-child(4) { animation: fadeInUp 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) 1.35s forwards; }
-    a.btn:nth-child(5) { animation: fadeInUp 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) 1.4s forwards; }
-    a.btn:nth-child(6) { animation: fadeInUp 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) 1.45s forwards; }
-    a.btn:nth-child(7) { animation: fadeInUp 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) 1.5s forwards; }
-    
-    a.btn::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
-      transition: 0.4s;
-    }
-    
-    a.btn:hover::before {
-      left: 100%;
-    }
-    
-    a.btn:hover,
-    a.btn:active {
-      transform: translateY(-1px) scale(1.01);
-      box-shadow: 0 5px 15px rgba(42, 114, 255, 0.3);
-    }
-    
-    /* Music Player (Simplified) */
-.music-player {
-  background: linear-gradient(135deg, var(--primary), var(--secondary));
-  border-radius: 15px;
-  padding: 15px;
-  margin: 20px 0;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-  color: white;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  opacity: 0;
-  transform: translateY(20px) scale(0.98);
-  animation: fadeInUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 1.6s forwards;
-  overflow: hidden;
-  will-change: opacity, transform;
-}
-
-.music-info {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-  text-align: center;
-}
-
-.album-art {
-  width: 60px;
-  height: 60px;
-  border-radius: 8px;
-  object-fit: cover;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-  animation: rotate 15s linear infinite paused;
-  border: 2px solid white;
-  will-change: animation-play-state;
-}
-
-.album-art.playing {
-  animation-play-state: running;
-}
-
-@keyframes rotate {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-.song-details {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-}
-
-.song-title {
-  font-size: 14px;
-  font-weight: 500;
-  margin-bottom: 3px;
-  word-break: break-word;
-  text-align: center;
-  width: 100%;
-}
-
-.song-artist {
-  font-size: 12px;
-  opacity: 0.9;
-  text-align: center;
-  width: 100%;
-}
-
-.progress-container {
-  width: 100%;
-  background: rgba(255,255,255,0.25);
-  height: 4px;
-  border-radius: 2px;
-  cursor: pointer;
-  overflow: hidden;
-}
-
-.progress-bar {
-  height: 100%;
-  background: white;
-  border-radius: 2px;
-  width: 0%;
-  transition: width 0.1s linear;
-  will-change: width;
-}
-
-.time-info {
-  display: flex;
-  justify-content: space-between;
-  font-size: 11px;
-  opacity: 0.9;
-  margin-top: 6px;
-}
-
-.controls {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 12px;
-}
-
-.control-btn {
-  background: none;
-  border: none;
-  color: white;
-  font-size: 16px;
-  cursor: pointer;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  transition: var(--transition);
-  will-change: transform;
-  flex-shrink: 0;
-}
-
-.control-btn:hover {
-  background: rgba(255,255,255,0.15);
-  transform: scale(1.05);
-}
-
-.play-btn {
-  background: white;
-  color: var(--primary);
-  font-size: 18px;
-  width: 40px;
-  height: 40px;
-  box-shadow: 0 3px 8px rgba(0,0,0,0.15);
-}
-
-.play-btn:hover {
-  transform: scale(1.05);
-}
-
-.volume-container {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-top: 6px;
-}
-
-.volume-slider {
-  flex: 1;
-  height: 3px;
-  background: rgba(255,255,255,0.25);
-  border-radius: 1.5px;
-  outline: none;
-  -webkit-appearance: none;
-  cursor: pointer;
-}
-
-.volume-slider::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: white;
-  cursor: pointer;
-}
-    
-    /* Skills Grid */
-    .skills-section {
-      margin: 20px 0;
-      opacity: 0;
-      transform: translateY(15px) scale(0.98);
-      animation: fadeInUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 1.7s forwards;
-      will-change: opacity, transform;
-    }
-    
-    .skills-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-      margin-top: 12px;
-    }
-    
-    .skill-item {
-      background: var(--light-card);
-      padding: 12px 8px;
-      border-radius: 10px;
-      border: 1px solid rgba(42, 114, 255, 0.15);
-      transition: var(--transition);
-      text-align: center;
-      will-change: transform, box-shadow;
-    }
-    
-    .skill-item:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(42, 114, 255, 0.1);
-    }
-    
-    .skill-icon {
-      font-size: 20px;
-      color: var(--primary);
-      margin-bottom: 6px;
-    }
-    
-    .skill-name {
       font-size: 11px;
-      font-weight: 500;
     }
 
-    /* Projects Section */
-    .projects-section {
-      margin: 20px 0;
-      opacity: 0;
-      transform: translateY(15px) scale(0.98);
-      animation: fadeInUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 1.8s forwards;
-      will-change: opacity, transform;
+    .history-time {
+      color: var(--text-lighter);
     }
-    
-    .projects-grid {
+
+    .history-status {
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 10px;
+      font-weight: 600;
+    }
+
+    .status-pending { background: #fff3cd; color: #856404; }
+    .status-progress { background: #cce7ff; color: #004085; }
+    .status-completed { background: #d4edda; color: #155724; }
+
+    .history-actions {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      display: flex;
+      gap: 5px;
+    }
+
+    .action-btn {
+      background: none;
+      border: none;
+      color: var(--text-lighter);
+      cursor: pointer;
+      transition: all 0.3s var(--ease);
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      padding: 4px;
+      border-radius: 4px;
+    }
+
+    .action-btn:hover {
+      color: var(--strawberry);
+      background: var(--pink-soft);
+    }
+
+    .like-btn.liked {
+      color: var(--strawberry);
+    }
+
+    .empty-history {
+      text-align: center;
+      color: var(--text-lighter);
+      font-style: italic;
+      padding: 20px;
+      font-size: 13px;
+    }
+
+    /* ===== ANALYTICS DASHBOARD ===== */
+    .analytics-section {
+      margin-top: 25px;
+      border-top: 1px solid var(--border-color);
+      padding-top: 20px;
+      display: none;
+    }
+
+    .analytics-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 15px;
+    }
+
+    .analytics-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-color);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .stats-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 12px;
-      margin-top: 12px;
+      margin-bottom: 15px;
     }
-    
-    .project-card {
-      background: var(--light-card);
-      border-radius: 12px;
-      overflow: hidden;
-      border: 1px solid rgba(42, 114, 255, 0.15);
-      box-shadow: 0 3px 10px rgba(0,0,0,0.05);
-      transition: var(--transition);
-      will-change: transform, box-shadow;
-    }
-    
-    .project-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 15px rgba(42, 114, 255, 0.1);
-    }
-    
-    .project-card img {
-      width: 100%;
-      height: 120px;
-      object-fit: cover;
-    }
-    
-    .project-info {
-      padding: 12px;
-      text-align: left;
-    }
-    
-    .project-info h3 {
-      font-size: 14px;
-      font-weight: 500;
-      color: var(--primary);
-      margin-bottom: 6px;
-    }
-    
-    .project-info p {
-      font-size: 12px;
-      opacity: 0.85;
-      line-height: 1.3;
-    }
-    
-    /* Gallery */
-    .gallery-section {
-      margin: 20px 0;
-      opacity: 0;
-      transform: translateY(15px) scale(0.98);
-      animation: fadeInUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 1.9s forwards;
-      will-change: opacity, transform;
-    }
-    
-    .gallery-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 6px;
-      margin-top: 12px;
-    }
-    
-    .gallery-item {
-      position: relative;
-      border-radius: 10px;
-      overflow: hidden;
-      aspect-ratio: 1;
-      cursor: pointer;
-      transition: var(--transition);
-      border: 2px solid transparent;
-      will-change: transform;
-    }
-    
-    .gallery-item img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: var(--transition);
-      will-change: transform;
-    }
-    
-    .gallery-item:hover {
-      transform: scale(1.03);
-      border-color: var(--primary);
-    }
-    
-    .gallery-item:hover img {
-      transform: scale(1.05);
-    }
-    
-    /* Footer */
-    .footer {
-      margin-top: 25px;
+
+    .stat-card {
+      background: var(--pink-soft);
       padding: 15px;
-      border-top: 1px solid rgba(42, 114, 255, 0.15);
-      opacity: 0;
-      transform: translateY(15px) scale(0.98);
-      animation: fadeInUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 2s forwards;
-      will-change: opacity, transform;
+      border-radius: var(--radius-sm);
+      text-align: center;
+      border: 1px solid var(--border-color);
     }
-    
-    .footer-text {
+
+    .stat-number {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--strawberry);
+      margin-bottom: 5px;
+    }
+
+    .stat-label {
       font-size: 12px;
-      opacity: 0.75;
-    }
-    
-    /* Scroll to Top */
-    .scroll-top {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      padding: 10px;
-      background: linear-gradient(45deg, var(--primary), var(--secondary));
-      color: #fff;
-      border-radius: 50%;
-      cursor: pointer;
-      font-size: 20px;
-      border: none;
-      width: 50px;
-      height: 50px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 4px 15px rgba(42, 114, 255, 0.4);
-      z-index: 1000;
-      opacity: 0;
-      visibility: hidden;
-      transform: scale(0.8) translateY(15px);
-      transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-      will-change: opacity, transform;
+      color: var(--text-light);
     }
 
-    .scroll-top.show {
-      opacity: 1;
-      visibility: visible;
-      transform: scale(1) translateY(0);
-    }
-
-    .scroll-top:hover {
-      transform: scale(1.05);
-      box-shadow: 0 6px 20px rgba(42, 114, 255, 0.5);
-    }
-    
-    /* Modal */
-    .modal {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.9);
+    /* ===== BULK OPERATIONS ===== */
+    .bulk-actions {
       display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 2000;
-      animation: modalFadeIn 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-      will-change: opacity;
-    }
-    
-    @keyframes modalFadeIn {
-      to { opacity: 1; }
-    }
-    
-    .modal img {
-      width: 95%;
-      max-width: 350px;
-      border-radius: 12px;
-      transform: scale(0.9);
-      animation: modalZoomIn 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.1s forwards;
-      box-shadow: 0 0 40px rgba(42, 114, 255, 0.4);
-      will-change: transform;
-    }
-    
-    @keyframes modalZoomIn {
-      to {
-        transform: scale(1);
-      }
-    }
-    
-    /* Section Titles */
-    .section-title {
-      font-size: 16px;
-      font-weight: 500;
-      margin: 20px 0 12px 0;
-      color: var(--primary);
-      display: flex;
-      align-items: center;
-      justify-content: center;
       gap: 8px;
-      opacity: 0;
-      transform: translateY(15px) scale(0.98);
-      animation: fadeInUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-      will-change: opacity, transform;
+      margin-bottom: 15px;
+      flex-wrap: wrap;
+      align-items: center;
     }
-    
-    /* Gallery Navigation */
-    .gallery-nav {
+
+    .bulk-btn {
+      padding: 8px 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
       display: flex;
-      justify-content: center;
-      gap: 12px;
-      margin-top: 15px;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .bulk-select {
+      padding: 8px 12px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      background: var(--card-bg);
+      color: var(--text-color);
+      font-size: 12px;
+    }
+
+    .delete-toggle {
+      background: #ff4757;
+      color: white;
+    }
+
+    .delete-toggle.active {
+      background: #ff3742;
+      box-shadow: 0 0 0 2px rgba(255, 71, 87, 0.3);
+    }
+
+    /* ===== ADMIN PANEL ===== */
+    .admin-panel {
+      margin-top: 20px;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 20px;
+      background: var(--pink-soft);
+      display: none;
+    }
+
+    .admin-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 15px;
+    }
+
+    .admin-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-color);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .admin-list {
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .admin-item {
+      padding: 15px;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      margin-bottom: 10px;
+      background: var(--card-bg);
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .admin-item.deleting {
+      border-color: #ff4757;
+      background: rgba(255, 71, 87, 0.05);
+    }
+
+    .admin-item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 8px;
+    }
+
+    .admin-item-name {
+      font-weight: 600;
+      color: var(--strawberry);
+      font-size: 14px;
+    }
+
+    .admin-item-theme {
+      color: var(--text-light);
+      font-size: 12px;
+      background: var(--pink-soft);
+      padding: 2px 8px;
+      border-radius: 10px;
+      display: inline-block;
+      margin: 4px 0;
+    }
+
+    .admin-item-desc {
+      font-size: 13px;
+      color: var(--text-color);
+      margin-bottom: 8px;
+      line-height: 1.4;
+    }
+
+    .admin-item-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 8px;
+      font-size: 11px;
+      color: var(--text-light);
+    }
+
+    .admin-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
       flex-wrap: wrap;
     }
-    
-    .gallery-nav-btn {
+
+    .status-btn {
+      padding: 6px 12px;
+      border: none;
+      border-radius: 6px;
+      font-size: 11px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .status-pending {
+      background: #ffa502;
+      color: white;
+    }
+
+    .status-progress {
+      background: #3742fa;
+      color: white;
+    }
+
+    .status-completed {
+      background: #2ed573;
+      color: white;
+    }
+
+    .delete-btn {
+      background: #ff4757;
+      color: white;
+    }
+
+    .delete-btn:hover {
+      background: #ff3742;
+    }
+
+    .checkbox {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+    }
+
+    .delete-checkbox {
+      display: none;
+    }
+
+    .delete-checkbox.visible {
+      display: block;
+    }
+
+    /* ===== MODALS ===== */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-content {
+      background: var(--card-bg);
+      padding: 25px;
+      border-radius: var(--radius);
+      max-width: 400px;
+      width: 100%;
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow);
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .modal-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text-color);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .close-modal {
+      background: none;
+      border: none;
+      font-size: 20px;
+      color: var(--text-lighter);
+      cursor: pointer;
+    }
+
+    .login-form .form-group {
+      margin-bottom: 15px;
+    }
+
+    /* ===== COMMENTS MODAL ===== */
+    .comments-list {
+      max-height: 300px;
+      overflow-y: auto;
+      margin-bottom: 15px;
+    }
+
+    .comment-item {
+      padding: 10px;
+      border-bottom: 1px solid var(--border-color);
+      font-size: 13px;
+    }
+
+    .comment-author {
+      font-weight: 600;
+      color: var(--strawberry);
+      margin-bottom: 4px;
+    }
+
+    .comment-text {
+      color: var(--text-color);
+      margin-bottom: 4px;
+    }
+
+    .comment-time {
+      font-size: 11px;
+      color: var(--text-lighter);
+    }
+
+    .comment-form {
+      display: flex;
+      gap: 8px;
+    }
+
+    .comment-input {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      font-size: 13px;
+      background: var(--card-bg);
+      color: var(--text-color);
+    }
+
+    .comment-submit {
+      padding: 10px 15px;
+      background: var(--strawberry);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    /* ===== FOOTER ===== */
+    .footer {
+      text-align: center;
+      margin-top: 25px;
+      font-size: 12px;
+      color: var(--text-lighter);
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
-      color: white;
-      padding: 12px 20px;
-      border-radius: 25px;
-      cursor: pointer;
-      transition: var(--transition);
-      font-size: 13px;
-      font-weight: 500;
-      min-height: 45px;
-      text-decoration: none;
-      box-shadow: 0 4px 12px rgba(42, 114, 255, 0.2);
-      position: relative;
-      overflow: hidden;
-      will-change: background-color, color, transform, box-shadow;
+      gap: 6px;
+      flex-shrink: 0;
     }
-    
-    .gallery-nav-btn::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-      transition: 0.5s;
+
+    .footer i {
+      color: var(--strawberry);
     }
-    
-    .gallery-nav-btn:hover::before {
-      left: 100%;
-    }
-    
-    .gallery-nav-btn:hover {
-      transform: translateY(-3px) scale(1.03);
-      box-shadow: 0 6px 20px rgba(42, 114, 255, 0.3);
-      background: linear-gradient(135deg, var(--secondary), var(--primary));
-    }
-    
-    .gallery-nav-btn:active {
-      transform: translateY(-1px) scale(1.01);
-      animation: buttonPulse 0.3s ease;
-    }
-    
-    @keyframes buttonPulse {
-      0% { box-shadow: 0 0 0 0 rgba(42, 114, 255, 0.7); }
-      70% { box-shadow: 0 0 0 10px rgba(42, 114, 255, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(42, 114, 255, 0); }
-    }
-    
-    .gallery-nav-btn i {
-      font-size: 16px;
-      transition: transform 0.3s ease;
-    }
-    
-    .gallery-nav-btn:hover i {
-      transform: scale(1.1) rotate(5deg);
-    }
-    
-    /* Responsive */
-    @media (max-width: 768px) {
+
+    /* ===== RESPONSIVE STYLES ===== */
+    @media (max-width: 480px) {
       body {
         padding: 10px;
+        align-items: flex-start;
       }
-      
-      .container {
-        padding: 5px;
+
+      .responsive-container {
+        min-height: calc(100vh - 20px);
       }
-      
-      .name {
-        font-size: 22px;
+
+      .content {
+        padding: 20px 15px;
       }
-      
-      .bio {
-        font-size: 13px;
-        padding: 0 10px;
+
+      .header {
+        padding: 25px 20px 20px;
       }
-      
-      .quote-text {
-        font-size: 12px;
-      }
-      
-      .section-title {
-        font-size: 15px;
-        margin: 18px 0 10px 0;
-      }
-    }
-    
-    @media (max-width: 480px) {
-      .links-grid,
-      .projects-grid {
-        grid-template-columns: 1fr;
-        gap: 8px;
-      }
-      
-      .stats-container,
-      .skills-grid,
-      .gallery-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 6px;
-      }
-      
-      .scroll-top {
-        bottom: 15px;
-        right: 15px;
-        width: 45px;
-        height: 45px;
-        font-size: 18px;
-      }
-      
-      .music-player {
-        padding: 12px;
-        gap: 10px;
-      }
-      
-      .album-art {
-        width: 50px;
-        height: 50px;
-      }
-      
-      .song-title {
-        font-size: 13px;
-      }
-      
-      .song-artist {
-        font-size: 11px;
-      }
-      
-      .controls {
-        gap: 8px;
-      }
-      
-      .control-btn {
-        width: 28px;
-        height: 28px;
-        font-size: 14px;
-      }
-      
-      .play-btn {
-        width: 36px;
-        height: 36px;
+
+      input, textarea {
+        padding: 12px 14px;
         font-size: 16px;
       }
-      
-      .project-card img {
-        height: 100px;
+
+      textarea {
+        min-height: 120px;
       }
-      
-      .project-info h3 {
-        font-size: 13px;
+
+      .upload {
+        padding: 20px 12px;
       }
-      
-      .project-info p {
-        font-size: 11px;
-      }
-      
-      .stat-number {
+
+      .submit {
+        padding: 14px;
         font-size: 16px;
       }
-      
-      .stat-label {
-        font-size: 9px;
+
+      .theme-toggle, .admin-toggle, .sound-toggle, .music-toggle {
+        width: 40px;
+        height: 40px;
       }
-      
-      .skill-icon {
-        font-size: 18px;
+
+      .theme-toggle {
+        top: 10px;
+        right: 10px;
       }
-      
-      .skill-name {
-        font-size: 10px;
+
+      .admin-toggle {
+        top: 60px;
+        right: 10px;
       }
-    }
-    
-    @media (max-width: 360px) {
-      .stats-container,
-      .skills-grid,
-      .gallery-grid {
+
+      .sound-toggle {
+        top: 110px;
+        right: 10px;
+      }
+
+      .music-toggle {
+        top: 160px;
+        right: 10px;
+      }
+
+      .stats-grid {
         grid-template-columns: 1fr;
       }
-      
-      img.pfp {
-        width: 110px;
-        height: 110px;
+
+      .admin-actions {
+        flex-direction: column;
       }
-      
-      .name {
+
+      .status-btn {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .bulk-actions {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .bulk-select, .bulk-btn {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 320px) {
+      .profile-container {
+        width: 70px;
+        height: 70px;
+      }
+
+      h1 {
         font-size: 20px;
       }
-      
-      .bio {
-        font-size: 12px;
-      }
-      
-      .quote-section {
-        padding: 12px;
-      }
-      
-      .quote-text {
-        font-size: 11px;
-      }
-      
-      .links-grid {
-        gap: 6px;
-      }
-      
-      a.btn {
-        padding: 10px 6px;
-        font-size: 12px;
-        min-height: 42px;
-      }
-      
-      .music-info {
-        gap: 8px;
-      }
-      
-      .volume-container {
-        gap: 4px;
+
+      .tagline {
+        font-size: 13px;
       }
     }
   </style>
 </head>
 <body>
 
-<!-- Scroll Progress Bar -->
-<div class="scroll-progress" id="scrollProgress">
-  <div class="scroll-progress-bar" id="progressBarScroll"></div>
-</div>
-
-<!-- Scroll to Top Button -->
-<button class="scroll-top" id="scrollTopBtn"><i class='bx bx-up-arrow-alt'></i></button>
-
-<div class="container">
-  <!-- Header Section -->
-  <div class="header" data-scroll>
-    <div class="profile-container">
-      <img src="https://cdn.yupra.my.id/yp/4vg61dch.jpg" class="pfp" alt="Pirrrzaaa">
-    </div>
-    <div class="name" id="nameText">Ryuuzaaa (Pirrrzaaa)</div>
-    <div class="bio">
-      The sky is not always clear, sometimes even rain can bring disaster
-      and feelings can also often hurt 🌧️💙
-    </div>
+  <!-- PRELOADER -->
+  <div id="preloader">
+    <div class="loader"></div>
   </div>
 
-  <!-- Quote Section -->
-  <div class="quote-section" data-scroll>
-    <div class="quote-text" id="quoteText">"Life is like a camera: Focus on what's important, capture the good times, develop from the negatives, and if things don't work out, take another shot."</div>
-    <div class="quote-author">— Unknown</div>
-  </div>
-
-  <!-- Stats Section -->
-  <div class="stats-container" data-scroll>
-    <div class="stat-card">
-      <div class="stat-number" id="visitCount">1</div>
-      <div class="stat-label">Visitors Today</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-number">7</div>
-      <div class="stat-label">Social Links</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-number">6</div>
-      <div class="stat-label">Gallery Photos</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-number">6</div>
-      <div class="stat-label">My Skills</div>
-    </div>
-  </div>
-
-  <!-- Social Links -->
-  <div class="section-title" data-scroll>
-    <i class='bx bx-link-alt'></i>
-    Connect With Me
-  </div>
-  <div class="links-grid" data-scroll>
-    <a href="https://t.me/nicetryzaa" class="btn" data-scroll><i class='bx bxl-telegram'></i> Telegram</a>
-    <a href="https://whatsapp.com/channel/0029VbB0n5N05MUf9cs2WR1L" class="btn" data-scroll><i class='bx bxl-whatsapp'></i> WA Channel</a>
-    <a href="https://chat.whatsapp.com/DyoaIjzP4irAJ37A1qRGpo?mode=wwt" class="btn" data-scroll><i class='bx bxl-whatsapp'></i> Group WA</a>
-    <a href="https://wa.me/6289517185039" class="btn" data-scroll><i class='bx bxl-whatsapp'></i> WhatsApp</a>
-    <a href="https://www.threads.com/@nicetry.zaa._" class="btn" data-scroll><i class='bx bx-message-rounded'></i> Threads</a>
-    <a href="https://www.instagram.com/nicetry.zaa._?igsh=MXJia3NscDk1ZG55Zw==" class="btn" data-scroll><i class='bx bxl-instagram'></i> Instagram</a>
-    <a href="https://vm.tiktok.com/ZSHvVphFgaJyv-yjgNV/" class="btn" data-scroll><i class='bx bxl-tiktok'></i> TikTok</a>
-  </div>
-
-  <!-- Skills Section -->
-  <div class="skills-section" data-scroll>
-    <div class="section-title">
-      <i class='bx bx-star'></i>
-      My Skills
-    </div>
-    <div class="skills-grid">
-      <div class="skill-item" data-scroll>
-        <div class="skill-icon"><i class='bx bx-code-alt'></i></div>
-        <div class="skill-name">Web Dev</div>
-      </div>
-      <div class="skill-item" data-scroll>
-        <div class="skill-icon"><i class='bx bx-palette'></i></div>
-        <div class="skill-name">Design</div>
-      </div>
-      <div class="skill-item" data-scroll>
-        <div class="skill-icon"><i class='bx bx-camera'></i></div>
-        <div class="skill-name">Photography</div>
-      </div>
-      <div class="skill-item" data-scroll>
-        <div class="skill-icon"><i class='bx bx-edit'></i></div>
-        <div class="skill-name">Writing</div>
-      </div>
-      <div class="skill-item" data-scroll>
-        <div class="skill-icon"><i class='bx bx-music'></i></div>
-        <div class="skill-name">Music</div>
-      </div>
-      <div class="skill-item" data-scroll>
-        <div class="skill-icon"><i class='bx bx-video'></i></div>
-        <div class="skill-name">Video Edit</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Projects Section -->
-  <div class="projects-section" data-scroll>
-    <div class="section-title">
-      <i class='bx bx-rocket'></i>
-      My Projects
-    </div>
-    <div class="projects-grid">
-      <div class="project-card" data-scroll>
-        <img src="https://cdn.yupra.my.id/yp/4vg61dch.jpg" alt="Project 1" loading="lazy">
-        <div class="project-info">
-          <h3>Personal Portfolio</h3>
-          <p>A dynamic web portfolio showcasing skills and creativity with smooth animations.</p>
+  <!-- LOGIN MODAL -->
+  <div class="modal" id="loginModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title">
+          <i class="fas fa-user-shield"></i>
+          Admin Login
         </div>
+        <button class="close-modal" id="closeModal">&times;</button>
       </div>
-      <div class="project-card" data-scroll>
-        <img src="https://cdn.yupra.my.id/yp/1sp0asp8.jpg" alt="Project 2" loading="lazy">
-        <div class="project-info">
-          <h3>Music Visualizer</h3>
-          <p>An interactive app that syncs visuals with audio tracks for engaging experiences.</p>
+      <form class="login-form" id="loginForm">
+        <div class="form-group">
+          <label for="username">
+            <i class="fas fa-user"></i>
+            Username
+          </label>
+          <input type="text" id="username" placeholder="Masukkan username" required>
         </div>
-      </div>
-      <div class="project-card" data-scroll>
-        <img src="https://cdn.yupra.my.id/yp/u1a2m3j3.jpg" alt="Project 3" loading="lazy">
-        <div class="project-info">
-          <h3>Photo Gallery App</h3>
-          <p>A responsive gallery with modal views and download features for image sharing.</p>
+        <div class="form-group">
+          <label for="password">
+            <i class="fas fa-lock"></i>
+            Password
+          </label>
+          <input type="password" id="password" placeholder="Masukkan password" required>
         </div>
-      </div>
+        <button type="submit" class="submit">
+          <i class="fas fa-sign-in-alt"></i>
+          Login
+        </button>
+      </form>
     </div>
   </div>
 
-  <!-- Music Player -->
-  <div class="section-title" data-scroll>
-    <i class='bx bx-music'></i>
-    Currently Playing
-  </div>
-  <div class="music-player" data-scroll>
-    <div class="music-info">
-      <img src="https://cdn.yupra.my.id/yp/4vg61dch.jpg" class="album-art" alt="Album Art" loading="lazy">
-      <div class="song-details">
-        <div class="song-title">Pirrrzaaa Theme</div>
-        <div class="song-artist">Pirrrzaaa</div>
-      </div>
-    </div>
-    
-    <div class="progress-area">
-      <div class="progress-container" id="progressContainer">
-        <div class="progress-bar" id="progressBar"></div>
-      </div>
-      <div class="time-info">
-        <span id="currentTime">0:00</span>
-        <span id="duration">0:00</span>
-      </div>
-    </div>
-    
-    <div class="controls">
-      <button class="control-btn" id="prevBtn"><i class='bx bx-skip-previous'></i></button>
-      <button class="control-btn play-btn" id="playBtn"><i class='bx bx-play' id="playIcon"></i></button>
-      <button class="control-btn" id="nextBtn"><i class='bx bx-skip-next'></i></button>
-    </div>
-    
-    <div class="volume-container">
-      <i class='bx bx-volume-full'></i>
-      <input type="range" min="0" max="100" value="70" class="volume-slider" id="volumeSlider">
-    </div>
-  </div>
-
-  <!-- Audio Element -->
-  <audio id="music" preload="metadata">
-    <source src="https://cdn.yupra.my.id/yp/lhqcfxy1.m4a" type="audio/mpeg">
-    Your browser does not support the audio element.
+  <!-- BACKGROUND MUSIC -->
+  <audio id="backgroundMusic" loop>
+    <source src="https://cdn.yupra.my.id/yp/odwl3nmc.mp3" type="audio/mpeg">
   </audio>
 
-  <!-- Gallery -->
-  <div class="gallery-section" data-scroll>
-    <div class="section-title">
-      <i class='bx bx-photo-album'></i>
-      My Gallery
-    </div>
-    <div class="gallery-grid">
-      <div class="gallery-item" data-scroll>
-        <img src="https://cdn.yupra.my.id/yp/4vg61dch.jpg" alt="Photo 1" loading="lazy">
+  <!-- MUSIC TOGGLE -->
+  <div class="music-toggle" id="musicToggle">
+    <i class="fas fa-music"></i>
+  </div>
+
+  <!-- SOUND TOGGLE -->
+  <div class="sound-toggle" id="soundToggle">
+    <i class="fas fa-volume-up"></i>
+  </div>
+
+  <!-- DARK MODE TOGGLE -->
+  <div class="theme-toggle" id="themeToggle">
+    <i class="fas fa-moon"></i>
+  </div>
+
+  <!-- ADMIN TOGGLE -->
+  <div class="admin-toggle" id="adminToggle">
+    <i class="fas fa-user-cog"></i>
+  </div>
+
+  <!-- MAIN CONTAINER -->
+  <div class="responsive-container">
+    <!-- MAIN CARD -->
+    <div class="card">
+      <!-- HEADER SECTION -->
+      <div class="header">
+        <div class="profile-container">
+          <img 
+            src="https://cdn.yupra.my.id/yp/q48aunsa.jpg" 
+            alt="Firz" 
+            class="profile lazy-image"
+            loading="lazy"
+            onload="this.classList.add('loaded')"
+          >
+        </div>
+        <h1>Stickers ʚfirz</h1>
+        <div class="tagline">
+          <i class="fas fa-strawberry"></i>
+          Request Sticker by Firz 🍓
+        </div>
       </div>
-      <div class="gallery-item" data-scroll>
-        <img src="https://cdn.yupra.my.id/yp/1sp0asp8.jpg" alt="Photo 2" loading="lazy">
+
+      <!-- CONTENT SECTION -->
+      <div class="content">
+        <div class="scrollable-content">
+          <p class="desc">
+            Request stiker apa saja, aku buatkan khusus buat kamu. Update setiap hari di channel WhatsApp 💗
+          </p>
+
+          <!-- FORM -->
+          <form id="form" method="POST" enctype="multipart/form-data">
+            <!-- Name Field -->
+            <div class="form-group">
+              <label for="name">
+                <i class="fas fa-user"></i>
+                Nama Kamu
+              </label>
+              <input type="text" id="name" name="Nama" placeholder="Siapa nih?~" required />
+            </div>
+            
+            <!-- Theme Field -->
+            <div class="form-group">
+              <label for="theme">
+                <i class="fas fa-palette"></i>
+                Tema / Ide Stiker
+              </label>
+              <input type="text" id="theme" name="Tema" placeholder="Contoh: Sanrio, Couple, Cat Meme" />
+            </div>
+            
+            <!-- Description Field -->
+            <div class="form-group">
+              <label for="description">
+                <i class="fas fa-edit"></i>
+                Deskripsi Detail
+              </label>
+              <textarea id="description" name="Deskripsi" placeholder="Jelaskan pose, warna, tulisan, ekspresi, dll..." required></textarea>
+            </div>
+
+            <!-- Upload Section -->
+            <div class="upload" id="upload">
+              <i class="fas fa-cloud-upload-alt"></i>
+              <p>Upload gambar referensi (opsional)</p>
+              <input type="file" name="attachment" accept="image/*" id="file" style="display:none;">
+              <img id="preview" src="" alt="Preview" class="lazy-image">
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="submit" id="submitBtn">
+              <span class="spinner" id="spinner"></span>
+              <i class="fas fa-paper-plane"></i>
+              <span id="btnText">Kirim Request</span>
+            </button>
+          </form>
+
+          <!-- WHATSAPP CHANNEL LINK -->
+          <a href="https://whatsapp.com/channel/0029VbB0n5N05MUf9cs2WR1L" target="_blank" class="channel">
+            <i class="fab fa-whatsapp"></i> 
+            <span>Gabung Channel WhatsApp</span>
+          </a>
+
+          <!-- ANALYTICS DASHBOARD -->
+          <div class="analytics-section" id="analyticsSection">
+            <div class="analytics-header">
+              <div class="analytics-title">
+                <i class="fas fa-chart-bar"></i>
+                Dashboard Analytics
+              </div>
+            </div>
+            <div class="stats-grid" id="statsGrid">
+              <div class="stat-card">
+                <div class="stat-number" id="totalRequests">0</div>
+                <div class="stat-label">Total Requests</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-number" id="pendingRequests">0</div>
+                <div class="stat-label">Pending</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-number" id="completedRequests">0</div>
+                <div class="stat-label">Completed</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-number" id="totalLikes">0</div>
+                <div class="stat-label">Total Likes</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- BULK OPERATIONS -->
+          <div class="bulk-actions" id="bulkActions">
+            <select class="bulk-select" id="bulkActionSelect">
+              <option value="">Pilih Aksi</option>
+              <option value="completed">Tandai sebagai Selesai</option>
+              <option value="progress">Tandai sebagai Progress</option>
+              <option value="pending">Tandai sebagai Pending</option>
+              <option value="delete">Hapus Request</option>
+            </select>
+            <button class="bulk-btn status-completed" onclick="applyBulkAction()">
+              <i class="fas fa-check"></i> Terapkan
+            </button>
+            <button class="bulk-btn delete-toggle" id="toggleDeleteBtn" onclick="toggleDeleteMode()">
+              <i class="fas fa-trash"></i> Mode Hapus
+            </button>
+            <button class="bulk-btn status-pending" onclick="clearBulkSelection()">
+              <i class="fas fa-times"></i> Batal
+            </button>
+          </div>
+
+          <!-- HISTORY SECTION -->
+          <div class="history-section">
+            <div class="history-header">
+              <div class="history-title">
+                <i class="fas fa-history"></i>
+                Riwayat Request Terbaru
+              </div>
+              <button class="action-btn" onclick="loadHistory()" title="Refresh">
+                <i class="fas fa-sync-alt"></i>
+              </button>
+            </div>
+            <div class="history-list" id="historyList">
+              <div class="empty-history">Belum ada riwayat request</div>
+            </div>
+          </div>
+
+          <!-- ADMIN PANEL -->
+          <div class="admin-panel" id="adminPanel">
+            <div class="admin-header">
+              <div class="admin-title">
+                <i class="fas fa-user-shield"></i>
+                Panel Admin
+              </div>
+              <div>
+                <button class="status-btn status-pending" onclick="toggleAnalytics()">
+                  <i class="fas fa-chart-bar"></i> Analytics
+                </button>
+                <button class="status-btn status-progress" onclick="logoutAdmin()">
+                  <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+              </div>
+            </div>
+            <div class="admin-list" id="adminList">
+              <div class="empty-history">Belum ada request dari user</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+          <i class="fas fa-heart"></i>
+          <span>Made with love by Firz • 2025</span>
+        </div>
       </div>
-      <div class="gallery-item" data-scroll>
-        <img src="https://cdn.yupra.my.id/yp/u1a2m3j3.jpg" alt="Photo 3" loading="lazy">
-      </div>
-      <div class="gallery-item" data-scroll>
-        <img src="https://cdn.yupra.my.id/yp/g1ddlfjf.jpg" alt="Photo 4" loading="lazy">
-      </div>
-      <div class="gallery-item" data-scroll>
-        <img src="https://cdn.yupra.my.id/yp/28k0fbyj.jpg" alt="Photo 5" loading="lazy">
-      </div>
-      <div class="gallery-item" data-scroll>
-        <img src="https://cdn.yupra.my.id/yp/cynx6xaz.jpg" alt="Photo 6" loading="lazy">
-      </div>
-    </div>
-    <div class="gallery-nav">
-      <a href="article.html" class="gallery-nav-btn" target="_blank" rel="noopener noreferrer">
-        <i class='bx bx-images'></i> Lihat Semua
-      </a>
-      <a href="article.html" class="gallery-nav-btn" target="_blank" rel="noopener noreferrer">
-        <i class='bx bx-book-reader'></i> Tahap Pengembangan
-      </a>
     </div>
   </div>
 
-  <!-- Footer -->
-  <div class="footer" data-scroll>
-    <div class="footer-text">
-      Made with ❤️ by Pirrrzaaa • © 2025
-    </div>
-  </div>
-
-  <!-- Modal -->
-  <div class="modal" id="modal">
-    <img id="modalImg">
-  </div>
-</div>
-
-<script>
-  // Simplified JS for lighter load
-  // Visitor Counter
-  let visitCount = Number(localStorage.getItem('visitCount')) + 1 || 1;
-  localStorage.setItem('visitCount', visitCount);
-  document.getElementById('visitCount').textContent = visitCount;
-
-  // Name Typing (Faster)
-  const nameText = "Ryuuzaaa (Pirrrzaaa)";
-  const nameElement = document.getElementById('nameText');
-  let nameIndex = 0;
-
-  function typeName() {
-    if (nameIndex < nameText.length) {
-      nameElement.textContent += nameText.charAt(nameIndex);
-      nameIndex++;
-      setTimeout(typeName, 100);
-    } else {
-      nameElement.classList.remove('typing');
-    }
-  }
-
-  function startNameTyping() {
-    nameElement.style.opacity = '1';
-    nameElement.style.transform = 'translateY(0) scale(1)';
-    nameElement.classList.add('typing');
-    nameElement.textContent = '';
-    nameIndex = 0;
-    typeName();
-  }
-
-  setTimeout(startNameTyping, 200);
-
-  // Music Player
-  const music = document.getElementById("music");
-  const playBtn = document.getElementById("playBtn");
-  const playIcon = document.getElementById("playIcon");
-  const progressBar = document.getElementById("progressBar");
-  const progressContainer = document.getElementById("progressContainer");
-  const currentTimeEl = document.getElementById("currentTime");
-  const durationEl = document.getElementById("duration");
-  const volumeSlider = document.getElementById("volumeSlider");
-  const albumArt = document.querySelector('.album-art');
-  
-  let isPlaying = false;
-  
-  const togglePlay = () => isPlaying ? pauseMusic() : playMusic();
-  
-  const playMusic = () => {
-    isPlaying = true;
-    playIcon.classList.replace('bx-play', 'bx-pause');
-    albumArt.classList.add('playing');
-    music.play().catch(() => {});
-  };
-  
-  const pauseMusic = () => {
-    isPlaying = false;
-    playIcon.classList.replace('bx-pause', 'bx-play');
-    albumArt.classList.remove('playing');
-    music.pause();
-  };
-  
-  const updateProgress = (e) => {
-    const { duration, currentTime } = e.target;
-    if (duration) {
-      const percent = (currentTime / duration) * 100;
-      progressBar.style.width = `${percent}%`;
+  <script>
+    // ===== BACKGROUND MUSIC SYSTEM =====
+    const MusicManager = {
+      enabled: false,
+      currentTrack: 0,
+      tracks: [
+        'https://cdn.yupra.my.id/yp/odwl3nmc.mp3',
+        // Tambahkan link lagu lain di sini nanti
+        // 'https://cdn.yupra.my.id/yp/lagu2.mp3',
+        // 'https://cdn.yupra.my.id/yp/lagu3.mp3'
+      ],
+      audio: new Audio(),
+      volume: 0.3,
       
-      const fmtTime = (t) => {
-        const m = Math.floor(t / 60);
-        const s = Math.floor(t % 60);
-        return `${m}:${s.toString().padStart(2, '0')}`;
-      };
+      init() {
+        this.audio.volume = this.volume;
+        this.audio.addEventListener('ended', () => this.nextTrack());
+        
+        // Load saved preference
+        const musicEnabled = localStorage.getItem('musicEnabled');
+        if (musicEnabled === 'true') {
+          this.enable();
+        }
+      },
       
-      currentTimeEl.textContent = fmtTime(currentTime);
-      durationEl.textContent = fmtTime(duration);
-    }
-  };
-  
-  const setProgress = (e) => {
-    const width = progressContainer.clientWidth;
-    music.currentTime = (e.offsetX / width) * music.duration;
-  };
-  
-  const setVolume = () => music.volume = volumeSlider.value / 100;
-  
-  playBtn.addEventListener('click', togglePlay);
-  music.addEventListener('timeupdate', updateProgress);
-  music.addEventListener('ended', () => {
-    isPlaying = false;
-    playIcon.classList.replace('bx-pause', 'bx-play');
-    albumArt.classList.remove('playing');
-  });
-  music.addEventListener('loadedmetadata', () => {
-    const fmtTime = (t) => {
-      const m = Math.floor(t / 60);
-      const s = Math.floor(t % 60);
-      return `${m}:${s.toString().padStart(2, '0')}`;
-    };
-    durationEl.textContent = fmtTime(music.duration);
-  });
-  progressContainer.addEventListener('click', setProgress);
-  volumeSlider.addEventListener('input', setVolume);
-  setVolume();
-
-  // Gallery Modal
-  const modal = document.getElementById("modal");
-  const modalImg = document.getElementById("modalImg");
-  document.querySelectorAll('.gallery-item img').forEach(img => {
-    img.addEventListener('click', () => {
-      modal.style.display = "flex";
-      modalImg.src = img.src;
-    });
-  });
-  
-  modal.addEventListener('click', () => modal.style.display = "none");
-
-  // Scroll to Top
-  const scrollTopBtn = document.getElementById("scrollTopBtn");
-  const handleScrollTop = () => scrollTopBtn.classList.toggle('show', window.scrollY > 200);
-  scrollTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
-  window.addEventListener('scroll', handleScrollTop);
-
-  // Scroll Progress
-  const progressBarScroll = document.getElementById('progressBarScroll');
-  const scrollProgress = document.getElementById('scrollProgress');
-  const updateProgressBar = () => {
-    const scrolled = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
-    progressBarScroll.style.width = scrolled + '%';
-    scrollProgress.classList.toggle('visible', window.scrollY > 0);
-  };
-  window.addEventListener('scroll', updateProgressBar);
-
-  // Scroll Animations (Simplified Throttle)
-  const elements = document.querySelectorAll('[data-scroll]');
-  let ticking = false;
-
-  const checkScroll = () => {
-    elements.forEach(el => {
-      const rect = el.getBoundingClientRect();
-      if (rect.top < window.innerHeight * 0.75 && rect.bottom > 0 && !el.classList.contains('visible')) {
-        el.classList.add('visible');
+      enable() {
+        this.enabled = true;
+        this.loadCurrentTrack();
+        this.audio.play().catch(e => console.log('Auto-play prevented:', e));
+        this.updateUI();
+        localStorage.setItem('musicEnabled', 'true');
+      },
+      
+      disable() {
+        this.enabled = false;
+        this.audio.pause();
+        this.updateUI();
+        localStorage.setItem('musicEnabled', 'false');
+      },
+      
+      loadCurrentTrack() {
+        if (this.tracks.length > 0) {
+          this.audio.src = this.tracks[this.currentTrack];
+          this.audio.load();
+        }
+      },
+      
+      nextTrack() {
+        if (this.tracks.length > 0) {
+          this.currentTrack = (this.currentTrack + 1) % this.tracks.length;
+          if (this.enabled) {
+            this.loadCurrentTrack();
+            this.audio.play();
+          }
+        }
+      },
+      
+      previousTrack() {
+        if (this.tracks.length > 0) {
+          this.currentTrack = (this.currentTrack - 1 + this.tracks.length) % this.tracks.length;
+          if (this.enabled) {
+            this.loadCurrentTrack();
+            this.audio.play();
+          }
+        }
+      },
+      
+      updateUI() {
+        const icon = document.querySelector('.music-toggle i');
+        if (this.enabled) {
+          icon.className = 'fas fa-music';
+          document.querySelector('.music-toggle').classList.remove('muted');
+        } else {
+          icon.className = 'fas fa-music-slash';
+          document.querySelector('.music-toggle').classList.add('muted');
+        }
+      },
+      
+      toggle() {
+        if (this.enabled) {
+          this.disable();
+        } else {
+          this.enable();
+        }
+      },
+      
+      // Method untuk nambah lagu baru
+      addTrack(url) {
+        this.tracks.push(url);
+        if (this.tracks.length === 1 && this.enabled) {
+          this.loadCurrentTrack();
+          this.audio.play();
+        }
       }
-    });
-  };
+    };
 
-  const requestTick = () => {
-    if (!ticking) {
-      requestAnimationFrame(checkScroll);
-      ticking = true;
+    // ===== SOUND EFFECTS =====
+    const SoundManager = {
+      enabled: true,
+      audioContext: null,
+      lastPlayTime: 0,
+      minPlayInterval: 100,
+      
+      init() {
+        try {
+          this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        } catch (error) {
+          console.log('Web Audio API not supported');
+        }
+      },
+      
+      play(soundName) {
+        if (!this.enabled || !this.audioContext) return;
+        
+        const now = Date.now();
+        if (now - this.lastPlayTime < this.minPlayInterval) {
+          return;
+        }
+        this.lastPlayTime = now;
+        
+        const sounds = {
+          submit: () => this.beep(523.25, 0.3, 0.5),
+          like: () => this.beep(659.25, 0.2, 0.3),
+          notification: () => {
+            this.beep(784.00, 0.2, 0.2);
+            this.scheduleBeep(1046.50, 0.2, 0.2, 100);
+          },
+          error: () => {
+            this.beep(392.00, 0.1, 0.25);
+            this.scheduleBeep(329.63, 0.1, 0.25, 100);
+          },
+          delete: () => this.beep(261.63, 0.3, 0.5, 'sawtooth')
+        };
+        
+        if (sounds[soundName]) {
+          try {
+            sounds[soundName]();
+          } catch (error) {
+            console.log('Sound error:', error);
+          }
+        }
+      },
+      
+      beep(frequency, volume, duration, type = 'sine') {
+        if (!this.audioContext) return;
+        
+        try {
+          if (this.audioContext.state === 'suspended') {
+            this.audioContext.resume();
+          }
+          
+          const oscillator = this.audioContext.createOscillator();
+          const gainNode = this.audioContext.createGain();
+          
+          oscillator.connect(gainNode);
+          gainNode.connect(this.audioContext.destination);
+          
+          oscillator.frequency.value = frequency;
+          oscillator.type = type;
+          
+          gainNode.gain.setValueAtTime(0, this.audioContext.currentTime);
+          gainNode.gain.linearRampToValueAtTime(volume, this.audioContext.currentTime + 0.01);
+          gainNode.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + duration);
+          
+          oscillator.start(this.audioContext.currentTime);
+          oscillator.stop(this.audioContext.currentTime + duration);
+          
+          oscillator.onended = () => {
+            oscillator.disconnect();
+            gainNode.disconnect();
+          };
+          
+        } catch (error) {
+          console.log('Beep error:', error);
+        }
+      },
+      
+      scheduleBeep(frequency, volume, duration, delay) {
+        setTimeout(() => {
+          this.beep(frequency, volume, duration);
+        }, delay);
+      },
+      
+      toggle() {
+        this.enabled = !this.enabled;
+        const icon = document.querySelector('.sound-toggle i');
+        icon.className = this.enabled ? 'fas fa-volume-up' : 'fas fa-volume-mute';
+        document.querySelector('.sound-toggle').classList.toggle('muted', !this.enabled);
+        localStorage.setItem('soundEnabled', this.enabled);
+        
+        if (this.enabled) {
+          if (!this.audioContext) {
+            this.init();
+          }
+          this.play('notification');
+        }
+      }
+    };
+
+    // ===== CACHED DOM ELEMENTS =====
+    const domCache = {
+      preloader: document.getElementById('preloader'),
+      themeToggle: document.getElementById('themeToggle'),
+      adminToggle: document.getElementById('adminToggle'),
+      soundToggle: document.getElementById('soundToggle'),
+      musicToggle: document.getElementById('musicToggle'),
+      adminPanel: document.getElementById('adminPanel'),
+      analyticsSection: document.getElementById('analyticsSection'),
+      bulkActions: document.getElementById('bulkActions'),
+      toggleDeleteBtn: document.getElementById('toggleDeleteBtn'),
+      loginModal: document.getElementById('loginModal'),
+      closeModal: document.getElementById('closeModal'),
+      loginForm: document.getElementById('loginForm'),
+      form: document.getElementById('form'),
+      submitBtn: document.getElementById('submitBtn'),
+      spinner: document.getElementById('spinner'),
+      btnText: document.getElementById('btnText'),
+      historyList: document.getElementById('historyList'),
+      adminList: document.getElementById('adminList'),
+      statsGrid: document.getElementById('statsGrid'),
+      upload: document.getElementById('upload'),
+      file: document.getElementById('file'),
+      preview: document.getElementById('preview')
+    };
+
+    // ===== SUPABASE CONFIGURATION =====
+    const SUPABASE_URL = 'https://bbxznnuxnxhdgxromqsf.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJieHpubnV4bnhoZGd4cm9tcXNmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM5MDQ4NTIsImV4cCI6MjA3OTQ4MDg1Mn0.nhED8RaNN0RlZDWpQ2TOAy33fWK2RrJFBpSC2-GbUIs';
+    
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    // ===== APPLICATION STATE =====
+    let isAdminLoggedIn = false;
+    let selectedRequests = new Set();
+    let deleteMode = false;
+    let currentRequestId = null;
+
+    // ===== HELPER FUNCTIONS =====
+    async function getUserIP() {
+      try {
+        const response = await fetch('https://api.ipify.org?format=json');
+        const data = await response.json();
+        return data.ip;
+      } catch (error) {
+        return 'unknown-' + Math.random().toString(36).substr(2, 9);
+      }
     }
-    ticking = false;
-  };
 
-  window.addEventListener('scroll', requestTick, { passive: true });
-  window.addEventListener('load', checkScroll);
-</script>
+    function formatDate(dateString) {
+      const date = new Date(dateString);
+      return date.toLocaleDateString('id-ID', {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric'
+      });
+    }
 
+    function formatTime(dateString) {
+      const date = new Date(dateString);
+      return date.toLocaleTimeString('id-ID', {
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    }
+
+    function formatDateTime(dateString) {
+      const date = new Date(dateString);
+      return date.toLocaleDateString('id-ID', {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    }
+
+    // ===== TOAST NOTIFICATION =====
+    function showToast(message, type = 'info') {
+      const toast = document.createElement('div');
+      toast.style.cssText = `
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: ${type === 'error' ? '#ff4757' : type === 'success' ? '#2ed573' : '#3742fa'};
+        color: white;
+        padding: 12px 20px;
+        border-radius: 8px;
+        z-index: 1000;
+        font-size: 14px;
+        font-weight: 500;
+        max-width: 90%;
+        text-align: center;
+        transition: all 0.3s ease;
+      `;
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(-50%) translateY(-20px)';
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+
+    // ===== ANALYTICS FUNCTIONS =====
+    async function loadAnalytics() {
+      try {
+        const { data: stats, error } = await supabase
+          .rpc('get_request_stats');
+
+        if (error) throw error;
+
+        if (stats && stats.length > 0) {
+          const stat = stats[0];
+          document.getElementById('totalRequests').textContent = stat.total_requests || 0;
+          document.getElementById('pendingRequests').textContent = stat.pending_requests || 0;
+          document.getElementById('completedRequests').textContent = stat.completed_requests || 0;
+          document.getElementById('totalLikes').textContent = stat.total_likes || 0;
+        }
+      } catch (error) {
+        console.error('Error loading analytics:', error);
+      }
+    }
+
+    function toggleAnalytics() {
+      const analyticsSection = domCache.analyticsSection;
+      analyticsSection.style.display = analyticsSection.style.display === 'none' ? 'block' : 'none';
+      
+      if (analyticsSection.style.display === 'block') {
+        loadAnalytics();
+      }
+    }
+
+    // ===== BULK OPERATIONS & DELETE MODE =====
+    function toggleDeleteMode() {
+      deleteMode = !deleteMode;
+      const checkboxes = document.querySelectorAll('.delete-checkbox');
+      const adminItems = document.querySelectorAll('.admin-item');
+      
+      checkboxes.forEach(cb => {
+        cb.style.display = deleteMode ? 'block' : 'none';
+      });
+      
+      adminItems.forEach(item => {
+        item.classList.toggle('deleting', deleteMode);
+      });
+      
+      domCache.toggleDeleteBtn.classList.toggle('active', deleteMode);
+      
+      if (deleteMode) {
+        SoundManager.play('notification');
+        showToast('Mode hapus diaktifkan', 'info');
+      } else {
+        showToast('Mode hapus dinonaktifkan', 'info');
+      }
+    }
+
+    function toggleBulkSelection(requestId) {
+      if (selectedRequests.has(requestId)) {
+        selectedRequests.delete(requestId);
+      } else {
+        selectedRequests.add(requestId);
+      }
+      
+      updateBulkUI();
+    }
+
+    function updateBulkUI() {
+      if (selectedRequests.size > 0) {
+        domCache.bulkActions.style.display = 'flex';
+      } else {
+        domCache.bulkActions.style.display = 'none';
+      }
+    }
+
+    async function applyBulkAction() {
+      const action = document.getElementById('bulkActionSelect').value;
+      if (!action || selectedRequests.size === 0) {
+        showToast('Pilih aksi dan seleksi minimal 1 request', 'error');
+        return;
+      }
+
+      try {
+        if (action === 'delete') {
+          const { error } = await supabase
+            .from('requests')
+            .delete()
+            .in('id', Array.from(selectedRequests));
+          
+          if (error) throw error;
+          showToast(`${selectedRequests.size} request berhasil dihapus`, 'success');
+          SoundManager.play('delete');
+        } else {
+          const { data, error } = await supabase
+            .rpc('bulk_update_request_status', {
+              request_ids: Array.from(selectedRequests),
+              new_status: action
+            });
+          
+          if (error) throw error;
+          showToast(`${data} request diupdate ke ${action}`, 'success');
+          SoundManager.play('notification');
+        }
+        
+        selectedRequests.clear();
+        deleteMode = false;
+        toggleDeleteMode();
+        updateBulkUI();
+        loadHistory();
+        loadAdminData();
+        loadAnalytics();
+        
+      } catch (error) {
+        showToast('Error: ' + error.message, 'error');
+        SoundManager.play('error');
+      }
+    }
+
+    function clearBulkSelection() {
+      selectedRequests.clear();
+      deleteMode = false;
+      toggleDeleteMode();
+      updateBulkUI();
+      document.querySelectorAll('.checkbox').forEach(cb => cb.checked = false);
+      showToast('Seleksi dibatalkan', 'info');
+    }
+
+    // ===== REQUEST MANAGEMENT =====
+    async function submitRequest(requestData) {
+      try {
+        const { data, error } = await supabase
+          .from('requests')
+          .insert([
+            {
+              name: requestData.name,
+              theme: requestData.theme,
+              description: requestData.description,
+              status: 'pending',
+              likes: 0
+            }
+          ])
+          .select();
+
+        if (error) throw error;
+
+        // Upload file jika ada
+        const fileInput = document.getElementById('file');
+        if (fileInput.files[0]) {
+          await uploadRequestFile(data[0].id, fileInput.files[0]);
+        }
+
+        SoundManager.play('submit');
+        showToast('Request berhasil dikirim! 🎉', 'success');
+        loadHistory();
+        loadAnalytics();
+        return data;
+      } catch (error) {
+        showToast('Error: ' + error.message, 'error');
+        SoundManager.play('error');
+        throw error;
+      }
+    }
+
+    async function uploadRequestFile(requestId, file) {
+      try {
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${requestId}-${Date.now()}.${fileExt}`;
+        const filePath = `requests/${fileName}`;
+
+        const { error } = await supabase.storage
+          .from('request_files')
+          .upload(filePath, file);
+
+        if (error) throw error;
+
+        const { data: { publicUrl } } = supabase.storage
+          .from('request_files')
+          .getPublicUrl(filePath);
+
+        await supabase
+          .from('requests')
+          .update({ file_url: publicUrl })
+          .eq('id', requestId);
+
+      } catch (error) {
+        console.error('Error uploading file:', error);
+      }
+    }
+
+    async function loadHistory() {
+      try {
+        const { data: requests, error } = await supabase
+          .from('requests')
+          .select('*')
+          .order('created_at', { ascending: false })
+          .limit(10);
+
+        if (error) throw error;
+
+        // Get user IP untuk like status
+        const userIp = await getUserIP();
+        
+        // Get likes untuk setiap request
+        const requestsWithLikes = await Promise.all(
+          requests.map(async (request) => {
+            const { data: likes, error: likesError } = await supabase
+              .from('request_likes')
+              .select('user_ip')
+              .eq('request_id', request.id);
+            
+            const { count: commentCount, error: countError } = await supabase
+              .from('request_comments')
+              .select('*', { count: 'exact', head: true })
+              .eq('request_id', request.id);
+
+            return {
+              ...request,
+              user_liked: likes?.some(like => like.user_ip === userIp) || false,
+              comment_count: commentCount || 0
+            };
+          })
+        );
+
+        displayRequests(requestsWithLikes);
+      } catch (error) {
+        console.error('Error loading history:', error);
+        displayRequests([]);
+      }
+    }
+
+    function displayRequests(requests) {
+      const historyList = domCache.historyList;
+      
+      if (requests.length === 0) {
+        historyList.innerHTML = '<div class="empty-history">Belum ada riwayat request</div>';
+        return;
+      }
+
+      historyList.innerHTML = requests.map(request => {
+        const statusClass = `status-${request.status}`;
+        const statusText = {
+          'pending': 'Pending',
+          'progress': 'Dalam Proses', 
+          'completed': 'Selesai'
+        }[request.status] || 'Pending';
+        
+        const likeClass = request.user_liked ? 'liked' : '';
+        const commentCount = request.comment_count || 0;
+        
+        return `
+          <div class="history-item">
+            <div class="history-item-header">
+              <div>
+                <div class="history-name">${request.name}</div>
+                ${request.theme ? `<div class="history-theme">${request.theme}</div>` : ''}
+              </div>
+              <div class="history-actions">
+                <button class="action-btn like-btn ${likeClass}" onclick="likeRequest(${request.id})" title="Suka">
+                  <i class="fas fa-heart"></i> ${request.likes || 0}
+                </button>
+                ${commentCount > 0 ? `
+                  <button class="action-btn" onclick="openComments(${request.id})" title="Komentar">
+                    <i class="fas fa-comment"></i> ${commentCount}
+                  </button>
+                ` : ''}
+              </div>
+            </div>
+            <div class="history-desc">${request.description}</div>
+            ${request.file_url ? `
+              <div style="margin: 8px 0;">
+                <img src="${request.file_url}" alt="Preview" class="lazy-image" loading="lazy" onload="this.classList.add('loaded')" style="max-width: 100%; max-height: 80px; border-radius: 6px;">
+              </div>
+            ` : ''}
+            <div class="history-meta">
+              <div class="history-time">${formatDate(request.created_at)} • ${formatTime(request.created_at)}</div>
+              <div class="history-status ${statusClass}">${statusText}</div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // ===== LIKE SYSTEM =====
+    async function likeRequest(requestId) {
+      try {
+        const userIp = await getUserIP();
+        
+        const { data, error } = await supabase
+          .rpc('handle_like', {
+            p_request_id: requestId,
+            p_user_ip: userIp,
+            p_user_agent: navigator.userAgent
+          });
+
+        if (error) {
+          // Fallback ke manual like system
+          await manualLikeSystem(requestId, userIp);
+          return;
+        }
+        
+        if (data.action === 'liked') {
+          showToast('Request disukai! ❤️', 'success');
+          SoundManager.play('like');
+        } else {
+          showToast('Like dibatalkan', 'info');
+        }
+        
+        loadHistory();
+        loadAnalytics();
+      } catch (error) {
+        showToast('Error: ' + error.message, 'error');
+        SoundManager.play('error');
+      }
+    }
+
+    // Fallback manual like system
+    async function manualLikeSystem(requestId, userIp) {
+      try {
+        // Check if already liked
+        const { data: existingLikes, error: checkError } = await supabase
+          .from('request_likes')
+          .select('*')
+          .eq('request_id', requestId)
+          .eq('user_ip', userIp);
+
+        if (checkError) throw checkError;
+
+        if (existingLikes && existingLikes.length > 0) {
+          // Unlike
+          const { error: deleteError } = await supabase
+            .from('request_likes')
+            .delete()
+            .eq('request_id', requestId)
+            .eq('user_ip', userIp);
+
+          if (deleteError) throw deleteError;
+
+          // Decrement likes count
+          const { error: updateError } = await supabase
+            .from('requests')
+            .update({ likes: supabase.raw('GREATEST(0, likes - 1)') })
+            .eq('id', requestId);
+
+          if (updateError) throw updateError;
+
+          showToast('Like dibatalkan', 'info');
+        } else {
+          // Like
+          const { error: insertError } = await supabase
+            .from('request_likes')
+            .insert([
+              {
+                request_id: requestId,
+                user_ip: userIp,
+                user_agent: navigator.userAgent
+              }
+            ]);
+
+          if (insertError) throw insertError;
+
+          // Increment likes count
+          const { error: updateError } = await supabase
+            .from('requests')
+            .update({ likes: supabase.raw('likes + 1') })
+            .eq('id', requestId);
+
+          if (updateError) throw updateError;
+
+          showToast('Request disukai! ❤️', 'success');
+          SoundManager.play('like');
+        }
+
+        loadHistory();
+        loadAnalytics();
+      } catch (error) {
+        throw error;
+      }
+    }
+
+    // ===== COMMENT SYSTEM =====
+    function openComments(requestId) {
+      currentRequestId = requestId;
+      if (!document.getElementById('commentsModal')) {
+        createCommentsModal();
+      }
+      document.getElementById('commentsModal').style.display = 'flex';
+      loadComments(requestId);
+    }
+
+    function createCommentsModal() {
+      const modal = document.createElement('div');
+      modal.className = 'modal';
+      modal.id = 'commentsModal';
+      modal.innerHTML = `
+        <div class="modal-content">
+          <div class="modal-header">
+            <div class="modal-title">
+              <i class="fas fa-comments"></i>
+              Komentar
+            </div>
+            <button class="close-modal" onclick="closeCommentsModal()">&times;</button>
+          </div>
+          <div class="comments-list" id="commentsList">
+            <div class="empty-history">Memuat komentar...</div>
+          </div>
+          <form class="comment-form" id="commentForm" onsubmit="submitComment(event)">
+            <input type="text" class="comment-input" id="commentInput" placeholder="Tulis komentar..." required>
+            <button type="submit" class="comment-submit">
+              <i class="fas fa-paper-plane"></i>
+            </button>
+          </form>
+        </div>
+      `;
+      document.body.appendChild(modal);
+    }
+
+    function closeCommentsModal() {
+      document.getElementById('commentsModal').style.display = 'none';
+    }
+
+    async function loadComments(requestId) {
+      try {
+        const { data: comments, error } = await supabase
+          .from('request_comments')
+          .select('*')
+          .eq('request_id', requestId)
+          .order('created_at', { ascending: true });
+
+        if (error) throw error;
+
+        displayComments(comments || []);
+      } catch (error) {
+        console.error('Error loading comments:', error);
+        document.getElementById('commentsList').innerHTML = '<div class="empty-history">Error memuat komentar</div>';
+      }
+    }
+
+    function displayComments(comments) {
+      const commentsList = document.getElementById('commentsList');
+      
+      if (comments.length === 0) {
+        commentsList.innerHTML = '<div class="empty-history">Belum ada komentar</div>';
+        return;
+      }
+
+      commentsList.innerHTML = comments.map(comment => `
+        <div class="comment-item">
+          <div class="comment-author">${comment.author || 'Anonymous'}</div>
+          <div class="comment-text">${comment.comment}</div>
+          <div class="comment-time">${formatDateTime(comment.created_at)}</div>
+        </div>
+      `).join('');
+    }
+
+    async function submitComment(event) {
+      event.preventDefault();
+      const commentInput = document.getElementById('commentInput');
+      const comment = commentInput.value.trim();
+
+      if (!comment) return;
+
+      try {
+        const { error } = await supabase
+          .from('request_comments')
+          .insert([
+            {
+              request_id: currentRequestId,
+              comment: comment,
+              author: 'User'
+            }
+          ]);
+
+        if (error) throw error;
+
+        SoundManager.play('notification');
+        showToast('Komentar berhasil dikirim!', 'success');
+        loadComments(currentRequestId);
+        loadHistory();
+        commentInput.value = '';
+        
+      } catch (error) {
+        showToast('Error mengirim komentar: ' + error.message, 'error');
+        SoundManager.play('error');
+      }
+    }
+
+    // ===== ADMIN FUNCTIONS =====
+    async function adminLogin(username, password) {
+      try {
+        // Coba menggunakan RPC function
+        const { data, error } = await supabase
+          .rpc('admin_login', {
+            p_username: username,
+            p_password: password
+          });
+
+        if (error) {
+          // Fallback ke hardcoded check
+          if (username === 'admin' && password === 'admin123') {
+            return { success: true, user: { username: 'admin', role: 'super_admin' } };
+          } else {
+            throw new Error('Login failed');
+          }
+        }
+
+        if (data && data.length > 0) {
+          return { success: true, user: data[0] };
+        } else {
+          throw new Error('Login failed');
+        }
+      } catch (error) {
+        throw error;
+      }
+    }
+
+    async function loadAdminData() {
+      try {
+        const { data: requests, error } = await supabase
+          .from('requests')
+          .select('*')
+          .order('created_at', { ascending: false });
+
+        if (error) throw error;
+
+        displayAdminRequests(requests || []);
+      } catch (error) {
+        console.error('Error loading admin data:', error);
+        domCache.adminList.innerHTML = '<div class="empty-history">Error memuat data</div>';
+      }
+    }
+
+    function displayAdminRequests(requests) {
+      const adminList = domCache.adminList;
+      
+      if (requests.length === 0) {
+        adminList.innerHTML = '<div class="empty-history">Belum ada request dari user</div>';
+        return;
+      }
+
+      adminList.innerHTML = requests.map(request => {
+        const isSelected = selectedRequests.has(request.id);
+        const checkboxStyle = deleteMode ? 'style="display: block;"' : 'style="display: none;"';
+        
+        return `
+          <div class="admin-item ${isSelected ? 'deleting' : ''}">
+            <input type="checkbox" class="checkbox delete-checkbox" ${checkboxStyle} 
+                   onchange="toggleBulkSelection(${request.id})" ${isSelected ? 'checked' : ''}>
+            <div class="admin-item-header">
+              <div class="admin-item-name">${request.name}</div>
+              <div class="history-status status-${request.status}">
+                ${request.status === 'completed' ? 'Selesai' : request.status === 'progress' ? 'Dalam Proses' : 'Pending'}
+              </div>
+            </div>
+            ${request.theme ? `<div class="admin-item-theme">${request.theme}</div>` : ''}
+            <div class="admin-item-desc">${request.description}</div>
+            ${request.file_url ? `
+              <div style="margin: 8px 0;">
+                <img src="${request.file_url}" alt="Preview" class="lazy-image" loading="lazy" onload="this.classList.add('loaded')" style="max-width: 100%; max-height: 100px; border-radius: 6px;">
+              </div>
+            ` : ''}
+            <div class="admin-item-meta">
+              <div>${formatDateTime(request.created_at)}</div>
+              <div>❤️ ${request.likes || 0} likes</div>
+            </div>
+            <div class="admin-actions">
+              <button class="status-btn status-pending" onclick="updateRequestStatus(${request.id}, 'pending')">
+                <i class="fas fa-clock"></i> Pending
+              </button>
+              <button class="status-btn status-progress" onclick="updateRequestStatus(${request.id}, 'progress')">
+                <i class="fas fa-spinner"></i> Progress
+              </button>
+              <button class="status-btn status-completed" onclick="updateRequestStatus(${request.id}, 'completed')">
+                <i class="fas fa-check"></i> Selesai
+              </button>
+              <button class="status-btn delete-btn" onclick="deleteSingleRequest(${request.id})">
+                <i class="fas fa-trash"></i> Hapus
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    async function updateRequestStatus(requestId, status) {
+      try {
+        const { error } = await supabase
+          .from('requests')
+          .update({ status: status })
+          .eq('id', requestId);
+
+        if (error) throw error;
+
+        SoundManager.play('notification');
+        showToast(`Status request diupdate ke: ${status}`, 'success');
+        loadHistory();
+        loadAdminData();
+        loadAnalytics();
+      } catch (error) {
+        showToast('Error updating status: ' + error.message, 'error');
+        SoundManager.play('error');
+      }
+    }
+
+    async function deleteSingleRequest(requestId) {
+      if (!confirm('Yakin ingin menghapus request ini?')) return;
+      
+      try {
+        const { error } = await supabase
+          .from('requests')
+          .delete()
+          .eq('id', requestId);
+
+        if (error) throw error;
+
+        SoundManager.play('delete');
+        showToast('Request berhasil dihapus', 'success');
+        loadHistory();
+        loadAdminData();
+        loadAnalytics();
+      } catch (error) {
+        showToast('Error: ' + error.message, 'error');
+        SoundManager.play('error');
+      }
+    }
+
+    function logoutAdmin() {
+      isAdminLoggedIn = false;
+      localStorage.removeItem('adminLoggedIn');
+      domCache.adminPanel.style.display = 'none';
+      domCache.analyticsSection.style.display = 'none';
+      domCache.bulkActions.style.display = 'none';
+      selectedRequests.clear();
+      deleteMode = false;
+      showToast('Admin logged out', 'info');
+      SoundManager.play('notification');
+    }
+
+    // ===== INITIALIZATION =====
+    function initializeApp() {
+      SoundManager.init();
+      MusicManager.init();
+      loadHistory();
+      
+      // Check admin status
+      const savedAdmin = localStorage.getItem('adminLoggedIn');
+      if (savedAdmin === 'true') {
+        isAdminLoggedIn = true;
+        domCache.adminPanel.style.display = 'block';
+        loadAdminData();
+      }
+
+      // Check sound preference
+      const soundEnabled = localStorage.getItem('soundEnabled');
+      if (soundEnabled === 'false') {
+        SoundManager.enabled = false;
+        domCache.soundToggle.classList.add('muted');
+        domCache.soundToggle.querySelector('i').className = 'fas fa-volume-mute';
+      }
+
+      // Auto detect system theme
+      if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark-mode');
+        document.querySelector('.theme-toggle i').className = 'fas fa-sun';
+      }
+    }
+
+    // ===== EVENT LISTENERS =====
+    document.addEventListener('DOMContentLoaded', function() {
+      // Preloader
+      setTimeout(() => {
+        domCache.preloader.classList.add('hide');
+        document.body.classList.add('loaded');
+        initializeApp();
+      }, 1000);
+
+      // Music toggle
+      domCache.musicToggle.addEventListener('click', () => MusicManager.toggle());
+
+      // Sound toggle
+      domCache.soundToggle.addEventListener('click', () => SoundManager.toggle());
+
+      // Theme toggle
+      domCache.themeToggle.addEventListener('click', function() {
+        document.body.classList.toggle('dark-mode');
+        const themeIcon = document.querySelector('.theme-toggle i');
+        themeIcon.className = document.body.classList.contains('dark-mode') ? 'fas fa-sun' : 'fas fa-moon';
+        localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+        SoundManager.play('notification');
+      });
+
+      // Admin toggle
+      domCache.adminToggle.addEventListener('click', function() {
+        if (isAdminLoggedIn) {
+          const adminPanel = domCache.adminPanel;
+          adminPanel.style.display = adminPanel.style.display === 'none' ? 'block' : 'none';
+          if (adminPanel.style.display === 'block') {
+            loadAdminData();
+          }
+        } else {
+          domCache.loginModal.style.display = 'flex';
+        }
+        SoundManager.play('notification');
+      });
+
+      // Admin login form
+      domCache.loginForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+
+        try {
+          const result = await adminLogin(username, password);
+          
+          if (result.success) {
+            isAdminLoggedIn = true;
+            localStorage.setItem('adminLoggedIn', 'true');
+            domCache.adminPanel.style.display = 'block';
+            domCache.loginModal.style.display = 'none';
+            loadAdminData();
+            showToast('Admin login berhasil!', 'success');
+            SoundManager.play('submit');
+            this.reset();
+          }
+        } catch (error) {
+          showToast('Username atau password salah!', 'error');
+          SoundManager.play('error');
+        }
+      });
+
+      // Form submission
+      domCache.form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const name = document.getElementById('name').value;
+        const theme = document.getElementById('theme').value;
+        const description = document.getElementById('description').value;
+
+        if (!name || !description) {
+          showToast('Harap isi nama dan deskripsi!', 'error');
+          SoundManager.play('error');
+          return;
+        }
+
+        // Show loading
+        domCache.btnText.textContent = 'Mengirim...';
+        domCache.spinner.style.display = 'inline-block';
+        domCache.submitBtn.classList.add('loading');
+
+        try {
+          await submitRequest({ name, theme, description });
+          
+          // Reset form
+          this.reset();
+          domCache.preview.style.display = 'none';
+          
+          // Confetti effect
+          if (window.confetti) {
+            confetti({
+              particleCount: 100,
+              spread: 70,
+              origin: { y: 0.6 }
+            });
+          }
+        } catch (error) {
+          // Error handling is done in submitRequest
+        } finally {
+          domCache.btnText.textContent = 'Kirim Request';
+          domCache.spinner.style.display = 'none';
+          domCache.submitBtn.classList.remove('loading');
+        }
+      });
+
+      // File upload
+      domCache.upload.addEventListener('click', function() {
+        domCache.file.click();
+      });
+
+      domCache.file.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            domCache.preview.src = e.target.result;
+            domCache.preview.style.display = 'block';
+            setTimeout(() => domCache.preview.classList.add('loaded'), 100);
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+
+      // Modal close buttons
+      domCache.closeModal.addEventListener('click', function() {
+        domCache.loginModal.style.display = 'none';
+      });
+
+      // Close modal when clicking outside
+      window.addEventListener('click', function(e) {
+        if (e.target.classList.contains('modal')) {
+          e.target.style.display = 'none';
+        }
+      });
+
+      // Keyboard shortcuts
+      document.addEventListener('keydown', function(e) {
+        // Ctrl + M untuk toggle music
+        if (e.ctrlKey && e.key === 'm') {
+          e.preventDefault();
+          MusicManager.toggle();
+        }
+        // Ctrl + D untuk toggle delete mode (hanya admin)
+        if (e.ctrlKey && e.key === 'd' && isAdminLoggedIn) {
+          e.preventDefault();
+          toggleDeleteMode();
+        }
+      });
+    });
+
+    // Load saved theme
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+      document.body.classList.add('dark-mode');
+      document.querySelector('.theme-toggle i').className = 'fas fa-sun';
+    }
+
+    // Make functions global for HTML
+    window.updateRequestStatus = updateRequestStatus;
+    window.likeRequest = likeRequest;
+    window.logoutAdmin = logoutAdmin;
+    window.toggleAnalytics = toggleAnalytics;
+    window.toggleBulkSelection = toggleBulkSelection;
+    window.toggleDeleteMode = toggleDeleteMode;
+    window.applyBulkAction = applyBulkAction;
+    window.clearBulkSelection = clearBulkSelection;
+    window.deleteSingleRequest = deleteSingleRequest;
+    window.loadHistory = loadHistory;
+    window.openComments = openComments;
+    window.closeCommentsModal = closeCommentsModal;
+    window.submitComment = submitComment;
+
+    // Export untuk menambah lagu dari console
+    window.addMusicTrack = (url) => MusicManager.addTrack(url);
+  </script>
 </body>
 </html>
