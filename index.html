@@ -4,336 +4,519 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pirrzaaa | TKJ Student & Developer</title>
-    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Inter:wght@300;400;600;800;900&display=swap" rel="stylesheet">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Inter:wght@300;400;500;600;700;800;900&family=Fira+Code:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    
     <style>
-        /* --- VARIABEL TEMA --- */
+        /* ==========================================================================
+           1. VARIABEL TEMA & WARNA
+           ========================================================================== */
         :root {
             --bg-color: #050505;
             --text-color: #ffffff;
-            --accent-color: #888888;
-            --border-color: #222222;
-            --glass-bg: rgba(10, 10, 10, 0.7);
-            --glow-color: radial-gradient(circle, rgba(255,255,255,0.04) 0%, rgba(5,5,5,0) 60%);
-            --tag-bg: rgba(255,255,255,0.08);
-            --bar-fill: #ffffff;
+            --accent-color: #8a8a8a;
+            --border-color: #262626;
+            --glass-bg: rgba(5, 5, 5, 0.75);
+            --card-bg: rgba(15, 15, 15, 0.6);
+            --terminal-green: #00ff88;
+            --terminal-green-dim: rgba(0, 255, 136, 0.1);
+            --tag-bg: rgba(255, 255, 250, 0.05);
+            --glow-color: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.03) 0%, transparent 60%);
+            --grid-line: rgba(255, 255, 255, 0.03);
+            
+            --matrix-0: #161b22; --matrix-1: #0e4429; --matrix-2: #006d32; --matrix-3: #26a641; --matrix-4: #39d353;
+            --lang-js: #f1e05a; --lang-html: #e34c26; --lang-css: #563d7c;
         }
+        
         [data-theme="light"] {
-            --bg-color: #f7f7f7;
-            --text-color: #050505;
+            --bg-color: #fafafa;
+            --text-color: #111111;
             --accent-color: #666666;
-            --border-color: #dddddd;
-            --glass-bg: rgba(250, 250, 250, 0.7);
-            --glow-color: radial-gradient(circle, rgba(0,0,0,0.04) 0%, rgba(247,247,247,0) 60%);
-            --tag-bg: rgba(0,0,0,0.05);
-            --bar-fill: #050505;
+            --border-color: #e0e0e0;
+            --glass-bg: rgba(250, 250, 250, 0.8);
+            --card-bg: rgba(255, 255, 255, 0.9);
+            --terminal-green: #00a859;
+            --terminal-green-dim: rgba(0, 168, 89, 0.1);
+            --tag-bg: rgba(0, 0, 0, 0.05);
+            --glow-color: radial-gradient(circle at 50% 50%, rgba(0,0,0,0.02) 0%, transparent 60%);
+            --grid-line: rgba(0, 0, 0, 0.04);
+
+            --matrix-0: #ebedf0; --matrix-1: #9be9a8; --matrix-2: #40c463; --matrix-3: #30a14e; --matrix-4: #216e39;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        /* ==========================================================================
+           2. RESET & GLOBAL STYLES
+           ========================================================================== */
+        * { margin: 0; padding: 0; box-sizing: border-box; outline: none; }
+        html { scroll-behavior: smooth; }
         
-        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
         ::-webkit-scrollbar-track { background: var(--bg-color); }
         ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--terminal-green); }
 
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg-color); color: var(--text-color); line-height: 1.6; overflow-x: hidden; cursor: none; scroll-behavior: smooth; transition: background-color 0.4s ease, color 0.4s ease; }
-        a, button, input, textarea { cursor: none; }
+        body { 
+            font-family: 'Inter', sans-serif; background-color: var(--bg-color); color: var(--text-color); 
+            font-size: 15px; line-height: 1.6; overflow-x: hidden; transition: background-color 0.4s, color 0.4s;
+            background-image: linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+            background-size: 40px 40px; background-position: center center;
+        }
+        
+        a, button, input, textarea { text-decoration: none; color: inherit; border: none; background: none; font-family: inherit;}
+        ul { list-style: none; }
+        .container { max-width: 1000px; margin: 0 auto; padding: 0 25px; position: relative; z-index: 1; }
 
-        /* --- BACKGROUND GLOW --- */
-        .ambient-glow { position: fixed; top: -50%; left: -50%; width: 200%; height: 200%; background: var(--glow-color); z-index: 0; pointer-events: none; animation: rotateGlow 40s linear infinite; }
+        /* ==========================================================================
+           3. BACKGROUND GLOW, KURSOR, & PRELOADER
+           ========================================================================== */
+        .ambient-glow { position: fixed; inset: -50%; background: var(--glow-color); z-index: 0; pointer-events: none; animation: rotateGlow 50s linear infinite; will-change: transform; }
         @keyframes rotateGlow { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        .container { max-width: 900px; margin: 0 auto; padding: 0 30px; position: relative; z-index: 1; }
-
-        /* --- PRELOADER & PROGRESS --- */
-        #preloader { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background-color: var(--bg-color); color: var(--text-color); z-index: 9999; display: flex; justify-content: center; align-items: center; transition: opacity 0.5s ease; }
-        .loader-text { font-size: 1.2rem; font-weight: 900; letter-spacing: 3px; text-transform: uppercase; animation: pulse 1s infinite alternate; }
+        #preloader { position: fixed; inset: 0; background-color: var(--bg-color); z-index: 100000; display: flex; justify-content: center; align-items: center; transition: opacity 0.5s ease; }
+        .loader-text { font-family: 'Fira Code', monospace; font-size: 1.1rem; font-weight: 700; color: var(--terminal-green); animation: pulse 1s infinite alternate; }
         @keyframes pulse { 0% { opacity: 0.3; } 100% { opacity: 1; } }
-        #progress-bar { position: fixed; top: 0; left: 0; height: 3px; background: var(--text-color); width: 0%; z-index: 10001; transition: width 0.1s; }
+        #progress-bar { position: fixed; top: 0; left: 0; height: 3px; background: var(--terminal-green); width: 0%; z-index: 10001; transition: width 0.1s linear; will-change: width; }
 
-        /* --- CUSTOM CURSOR --- */
-        .cursor { width: 12px; height: 12px; border: 2px solid var(--text-color); border-radius: 50%; position: fixed; pointer-events: none; transform: translate(-50%, -50%); transition: width 0.2s, height 0.2s, background-color 0.2s; z-index: 10000; mix-blend-mode: difference; }
-        .cursor.hovered { width: 45px; height: 45px; background-color: #ffffff; border: none; }
+        @media (pointer: fine) {
+            body, a, button, input, textarea { cursor: none; }
+            .cursor { 
+                width: 12px; height: 12px; border: 2px solid var(--terminal-green); position: fixed; top: 0; left: 0; border-radius: 50%;
+                pointer-events: none; z-index: 99999; mix-blend-mode: difference; 
+                transform: translate3d(calc(var(--cx) - 50%), calc(var(--cy) - 50%), 0); 
+                transition: width 0.2s, height 0.2s, background-color 0.2s, border-radius 0.2s; will-change: transform;
+            }
+            .cursor.hovered { width: 40px; height: 40px; background-color: var(--terminal-green-dim); border: 1px dashed var(--terminal-green); }
+        }
+        @media (pointer: coarse) { .cursor { display: none !important; } }
 
-        /* --- SMART NAVBAR & WIDGET LOKASI --- */
-        nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 40px; position: fixed; width: 100%; top: 0; background: var(--glass-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); z-index: 1000; border-bottom: 1px solid var(--border-color); transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+        /* ==========================================================================
+           4. NAVIGASI ATAS (DESKTOP) & NAVIGASI BAWAH (MOBILE)
+           ========================================================================== */
+        nav { 
+            display: flex; justify-content: space-between; align-items: center; 
+            padding: 15px 35px; position: fixed; width: 100%; top: 0; 
+            background: var(--glass-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); 
+            z-index: 1000; border-bottom: 1px solid var(--border-color); transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); 
+        }
         nav.nav-hidden { transform: translateY(-100%); }
-        .logo { font-size: 1.1rem; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; }
+        .logo { font-family: 'Fira Code', monospace; font-size: 1.1rem; font-weight: 700; letter-spacing: 1px; }
+        .logo span { color: var(--terminal-green); }
+        
         .nav-links { display: flex; align-items: center; gap: 30px; }
-        nav ul { display: flex; list-style: none; gap: 30px; }
-        nav a { color: var(--text-color); text-decoration: none; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; transition: color 0.3s; }
-        nav a:hover { color: var(--accent-color); }
-        .nav-widget { display: flex; flex-direction: column; align-items: flex-end; font-size: 0.7rem; color: var(--accent-color); font-weight: 600; letter-spacing: 1px; text-transform: uppercase; }
-        .nav-widget span { display: flex; align-items: center; gap: 5px; }
-        #theme-toggle { background: none; border: none; color: var(--text-color); font-size: 1.3rem; transition: transform 0.3s; margin-left: 15px; }
-        #theme-toggle:hover { transform: rotate(30deg) scale(1.1); color: var(--accent-color); }
+        .nav-links ul { display: flex; gap: 20px; }
+        .nav-links a { font-family: 'Fira Code', monospace; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; }
+        .nav-links a:hover { color: var(--terminal-green); }
 
+        .nav-widget { display: flex; flex-direction: column; align-items: flex-end; font-size: 0.65rem; color: var(--accent-color); font-family: 'Fira Code', monospace; }
+        .nav-widget span { display: flex; align-items: center; gap: 5px; }
+        #live-time { color: var(--terminal-green); font-weight: 600; margin-bottom: 2px;}
+        
+        #theme-toggle { font-size: 1.3rem; cursor: pointer; transition: 0.3s; margin-left: 15px; color: var(--text-color); display: flex; align-items: center; }
+        #theme-toggle:hover { color: var(--terminal-green); transform: rotate(30deg); }
+
+        /* MOBILE BOTTOM APP-BAR */
+        .mobile-nav { 
+            display: none; position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%);
+            background: var(--glass-bg); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--border-color); border-radius: 30px; padding: 10px 25px; 
+            z-index: 10002; gap: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .mobile-nav a { display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--accent-color); transition: 0.3s; }
+        .mobile-nav a i { font-size: 1.4rem; }
+        .mobile-nav a span { font-family: 'Fira Code', monospace; font-size: 0.55rem; font-weight: 700; text-transform: uppercase; }
+        .mobile-nav a:hover, .mobile-nav a:active { color: var(--terminal-green); transform: translateY(-3px); }
+
+        /* ==========================================================================
+           5. HERO SECTION & CODE SNIPPET
+           ========================================================================== */
+        .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding-top: 80px; }
+        
+        .status-badge { 
+            display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; 
+            border: 1px solid var(--border-color); border-radius: 30px; background: var(--card-bg);
+            font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; 
+            margin-bottom: 25px; opacity: 0; animation: fadeUp 0.8s forwards 0.2s; 
+        }
+        .status-dot { width: 8px; height: 8px; background-color: var(--terminal-green); border-radius: 50%; box-shadow: 0 0 10px var(--terminal-green); animation: blinkDot 2s infinite; }
+        @keyframes blinkDot { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+        .profile-img { 
+            width: 110px; height: 110px; border-radius: 50%; border: 2px solid var(--border-color); 
+            margin-bottom: 20px; overflow: hidden; opacity: 0; animation: fadeUp 0.8s forwards 0.4s; 
+            position: relative; transition: 0.4s; background: var(--border-color);
+        }
+        .profile-img img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(100%); transition: 0.4s; }
+        .profile-img:hover { border-color: var(--terminal-green); box-shadow: 0 0 20px var(--terminal-green-dim); transform: scale(1.05); }
+        .profile-img:hover img { filter: grayscale(0%); }
+
+        .hero-title { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 900; line-height: 1.1; letter-spacing: -1px; margin-bottom: 5px; opacity: 0; animation: fadeUp 0.8s forwards 0.6s;}
+        .hero-subtitle { font-size: clamp(1.4rem, 4vw, 2.2rem); font-weight: 700; color: var(--accent-color); margin-bottom: 15px; opacity: 0; animation: fadeUp 0.8s forwards 0.8s;}
+        .hero-subtitle span { color: var(--terminal-green); font-family: 'Fira Code', monospace; }
+        
+        /* Tambahan Class untuk Deskripsi agar rapi */
+        .hero-desc { font-size: 0.95rem; color: var(--accent-color); max-width: 650px; margin: 0 auto 25px auto; opacity: 0; animation: fadeUp 0.8s forwards 1.0s; line-height: 1.7; }
+        
+        .typing-cursor { display: inline-block; width: 3px; height: 1em; background: var(--terminal-green); margin-left: 5px; animation: blink 1s step-end infinite; vertical-align: text-bottom; }
+        @keyframes blink { 50% { opacity: 0; } }
+
+        /* VS Code Snippet Decor */
+        .code-snippet { 
+            text-align: left; background: #0d0d0d; border: 1px solid var(--border-color); 
+            border-radius: 10px; overflow: hidden; width: 100%; max-width: 500px; 
+            margin: 0 auto 30px auto; opacity: 0; animation: fadeUp 0.8s forwards 1.2s; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        [data-theme="light"] .code-snippet { background: #f4f4f4; }
+        .c-head { background: var(--border-color); padding: 8px 12px; display: flex; align-items: center; gap: 8px; }
+        .c-dots { display: flex; gap: 6px; }
+        .c-dot { width: 10px; height: 10px; border-radius: 50%; }
+        .c-dot.red { background: #ff5f56; } .c-dot.yel { background: #ffbd2e; } .c-dot.grn { background: #27c93f; }
+        .c-title { font-family: 'Fira Code', monospace; font-size: 0.7rem; color: var(--accent-color); margin-left: auto; margin-right: auto; }
+        .c-body { padding: 15px; font-family: 'Fira Code', monospace; font-size: 0.8rem; line-height: 1.5; color: var(--text-color); }
+        .c-kw { color: #ff7b72; } /* Keyword */
+        .c-str { color: #a5d6ff; } /* String */
+        .c-func { color: #d2a8ff; } /* Function */
+        .c-var { color: #79c0ff; } /* Variable */
+        [data-theme="light"] .c-kw { color: #d73a49; } [data-theme="light"] .c-str { color: #032f62; } 
+        [data-theme="light"] .c-func { color: #6f42c1; } [data-theme="light"] .c-var { color: #005cc5; }
+
+        .btn-primary { 
+            display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 14px 35px; font-size: 0.85rem; font-weight: 700; 
+            text-transform: uppercase; letter-spacing: 1px; border: 1px solid var(--text-color); border-radius: 30px; 
+            background: transparent; color: var(--text-color); transition: 0.3s; opacity: 0; animation: fadeUp 0.8s forwards 1.4s; cursor: pointer;
+        }
+        .btn-primary:hover { background: var(--text-color); color: var(--bg-color); transform: translateY(-3px); box-shadow: 0 8px 15px rgba(255,255,255,0.1); }
+
+        .scroll-down { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); opacity: 0; animation: fadeUp 0.8s forwards 1.8s; display: flex; flex-direction: column; align-items: center; gap: 8px; color: var(--accent-color); font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; }
+        .mouse { width: 20px; height: 32px; border: 2px solid var(--accent-color); border-radius: 12px; position: relative; }
+        .wheel { width: 4px; height: 6px; background: var(--terminal-green); border-radius: 2px; position: absolute; top: 5px; left: 50%; transform: translateX(-50%); animation: scrollWheel 1.5s infinite; }
+        @keyframes scrollWheel { 0% { top: 5px; opacity: 1; } 100% { top: 15px; opacity: 0; } }
         @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* --- HERO SECTION --- */
-        .hero { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; position: relative; }
-        .availability { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; border: 1px solid var(--border-color); border-radius: 20px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 25px; opacity: 0; animation: fadeUp 1s forwards 0.3s; }
-        .dot { width: 8px; height: 8px; background-color: #00ff88; border-radius: 50%; box-shadow: 0 0 10px #00ff88; animation: pulseDot 2s infinite; }
-        @keyframes pulseDot { 0% { box-shadow: 0 0 0 0 rgba(0,255,136, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(0,255,136, 0); } 100% { box-shadow: 0 0 0 0 rgba(0,255,136, 0); } }
-        .profile-img-container { width: 90px; height: 90px; border-radius: 50%; overflow: hidden; border: 2px solid var(--border-color); margin-bottom: 20px; opacity: 0; animation: fadeUp 1s forwards 0.5s; }
-        .profile-img-container img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(100%); transition: filter 0.4s, transform 0.4s; }
-        .profile-img-container:hover img { filter: grayscale(0%); transform: scale(1.1); }
-        .reveal-wrapper { overflow: hidden; display: block; margin-bottom: 5px; }
-        .reveal-text { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 900; line-height: 1.1; letter-spacing: -1.5px; transform: translateY(110%); opacity: 0; animation: textReveal 1s forwards; }
-        .delay-1 { animation-delay: 0.7s; }
-        .delay-2 { animation-delay: 0.9s; }
-        @keyframes textReveal { to { transform: translateY(0); opacity: 1; } }
-        .typing-cursor { display: inline-block; width: 3px; height: clamp(2rem, 5vw, 3.2rem); background-color: var(--text-color); margin-left: 5px; animation: blink 1s step-end infinite; vertical-align: bottom; }
-        @keyframes blink { 50% { opacity: 0; } }
-        .hero p { font-size: clamp(0.9rem, 2vw, 1rem); color: var(--accent-color); max-width: 550px; margin: 15px auto 25px auto; opacity: 0; animation: fadeUp 1s forwards 1.2s; }
-        
-        /* SOSIAL MEDIA LENGKAP & RAPI */
-        .hero-socials { display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; margin-bottom: 30px; opacity: 0; animation: fadeUp 1s forwards 1.4s; max-width: 400px; }
-        .hero-socials a { color: var(--text-color); font-size: 1.3rem; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border-color); border-radius: 50%; transition: all 0.3s; background: var(--bg-color); }
-        .hero-socials a:hover { background-color: var(--text-color); color: var(--bg-color); transform: translateY(-3px); box-shadow: 0 5px 15px rgba(255,255,255,0.1); }
-        
-        .btn-wrapper { opacity: 0; animation: fadeUp 1s forwards 1.6s; z-index: 10;}
-        .btn { display: inline-block; padding: 12px 30px; font-size: 0.85rem; border: 1px solid var(--text-color); border-radius: 30px; background: transparent; color: var(--text-color); text-transform: uppercase; letter-spacing: 2px; font-weight: 700; transition: all 0.3s; text-decoration: none;}
-        .btn:hover { background-color: var(--text-color); color: var(--bg-color); transform: translateY(-3px); }
-        
-        .scroll-down { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); opacity: 0; animation: fadeUp 1s forwards 1.9s; display: flex; flex-direction: column; align-items: center; gap: 10px; color: var(--accent-color); font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; }
-        .mouse { width: 22px; height: 34px; border: 2px solid var(--accent-color); border-radius: 12px; position: relative; }
-        .wheel { width: 4px; height: 6px; background: var(--accent-color); border-radius: 2px; position: absolute; top: 6px; left: 50%; transform: translateX(-50%); animation: scrollWheel 1.5s infinite; }
-        @keyframes scrollWheel { 0% { top: 6px; opacity: 1; } 100% { top: 18px; opacity: 0; } }
+        /* ==========================================================================
+           6. MARQUEE (TEKS BERJALAN)
+           ========================================================================== */
+        .marquee { width: 100%; border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); background: var(--card-bg); padding: 12px 0; overflow: hidden; white-space: nowrap; font-family: 'Fira Code', monospace; }
+        .marquee-inner { display: inline-block; font-size: 0.8rem; font-weight: 600; color: var(--accent-color); letter-spacing: 2px; animation: scrollText 35s linear infinite; }
+        .marquee-inner span { color: var(--terminal-green); margin: 0 15px; font-weight: 800;}
+        @keyframes scrollText { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
-        /* --- MARQUEE --- */
-        .marquee-container { width: 100%; border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); background: var(--glass-bg); padding: 15px 0; overflow: hidden; display: flex; white-space: nowrap; }
-        .marquee-text { font-size: 0.9rem; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; display: inline-block; animation: marqueeAnim 30s linear infinite; }
-        @keyframes marqueeAnim { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        /* ==========================================================================
+           7. LAYOUT & SECTIONS UMUM
+           ========================================================================== */
+        section { padding: 90px 0; border-bottom: 1px solid var(--border-color); position: relative; }
+        .section-title { font-family: 'Fira Code', monospace; font-size: clamp(1.6rem, 3vw, 2rem); font-weight: 700; margin-bottom: 40px; text-transform: uppercase; letter-spacing: -1px; display: flex; align-items: center; gap: 10px; justify-content: center; width: 100%;}
+        .section-title::before { content: '~/'; color: var(--terminal-green); font-size: 0.9em; }
 
-        /* --- SECTION UMUM --- */
-        section { padding: 100px 0; border-bottom: 1px solid var(--border-color); }
-        .section-title { font-size: clamp(1.8rem, 4vw, 2.2rem); font-weight: 900; margin-bottom: 40px; text-transform: uppercase; letter-spacing: -1px; display: inline-block; }
+        .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 25px; }
 
-        /* --- ABOUT & TECH STACK --- */
-        .timeline { border-left: 2px solid var(--border-color); padding-left: 30px; display: flex; flex-direction: column; gap: 30px; }
-        .timeline-item { position: relative; }
-        .timeline-item::before { content: ''; position: absolute; left: -37px; top: 5px; width: 12px; height: 12px; background: var(--bg-color); border: 2px solid var(--text-color); border-radius: 50%; transition: background 0.3s; }
-        .timeline-item:hover::before { background: var(--text-color); }
-        .timeline-date { font-size: 0.85rem; color: var(--accent-color); font-weight: 700; margin-bottom: 5px; display: block; }
-        .timeline-title { font-size: 1.15rem; font-weight: 800; margin-bottom: 5px; }
-        .timeline-desc { font-size: 0.95rem; color: var(--accent-color); line-height: 1.6; }
-        
-        .tools-grid { display: flex; flex-wrap: wrap; gap: 12px; }
-        .tool-item { display: flex; align-items: center; gap: 10px; padding: 12px 18px; border: 1px solid var(--border-color); border-radius: 10px; font-size: 0.85rem; font-weight: 600; color: var(--accent-color); transition: all 0.3s; background: var(--bg-color); }
-        .tool-item i { font-size: 1.3rem; color: var(--text-color); }
-        .tool-item:hover { border-color: var(--text-color); color: var(--text-color); transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
-
-        /* --- PROJECTS & PROCESS (DENGAN SPOTLIGHT EFFECT) --- */
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 35px; }
-        .card, .process-step, .hobby-card, .rpg-card { padding: 18px; border: 1px solid var(--border-color); transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); background: var(--bg-color); border-radius: 10px; position: relative; overflow: hidden; }
-        
-        /* Magic Spotlight */
-        .card::before, .process-step::before, .hobby-card::before, .rpg-card::before {
-            content: ''; position: absolute; top: var(--y, 50%); left: var(--x, 50%);
-            transform: translate(-50%, -50%); width: 350px; height: 350px;
-            background: radial-gradient(circle, rgba(255,255,255,0.06) 0%, transparent 60%);
+        /* Kartu Universal */
+        .card { 
+            background: var(--card-bg); border: 1px solid var(--border-color); padding: 25px; 
+            border-radius: 16px; position: relative; overflow: hidden; transition: 0.4s; 
+            display: flex; flex-direction: column; height: 100%; backdrop-filter: blur(10px);
+        }
+        .card::before {
+            content: ''; position: absolute; top: var(--y, 50%); left: var(--x, 50%); transform: translate(-50%, -50%);
+            width: 400px; height: 400px; background: radial-gradient(circle, var(--terminal-green-dim) 0%, transparent 60%);
             opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 0;
         }
-        [data-theme="light"] .card::before, [data-theme="light"] .process-step::before, [data-theme="light"] .hobby-card::before, [data-theme="light"] .rpg-card::before {
-            background: radial-gradient(circle, rgba(0,0,0,0.05) 0%, transparent 60%);
-        }
-        .card:hover::before, .process-step:hover::before, .hobby-card:hover::before, .rpg-card:hover::before { opacity: 1; }
-        .card > *, .process-step > *, .hobby-card > *, .rpg-card > * { position: relative; z-index: 1; }
+        .card:hover::before { opacity: 1; }
+        .card > * { position: relative; z-index: 1; }
+        .card:hover { border-color: var(--terminal-green); transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
 
-        .card:hover { border-color: var(--text-color); transform: translateY(-8px); box-shadow: 0 15px 30px rgba(0,0,0,0.15); }
-        .card-img-wrapper { width: 100%; height: 200px; overflow: hidden; margin-bottom: 20px; border-radius: 6px; background: #111; }
-        .card img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(100%); transition: filter 0.5s, transform 0.5s; }
-        .card:hover img { filter: grayscale(0%); transform: scale(1.05); }
-        .card h3 { font-size: 1.2rem; font-weight: 800; margin-bottom: 5px; }
-        .card p { color: var(--accent-color); font-size: 0.85rem; font-weight: 600; }
+        /* ==========================================================================
+           8. KOMPONEN DETAIL
+           ========================================================================== */
+        .tools-wrap { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 30px; }
+        .tool-tag { display: flex; align-items: center; gap: 8px; padding: 8px 14px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.8rem; font-weight: 500; background: var(--bg-color); transition: 0.3s; font-family: 'Fira Code', monospace; color: var(--accent-color);}
+        .tool-tag i { font-size: 1.2rem; color: var(--text-color); transition: 0.3s;}
+        .tool-tag:hover { border-color: var(--terminal-green); color: var(--terminal-green); transform: translateY(-2px); }
+        .tool-tag:hover i { color: var(--terminal-green); }
 
-        /* --- PROCESS KERJA --- */
-        .process-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px; }
-        .process-step { padding: 30px 20px; text-align: center; }
-        .process-step:hover { border-color: var(--text-color); transform: translateY(-5px); }
-        .process-icon { font-size: 2.5rem; color: var(--text-color); margin-bottom: 15px; }
-        .process-title { font-size: 1.05rem; font-weight: 800; margin-bottom: 10px; }
-        .process-desc { font-size: 0.85rem; color: var(--accent-color); }
+        /* GITHUB MATRIX */
+        .matrix-wrapper { width: 100%; overflow-x: auto; padding-bottom: 10px; margin-bottom: 20px; }
+        .matrix-wrapper::-webkit-scrollbar { height: 4px; } 
+        .matrix-grid { display: grid; grid-template-columns: repeat(25, 12px); gap: 4px; width: max-content; }
+        .matrix-box { width: 12px; height: 12px; border-radius: 2px; transition: 0.3s; }
+        .matrix-box:hover { transform: scale(1.3); box-shadow: 0 0 5px var(--terminal-green); }
+        .lvl-0 { background-color: var(--matrix-0); }
+        .lvl-1 { background-color: var(--matrix-1); }
+        .lvl-2 { background-color: var(--matrix-2); }
+        .lvl-3 { background-color: var(--matrix-3); }
+        .lvl-4 { background-color: var(--matrix-4); }
 
-        /* --- NEW SECTION: RPG PLAYER STATS --- */
-        .rpg-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
-        .rpg-card { padding: 30px; }
+        /* LANGUAGE STATS BAR */
+        .lang-bar { width: 100%; height: 8px; border-radius: 4px; display: flex; overflow: hidden; margin-bottom: 10px; }
+        .lang-js { background: var(--lang-js); } .lang-html { background: var(--lang-html); } .lang-css { background: var(--lang-css); }
+        .lang-labels { display: flex; gap: 15px; font-family: 'Fira Code', monospace; font-size: 0.7rem; color: var(--accent-color); flex-wrap: wrap;}
+        .lang-labels span { display: flex; align-items: center; gap: 5px; }
+        .lang-labels .ldot { width: 8px; height: 8px; border-radius: 50%; }
+
+        /* RPG Stats */
         .rpg-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 25px; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; }
-        .rpg-class { font-size: 0.85rem; color: var(--accent-color); text-transform: uppercase; letter-spacing: 2px; font-weight: 700; }
-        .rpg-name { font-size: 2rem; font-weight: 900; line-height: 1; }
-        .rpg-level { font-size: 1.2rem; font-weight: 800; color: var(--text-color); background: var(--tag-bg); padding: 5px 15px; border-radius: 20px; border: 1px solid var(--border-color); }
-        
+        .rpg-class { font-family: 'Fira Code', monospace; font-size: 0.7rem; color: var(--terminal-green); margin-bottom: 3px; text-transform: uppercase;}
+        .rpg-name { font-size: 1.6rem; font-weight: 900; line-height: 1; }
+        .rpg-level { font-family: 'Fira Code', monospace; font-size: 0.8rem; font-weight: 700; background: var(--tag-bg); padding: 4px 10px; border-radius: 6px; border: 1px solid var(--border-color); }
         .stat-row { margin-bottom: 15px; }
-        .stat-info { display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 700; margin-bottom: 5px; color: var(--text-color); text-transform: uppercase; }
-        .stat-bar-bg { width: 100%; height: 8px; background: var(--border-color); border-radius: 4px; overflow: hidden; position: relative; }
-        .stat-bar-fill { height: 100%; background: var(--bar-fill); border-radius: 4px; width: 0%; transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1); position: relative; }
-        .stat-bar-fill::after { content: ''; position: absolute; top: 0; right: 0; bottom: 0; left: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent); animation: shimmer 2s infinite; }
-        [data-theme="light"] .stat-bar-fill::after { background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent); }
-        @keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+        .stat-label { display: flex; justify-content: space-between; font-size: 0.75rem; font-weight: 600; margin-bottom: 6px; font-family: 'Fira Code', monospace; color: var(--text-color);}
+        .stat-bar { height: 6px; background: var(--border-color); border-radius: 10px; overflow: hidden; }
+        .stat-fill { height: 100%; background: var(--terminal-green); width: 0%; transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1); position: relative;}
+        .stat-fill::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent); animation: shimmer 2s infinite; }
 
-        /* --- DUNIA PIRRZAAA (HOBBIES) --- */
-        .hobby-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
-        .hobby-card { padding: 25px; display: flex; flex-direction: column; gap: 15px; }
-        .hobby-card:hover { border-color: var(--text-color); transform: translateY(-5px); }
-        .hobby-header { display: flex; align-items: center; gap: 10px; font-size: 1.2rem; font-weight: 800; color: var(--text-color); }
-        .hobby-header i { font-size: 1.8rem; color: var(--text-color); }
-        .tag-list { display: flex; flex-wrap: wrap; gap: 8px; }
-        .tag-pill { padding: 6px 12px; background: var(--tag-bg); border: 1px solid var(--border-color); border-radius: 20px; font-size: 0.8rem; font-weight: 600; color: var(--accent-color); transition: all 0.3s; }
-        .hobby-card:hover .tag-pill { border-color: var(--accent-color); color: var(--text-color); }
+        /* ==========================================================================
+           9. PROYEK, GALERI, & HOBI
+           ========================================================================== */
+        /* Proyek */
+        .proj-img { width: 100%; height: 160px; border-radius: 8px; overflow: hidden; margin-bottom: 15px; background: var(--border-color); }
+        .proj-img img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(100%); transition: 0.5s; }
+        .card:hover .proj-img img { filter: grayscale(0%); transform: scale(1.05); }
+        .proj-title { font-size: 1.15rem; font-weight: 800; margin-bottom: 5px; color: var(--text-color);}
+        .proj-tech { font-family: 'Fira Code', monospace; font-size: 0.75rem; color: var(--terminal-green); margin-bottom: 10px;}
+        .proj-desc { font-size: 0.85rem; color: var(--accent-color); flex-grow: 1; }
 
-        /* --- FAQ --- */
-        .faq-container { max-width: 700px; margin: 0 auto; }
+        /* Galeri Visual */
+        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
+        .gallery-item { position: relative; border-radius: 12px; overflow: hidden; aspect-ratio: 4/3; cursor: pointer; border: 1px solid var(--border-color); background: var(--border-color); }
+        .gallery-item img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(80%); transition: 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
+        .gallery-item:hover img { filter: grayscale(0%); transform: scale(1.1); }
+        .gallery-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center; opacity: 0; transition: 0.4s; pointer-events: none; }
+        .gallery-item:hover .gallery-overlay { opacity: 1; }
+        .gallery-overlay span { color: #fff; font-family: 'Fira Code', monospace; font-size: 0.85rem; font-weight: 700; transform: translateY(20px); transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1); background: rgba(0,0,0,0.6); padding: 5px 12px; border-radius: 20px; border: 1px solid var(--terminal-green); }
+        .gallery-item:hover .gallery-overlay span { transform: translateY(0); color: var(--terminal-green); }
+
+        /* Hobbies */
+        .hobby-header { display: flex; align-items: center; gap: 10px; font-size: 1.1rem; font-weight: 800; margin-bottom: 12px; color: var(--text-color);}
+        .hobby-header i { font-size: 1.6rem; color: var(--accent-color); transition: 0.3s; }
+        .card:hover .hobby-header i { color: var(--terminal-green); }
+        .hobby-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: auto; padding-top: 15px;}
+        .hobby-tag { padding: 5px 12px; background: var(--tag-bg); border: 1px solid var(--border-color); border-radius: 20px; font-size: 0.7rem; font-weight: 600; transition: 0.3s; color: var(--accent-color); font-family: 'Fira Code', monospace;}
+        .card:hover .hobby-tag { border-color: var(--terminal-green); color: var(--text-color);}
+
+        /* ==========================================================================
+           10. TERMINAL SYSTEM
+           ========================================================================== */
+        .dash-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 25px; }
+        .dash-box { padding: 15px; border: 1px solid var(--border-color); border-radius: 10px; background: var(--card-bg); text-align: center; }
+        .dash-label { font-size: 0.65rem; color: var(--accent-color); font-weight: 700; text-transform: uppercase; margin-bottom: 5px; }
+        .dash-val { font-family: 'Fira Code', monospace; font-size: 1rem; font-weight: 600; color: var(--text-color);}
+        
+        .terminal-box { border: 1px solid var(--border-color); border-radius: 12px; background: #0a0a0a; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+        [data-theme="light"] .terminal-box { background: #f0f0f0; }
+        .t-head { background: var(--border-color); padding: 10px 15px; display: flex; gap: 8px; align-items: center;}
+        .t-dot { width: 12px; height: 12px; border-radius: 50%; }
+        .t-body { padding: 20px; font-family: 'Fira Code', monospace; font-size: 0.85rem; height: 220px; overflow-y: auto; color: var(--text-color); }
+        .t-input-wrap { display: flex; gap: 10px; padding: 15px 20px; border-top: 1px solid var(--border-color); font-family: 'Fira Code', monospace; font-size: 0.85rem; background: var(--card-bg); align-items: center;}
+        .t-input { width: 100%; background: none; border: none; color: var(--terminal-green); font-family: inherit; font-size: inherit; outline: none;}
+
+        /* ==========================================================================
+           11. FAQ & CONTACT
+           ========================================================================== */
         .faq-item { border-bottom: 1px solid var(--border-color); padding: 20px 0; }
-        .faq-question { width: 100%; text-align: left; background: none; border: none; color: var(--text-color); font-size: 1.05rem; font-weight: 700; display: flex; justify-content: space-between; align-items: center; transition: color 0.3s; cursor: none;}
-        .faq-question:hover { color: var(--accent-color); }
-        .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.4s ease, margin-top 0.4s ease; color: var(--accent-color); font-size: 0.95rem; line-height: 1.6; }
-        .faq-item.active .faq-answer { max-height: 200px; margin-top: 15px; }
-        .faq-item.active .faq-question i { transform: rotate(180deg); }
-        .faq-question i { transition: transform 0.4s ease; }
+        .faq-q { width: 100%; text-align: left; font-size: 0.95rem; font-weight: 700; display: flex; justify-content: space-between; align-items: center; transition: 0.3s; cursor: pointer; color: var(--text-color);}
+        .faq-q:hover { color: var(--terminal-green); }
+        .faq-a { max-height: 0; overflow: hidden; transition: max-height 0.4s ease, margin-top 0.4s; color: var(--accent-color); font-size: 0.85rem; line-height: 1.6;}
+        .faq-item.active .faq-a { max-height: 200px; margin-top: 12px; }
+        .faq-item.active .faq-q i { transform: rotate(180deg); color: var(--terminal-green); }
 
-        /* --- CONTACT FORM --- */
-        .contact-form { display: flex; flex-direction: column; gap: 15px; max-width: 550px; width: 100%; margin: 0 auto;}
-        .contact-form input, .contact-form textarea { width: 100%; padding: 15px; background: transparent; border: 1px solid var(--border-color); border-radius: 6px; color: var(--text-color); font-family: 'Inter', sans-serif; font-size: 0.95rem; transition: border-color 0.3s; }
-        .contact-form input:focus, .contact-form textarea:focus { border-color: var(--text-color); outline: none; }
-        .contact-form textarea { height: 130px; resize: none; }
+        .contact-form { display: flex; flex-direction: column; gap: 15px; width: 100%; }
+        .contact-form input, .contact-form textarea { 
+            width: 100%; padding: 15px 20px; border: 1px solid var(--border-color); border-radius: 8px; 
+            background: var(--card-bg); color: var(--text-color); font-family: 'Inter', sans-serif; 
+            font-size: 0.9rem; transition: 0.3s; outline: none;
+        }
+        .contact-form input:focus, .contact-form textarea:focus { border-color: var(--terminal-green); box-shadow: 0 0 0 2px var(--terminal-green-dim); }
+        .contact-form textarea { height: 120px; resize: none; }
 
-        /* --- BIG CALL TO ACTION --- */
-        #cta { text-align: center; border-bottom: none; padding-bottom: 20px; }
-        .cta-title { font-size: clamp(2.2rem, 6vw, 3.5rem); font-weight: 900; letter-spacing: -1.5px; margin-bottom: 30px; line-height: 1.1; }
-        .btn-large { display: inline-flex; align-items: center; gap: 10px; padding: 16px 40px; font-size: 1rem; border-radius: 50px; background: var(--text-color); color: var(--bg-color); text-transform: uppercase; letter-spacing: 2px; font-weight: 800; text-decoration: none; transition: transform 0.3s, box-shadow 0.3s; }
-        .btn-large:hover { transform: translateY(-5px) scale(1.02); box-shadow: 0 20px 40px rgba(255,255,255,0.1); }
-        [data-theme="light"] .btn-large:hover { box-shadow: 0 20px 40px rgba(0,0,0,0.15); }
+        /* ==========================================================================
+           12. BENTO GRID SOSIAL MEDIA
+           ========================================================================== */
+        .bento-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 30px; }
+        .bento-item { 
+            display: flex; align-items: center; gap: 15px; padding: 15px 20px; 
+            border: 1px solid var(--border-color); border-radius: 12px; 
+            background: var(--card-bg); transition: 0.3s; color: var(--text-color);
+            cursor: pointer; text-decoration: none;
+        }
+        .bento-item i { font-size: 1.8rem; color: var(--accent-color); transition: 0.3s; }
+        .bento-info { display: flex; flex-direction: column; gap: 2px;}
+        .bento-name { font-size: 0.9rem; font-weight: 700; line-height: 1;}
+        .bento-handle { font-family: 'Fira Code', monospace; font-size: 0.7rem; color: var(--accent-color); transition: 0.3s; line-height: 1;}
+        
+        .bento-item:hover { border-color: var(--terminal-green); transform: translateY(-3px); box-shadow: 0 8px 20px var(--terminal-green-dim); }
+        .bento-item:hover i { color: var(--terminal-green); }
+        .bento-item:hover .bento-handle { color: var(--terminal-green); }
 
-        /* --- MODAL POP-UP VIEW --- */
-        .modal { display: flex; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--glass-bg); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); z-index: 10001; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.4s ease; }
-        .modal.active { opacity: 1; pointer-events: all; }
-        .modal-content { background: var(--bg-color); padding: 40px; border: 1px solid var(--border-color); border-radius: 12px; max-width: 800px; width: 90%; position: relative; transform: scale(0.95) translateY(20px); transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); box-shadow: 0 30px 60px rgba(0,0,0,0.5); }
-        .modal.active .modal-content { transform: scale(1) translateY(0); }
-        .close-btn { position: absolute; top: 15px; right: 20px; font-size: 2rem; cursor: none; color: var(--text-color); transition: transform 0.3s; }
-        .close-btn:hover { transform: rotate(90deg); color: var(--accent-color); }
-        .modal-content img { width: 100%; max-height: 400px; object-fit: cover; margin: 20px 0; border-radius: 8px; filter: grayscale(100%); transition: filter 0.4s; }
-        .modal-content:hover img { filter: grayscale(0%); }
-        .modal-content h2 { font-size: 1.6rem; font-weight: 900; }
-        .modal-desc { font-size: 0.95rem; color: var(--accent-color); line-height: 1.7; }
-
-        /* --- UI MUSIC PLAYER --- */
-        .music-player { position: fixed; bottom: 30px; left: 30px; display: flex; align-items: center; gap: 12px; padding: 12px 18px; background: var(--glass-bg); border: 1px solid var(--border-color); border-radius: 30px; backdrop-filter: blur(10px); z-index: 1000; transition: border-color 0.3s; }
-        .music-player:hover { border-color: var(--text-color); }
-        .play-btn { background: none; border: none; color: var(--text-color); font-size: 1.8rem; display: flex; align-items: center; cursor: none; transition: transform 0.2s; }
-        .play-btn:hover { transform: scale(1.1); }
-        .track-info { display: flex; flex-direction: column; width: 110px; overflow: hidden; }
-        .track-name { font-size: 0.75rem; font-weight: 700; white-space: nowrap; animation: scrollText 5s linear infinite; }
-        .artist-name { font-size: 0.65rem; color: var(--accent-color); }
-        .equalizer { display: flex; gap: 3px; align-items: flex-end; height: 14px; }
-        .bar { width: 3px; background-color: var(--accent-color); height: 3px; transition: background-color 0.3s; border-radius: 2px; }
-        .playing .bar { background-color: var(--text-color); animation: bounceBar 0.8s infinite alternate; }
-        .playing .bar:nth-child(2) { animation-delay: 0.2s; }
-        .playing .bar:nth-child(3) { animation-delay: 0.4s; }
-        @keyframes bounceBar { 0% { height: 3px; } 100% { height: 14px; } }
-        @keyframes scrollText { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
-
-        /* --- BACK TO TOP --- */
-        #backToTop { position: fixed; bottom: 30px; right: 30px; width: 45px; height: 45px; background: var(--glass-bg); border: 1px solid var(--border-color); border-radius: 50%; display: flex; justify-content: center; align-items: center; color: var(--text-color); font-size: 1.2rem; z-index: 1000; opacity: 0; pointer-events: none; transition: opacity 0.3s, transform 0.3s, border-color 0.3s; backdrop-filter: blur(10px); }
+        /* ==========================================================================
+           13. FOOTER, MUSIC PLAYER, BACK TO TOP, MODAL
+           ========================================================================== */
+        footer { padding: 50px 0 80px; text-align: center; border-top: 1px solid var(--border-color); margin-top: 40px; }
+        .signature { font-family: 'Caveat', cursive; font-size: 3rem; color: var(--terminal-green); margin-bottom: 10px; transform: rotate(-5deg); display: inline-block;}
+        .footer-text { font-size: 0.8rem; color: var(--accent-color); font-family: 'Fira Code', monospace;}
+        
+        /* Floating Widgets */
+        .music-player { 
+            position: fixed; bottom: 25px; left: 25px; display: flex; align-items: center; gap: 12px; 
+            padding: 10px 18px; background: var(--glass-bg); border: 1px solid var(--border-color); 
+            border-radius: 30px; backdrop-filter: blur(10px); z-index: 1000; transition: 0.3s; cursor: pointer;
+        }
+        .music-player:hover { border-color: var(--terminal-green); }
+        .play-btn { font-size: 1.6rem; transition: 0.2s; display: flex; align-items: center; color: var(--text-color); }
+        .play-btn:hover { color: var(--terminal-green); transform: scale(1.1); }
+        .track-info { display: flex; flex-direction: column; width: 90px; overflow: hidden; }
+        .track-name { font-size: 0.7rem; font-weight: 700; white-space: nowrap; animation: scrollText 6s linear infinite; color: var(--terminal-green); font-family: 'Fira Code', monospace;}
+        .artist-name { font-size: 0.6rem; color: var(--accent-color); line-height: 1;}
+        .equalizer { display: flex; gap: 2px; align-items: flex-end; height: 12px; }
+        .bar { width: 3px; height: 3px; background: var(--accent-color); border-radius: 2px; transition: 0.3s; }
+        .playing .bar { background: var(--terminal-green); animation: bounceBar 0.8s infinite alternate; }
+        .playing .bar:nth-child(2) { animation-delay: 0.2s; } .playing .bar:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes bounceBar { 0% { height: 3px; } 100% { height: 12px; } }
+        
+        #backToTop { 
+            position: fixed; bottom: 25px; right: 25px; width: 45px; height: 45px; 
+            background: var(--glass-bg); border: 1px solid var(--border-color); border-radius: 50%; 
+            display: flex; justify-content: center; align-items: center; font-size: 1.2rem; color: var(--text-color);
+            z-index: 1000; opacity: 0; pointer-events: none; transition: 0.3s; cursor: pointer; backdrop-filter: blur(10px);
+        }
         #backToTop.visible { opacity: 1; pointer-events: all; }
-        #backToTop:hover { transform: translateY(-5px); border-color: var(--text-color); }
+        #backToTop:hover { border-color: var(--terminal-green); color: var(--terminal-green); transform: translateY(-5px); }
 
-        /* --- FADE ANIMATION --- */
-        .fade-element { opacity: 0; transform: translateY(40px); transition: opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+        /* Modal (Pop-up) */
+        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); z-index: 10005; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: 0.4s; padding: 20px; }
+        .modal.active { opacity: 1; pointer-events: all; }
+        .modal-content { background: var(--bg-color); border: 1px solid var(--border-color); border-radius: 12px; padding: 25px; max-width: 600px; width: 100%; transform: scale(0.95) translateY(20px); transition: 0.4s; position: relative; }
+        .modal.active .modal-content { transform: scale(1) translateY(0); }
+        .close-btn { position: absolute; top: 15px; right: 20px; font-size: 1.8rem; cursor: pointer; transition: 0.3s; color: var(--text-color);}
+        .close-btn:hover { color: var(--terminal-green); transform: rotate(90deg); }
+        .modal-img { width: 100%; height: 250px; object-fit: cover; border-radius: 8px; margin: 15px 0; filter: grayscale(100%); transition: 0.4s; background: var(--border-color);}
+        .modal-content:hover .modal-img { filter: grayscale(0%); }
+        .modal-title { font-size: 1.5rem; font-weight: 900; margin-bottom: 5px; color: var(--text-color);}
+
+        /* ==========================================================================
+           14. ANIMASI SCROLL (FADE-IN SEKALI)
+           ========================================================================== */
+        .fade-element { opacity: 0; transform: translateY(30px); transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1); will-change: opacity, transform; }
         .fade-element.appear { opacity: 1; transform: translateY(0); }
 
-        /* --- FOOTER & TANDA TANGAN --- */
-        footer { text-align: center; padding: 20px 0 50px 0; color: var(--accent-color); font-size: 0.85rem; display: flex; flex-direction: column; align-items: center;}
-        .signature { font-family: 'Caveat', cursive; font-size: 3.5rem; color: var(--text-color); margin-bottom: 5px; opacity: 0; transform: scale(0.8) rotate(-5deg); transition: all 1s ease 0.3s; }
-        .fade-element.appear .signature { opacity: 1; transform: scale(1) rotate(-5deg); }
-        
-        .footer-socials { display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; margin: 20px 0 30px 0; max-width: 500px; }
-        .footer-socials a { color: var(--text-color); font-size: 1.5rem; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border-color); border-radius: 50%; transition: all 0.3s; background: var(--bg-color); }
-        .footer-socials a:hover { background-color: var(--text-color); color: var(--bg-color); transform: translateY(-5px); }
-
+        /* ==========================================================================
+           15. RESPONSIVE MOBILE
+           ========================================================================== */
         @media (max-width: 768px) {
-            body { cursor: auto; } .cursor { display: none; }
-            nav { padding: 15px 20px; flex-wrap: wrap; } .nav-links { gap: 15px; } nav ul { display: none; }
-            .nav-widget { display: none; } 
+            nav { padding: 15px 20px; }
+            .nav-links { display: none; }
+            .nav-widget { display: none; }
+            
+            .mobile-nav { display: flex; }
+            
             .container { padding: 0 20px; }
-            .music-player { bottom: 20px; left: 20px; padding: 8px 12px; }
+            .hero { padding-top: 60px; }
+            .hero-title { font-size: 2.2rem; }
+            .hero-subtitle { font-size: 1.3rem; }
+            .code-snippet { max-width: 100%; font-size: 0.75rem; }
+            .dash-grid { grid-template-columns: 1fr; gap: 10px;}
+            
+            .music-player { bottom: 85px; left: 15px; padding: 8px 15px; }
             .track-info { width: 80px; }
-            #backToTop { bottom: 20px; right: 20px; }
+            #backToTop { bottom: 85px; right: 15px; width: 40px; height: 40px; font-size: 1.1rem; }
+            
             .scroll-down { display: none; }
-            .rpg-header { flex-direction: column; align-items: flex-start; gap: 10px; }
+            section { padding: 70px 0; }
+            .bento-grid { grid-template-columns: 1fr; }
+            .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+            
+            .matrix-wrapper { overflow-x: auto; padding-bottom: 5px; }
+            .matrix-grid { gap: 3px; }
+            .matrix-box { width: 10px; height: 10px; }
         }
     </style>
 </head>
 <body>
 
     <div class="ambient-glow"></div>
-    <div id="preloader"><div class="loader-text">Pirrzaaa.</div></div>
+    
+    <div id="preloader"><div class="loader-text">Pirrzaaa.SYS</div></div>
     <div id="progress-bar"></div>
+    
     <div class="cursor" id="cursor"></div>
 
-    <div class="music-player hover-target" id="music-player">
-        <button class="play-btn hover-target" id="play-btn"><i class="ph ph-play-circle" id="play-icon"></i></button>
+    <div class="music-player magnetic" id="music-player">
+        <button class="play-btn" id="play-btn"><i class="ph ph-play-circle" id="play-icon"></i></button>
         <div class="track-info">
-            <span class="track-name">Lagu Favorit</span>
-            <span class="artist-name">Ryuuzaaa</span>
+            <span class="track-name">Anime Lo-Fi Mix</span>
+            <span class="artist-name">Studio Vibes</span>
         </div>
         <div class="equalizer" id="equalizer">
             <div class="bar"></div><div class="bar"></div><div class="bar"></div>
         </div>
         <audio id="bg-audio" loop preload="auto">
-            <source src="https://cdn.yupra.my.id/yp/p13xa93u" type="audio/mpeg">
+            <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=lofi-study-112191.mp3" type="audio/mpeg">
         </audio>
     </div>
 
-    <a href="#home" id="backToTop" class="hover-target"><i class="ph ph-caret-up"></i></a>
+    <button id="backToTop" aria-label="Kembali ke atas"><i class="ph ph-caret-up"></i></button>
 
     <nav id="navbar">
-        <div class="logo hover-target magnetic">Pirrzaaa.</div>
+        <div class="logo magnetic"><span>>_</span> Pirrzaaa.</div>
         <div class="nav-links">
             <ul>
-                <li><a href="#home" class="hover-target scramble" data-text="Beranda">Beranda</a></li>
-                <li><a href="#about" class="hover-target scramble" data-text="Tentang">Tentang</a></li>
-                <li><a href="#projects" class="hover-target scramble" data-text="Karya">Karya</a></li>
-                <li><a href="#stats" class="hover-target scramble" data-text="Status">Status</a></li>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">Stats</a></li>
+                <li><a href="#projects">Work</a></li>
+                <li><a href="#gallery">Gallery</a></li>
+                <li><a href="#hobbies">Hobbies</a></li>
+                <li><a href="#terminal">Console</a></li>
             </ul>
+        </div>
+        <div style="display: flex; align-items: center;">
             <div class="nav-widget">
-                <span><i class="ph ph-map-pin"></i> Semarang, ID</span>
-                <span id="live-time" style="font-family: monospace; font-size:0.75rem;">00:00:00 AM</span>
+                <span id="live-time">00:00:00</span>
+                <span><i class="ph ph-map-pin"></i> Pekalongan, ID</span>
             </div>
-            <button id="theme-toggle" class="hover-target magnetic"><i class="ph ph-sun" id="theme-icon"></i></button>
+            <button id="theme-toggle" aria-label="Ganti Tema"><i class="ph ph-sun" id="theme-icon"></i></button>
         </div>
     </nav>
 
+    <div class="mobile-nav">
+        <a href="#home"><i class="ph ph-house"></i><span>Home</span></a>
+        <a href="#about"><i class="ph ph-chart-bar"></i><span>Stats</span></a>
+        <a href="#projects"><i class="ph ph-briefcase"></i><span>Work</span></a>
+        <a href="#terminal"><i class="ph ph-terminal-window"></i><span>CMD</span></a>
+    </div>
+
     <div class="container">
         <section id="home" class="hero" style="border: none;">
-            <div class="availability">
-                <div class="dot"></div> Siswa SMK (TKJ) & Tech Enthusiast
-            </div>
-            <div class="profile-img-container hover-target magnetic">
-                <img src="https://cdn.yupra.my.id/yp/nzqc6kn8.jpg" alt="Foto Profil Pirrzaaa">
-            </div>
-            <div class="reveal-wrapper">
-                <h1 class="reveal-text delay-1">Halo, Saya Pirrzaaa.</h1>
-            </div>
-            <div class="reveal-wrapper" style="margin-top: -5px;">
-                <h1 class="reveal-text delay-2">Karya <span id="dynamic-text">Logika.</span><span class="typing-cursor"></span></h1>
-            </div>
-            <p>Pelajar jurusan TKJ yang hobi ngoprek Bot WA pakai Node.js, nyusun UI pakai Canva, dan mainin database Firebase. Kalau lagi libur ngoding, biasanya *push rank* atau maraton anime *action*.</p>
             
-            <div class="hero-socials">
-                <a href="#" class="hover-target magnetic" aria-label="WhatsApp"><i class="ph ph-whatsapp-logo"></i></a>
-                <a href="#" class="hover-target magnetic" aria-label="Instagram"><i class="ph ph-instagram-logo"></i></a>
-                <a href="#" class="hover-target magnetic" aria-label="TikTok"><i class="ph ph-tiktok-logo"></i></a>
-                <a href="#" class="hover-target magnetic" aria-label="Telegram"><i class="ph ph-telegram-logo"></i></a>
-                <a href="#" class="hover-target magnetic" aria-label="Discord"><i class="ph ph-discord-logo"></i></a>
-                <a href="#" class="hover-target magnetic" aria-label="GitHub"><i class="ph ph-github-logo"></i></a>
-                <a href="#" class="hover-target magnetic" aria-label="Threads"><i class="ph ph-threads-logo"></i></a>
-                <a href="#" class="hover-target magnetic" aria-label="Facebook"><i class="ph ph-facebook-logo"></i></a>
+            <div class="status-badge">
+                <div class="status-dot"></div> SMK TKJ Student & Developer
             </div>
 
-            <div class="btn-wrapper">
-                <a href="#projects" class="btn hover-target magnetic">Lihat Karya Saya</a>
+            <div class="profile-img">
+                <img src="https://cdn.yupra.my.id/yp/nzqc6kn8.jpg" alt="Pirrzaaa Profile">
+            </div>
+            
+            <h1 class="hero-title">Halo, Saya Pirrzaaa.</h1>
+            <h2 class="hero-subtitle">Karya <span id="dynamic-text">Logika.</span><span class="typing-cursor"></span></h2>
+            
+            <p class="hero-desc">Siswa SMK jurusan TKJ. Hobi ngoprek Bot WA pakai Node.js, nyusun UI pakai Canva, dan integrasi Firebase. Kalau libur ngoding, waktunya push rank MLBB atau maraton anime action.</p>
+            
+            <div class="code-snippet">
+                <div class="c-head">
+                    <div class="c-dots"><div class="c-dot red"></div><div class="c-dot yel"></div><div class="c-dot grn"></div></div>
+                    <div class="c-title">pirrzaaa.js</div>
+                </div>
+                <div class="c-body">
+                    <span class="c-kw">const</span> <span class="c-var">pirrzaaa</span> = {<br>
+                    &nbsp;&nbsp;role: <span class="c-str">"TKJ Student & Bot Creator"</span>,<br>
+                    &nbsp;&nbsp;skills: [<span class="c-str">"Node.js"</span>, <span class="c-str">"HTML/CSS"</span>, <span class="c-str">"Firebase"</span>],<br>
+                    &nbsp;&nbsp;hobby: () => <span class="c-str">"Push Rank & Action Anime"</span><br>
+                    };<br>
+                    <span class="c-var">console</span>.<span class="c-func">log</span>(<span class="c-var">pirrzaaa</span>.<span class="c-func">hobby</span>());
+                </div>
             </div>
 
+            <a href="#projects" class="btn-primary magnetic">Lihat Portofolio</a>
+            
             <div class="scroll-down">
                 Scroll
                 <div class="mouse"><div class="wheel"></div></div>
@@ -341,415 +524,463 @@
         </section>
     </div>
 
-    <div class="marquee-container">
-        <div class="marquee-text">
-            SMK TKJ • WA BOT CREATOR • NODE.JS • ACTION ANIME FAN • CANVA DESIGNER • MOBILE GAMER • FIREBASE • SMK TKJ • WA BOT CREATOR • NODE.JS • ACTION ANIME FAN • 
+    <div class="marquee">
+        <div class="marquee-inner">
+            <span>$</span> SMK TKJ <span>$</span> WA BOT CREATOR <span>$</span> NODE.JS <span>$</span> VPS PANEL <span>$</span> CANVA DESIGNER <span>$</span> FIREBASE <span>$</span> MLBB PLAYER <span>$</span> HUNTER X HUNTER <span>$</span> NO ROMANCE ANIME <span>$</span> ACODE ANDROID <span>$</span> VS CODE 
         </div>
     </div>
 
     <div class="container">
         <section id="about" class="fade-element">
-            <h2 class="section-title">Perjalanan & Keahlian</h2>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 50px;">
+            <h2 class="section-title" style="justify-content: center;">Tech & Stats</h2>
+            <div class="grid-2">
                 <div>
-                    <h3 style="margin-bottom: 25px; font-size: 1.2rem;">Aktivitas Belajar</h3>
-                    <div class="timeline">
-                        <div class="timeline-item hover-target">
-                            <span class="timeline-date">Sekarang - Siswa SMK</span>
-                            <h4 class="timeline-title">Eksplorasi Web & Database</h4>
-                            <p class="timeline-desc">Memadukan dasar-dasar HTML/CSS/JS dengan database Firebase untuk membangun logika web dinamis.</p>
-                        </div>
-                        <div class="timeline-item hover-target">
-                            <span class="timeline-date">Hobi Coding</span>
-                            <h4 class="timeline-title">Pengembangan Bot WA</h4>
-                            <p class="timeline-desc">Mempelajari dan meracik bot WhatsApp menggunakan Node.js yang dikelola melalui Panel atau VPS.</p>
-                        </div>
+                    <h3 style="font-size: 1.05rem; font-weight: 800; margin-bottom: 15px; color: var(--text-color);">Alat Tempur</h3>
+                    <div class="tools-wrap">
+                        <span class="tool-tag"><i class="ph ph-terminal"></i> VS Code</span>
+                        <span class="tool-tag"><i class="ph ph-device-mobile"></i> Acode</span>
+                        <span class="tool-tag"><i class="ph ph-node-logo"></i> Node.js</span>
+                        <span class="tool-tag"><i class="ph ph-database"></i> Firebase</span>
+                        <span class="tool-tag"><i class="ph ph-file-html"></i> HTML/CSS</span>
+                        <span class="tool-tag"><i class="ph ph-paint-brush"></i> Canva</span>
+                    </div>
+
+                    <h3 style="font-size: 1.05rem; font-weight: 800; margin-bottom: 10px; color: var(--text-color);">Coding Activity</h3>
+                    <div class="matrix-wrapper">
+                        <div class="matrix-grid" id="matrix-grid"></div>
+                    </div>
+
+                    <h3 style="font-size: 1.05rem; font-weight: 800; margin: 25px 0 10px 0; color: var(--text-color);">Language Stats</h3>
+                    <div class="lang-bar">
+                        <div class="lang-js" style="width: 55%;"></div>
+                        <div class="lang-html" style="width: 30%;"></div>
+                        <div class="lang-css" style="width: 15%;"></div>
+                    </div>
+                    <div class="lang-labels">
+                        <span><div class="ldot lang-js"></div> JavaScript 55%</span>
+                        <span><div class="ldot lang-html"></div> HTML 30%</span>
+                        <span><div class="ldot lang-css"></div> CSS 15%</span>
                     </div>
                 </div>
-                <div>
-                    <h3 style="margin-bottom: 25px; font-size: 1.2rem;">Alat Tempur Ngoding</h3>
-                    <div class="tools-grid">
-                        <div class="tool-item hover-target"><i class="ph ph-terminal"></i> VS Code (PC)</div>
-                        <div class="tool-item hover-target"><i class="ph ph-device-mobile"></i> Acode (Android)</div>
-                        <div class="tool-item hover-target"><i class="ph ph-node-logo"></i> Node.js (Awalan)</div>
-                        <div class="tool-item hover-target"><i class="ph ph-database"></i> Firebase</div>
-                        <div class="tool-item hover-target"><i class="ph ph-file-html"></i> HTML/CSS/JS</div>
-                        <div class="tool-item hover-target"><i class="ph ph-paint-brush"></i> Canva Design</div>
+
+                <div class="card rpg-card" id="stats-card">
+                    <div class="rpg-header">
+                        <div>
+                            <div class="rpg-class">Class: TKJ Student</div>
+                            <div class="rpg-name">Pirrzaaa</div>
+                        </div>
+                        <div class="rpg-level">Lv. 16</div>
+                    </div>
+                    <div class="stat-row">
+                        <div class="stat-label"><span>INT (Node.js/Logic)</span><span>65%</span></div>
+                        <div class="stat-bar"><div class="stat-fill" data-width="65%"></div></div>
+                    </div>
+                    <div class="stat-row">
+                        <div class="stat-label"><span>AGI (Web Coding)</span><span>75%</span></div>
+                        <div class="stat-bar"><div class="stat-fill" data-width="75%"></div></div>
+                    </div>
+                    <div class="stat-row">
+                        <div class="stat-label"><span>VIT (Gaming/MLBB)</span><span>95%</span></div>
+                        <div class="stat-bar"><div class="stat-fill" data-width="95%"></div></div>
+                    </div>
+                    <div class="stat-row">
+                        <div class="stat-label"><span>CHA (Canva UI)</span><span>70%</span></div>
+                        <div class="stat-bar"><div class="stat-fill" data-width="70%"></div></div>
                     </div>
                 </div>
             </div>
         </section>
 
         <section id="projects" class="fade-element">
-            <h2 class="section-title">Latihan & Proyek</h2>
-            <div class="grid">
-                <div class="card hover-target" onclick="openModal('WhatsApp Bot Assistant', 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=800&auto=format&fit=crop', 'Bot WhatsApp multifungsi yang dibangun menggunakan Node.js. Fitur dirancang untuk merespon perintah otomatis dan dijalankan menggunakan Panel/VPS agar online 24 jam.')">
-                    <div class="card-img-wrapper"><img src="https://cdn.yupra.my.id/yp/nzqc6kn8.jpg" alt="Proyek 1"></div>
-                    <h3>WhatsApp Bot</h3>
-                    <p>Node.js • VPS • API</p>
+            <h2 class="section-title" style="justify-content: center;">Latihan & Proyek</h2>
+            <div class="grid-3">
+                <div class="card" style="cursor: pointer;" onclick="openModal('WhatsApp Bot Pro', 'https://cdn.yupra.my.id/yp/nzqc6kn8.jpg', 'Bot WhatsApp multifungsi yang dibangun pakai Node.js. Berjalan 24/7 di VPS/Panel dengan fitur auto-respond pintar.')">
+                    <div class="proj-img"><img src="https://cdn.yupra.my.id/yp/nzqc6kn8.jpg" alt="Bot WA"></div>
+                    <h3 class="proj-title">WhatsApp Bot Pro</h3>
+                    <p class="proj-tech">Node.js • VPS • API</p>
+                    <p class="proj-desc" style="margin-top:5px;">Sistem otomasi pesan responsif.</p>
                 </div>
-                <div class="card hover-target" onclick="openModal('Mini Web App', 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=800&auto=format&fit=crop', 'Eksplorasi antarmuka website menggunakan dasar HTML, CSS, dan Javascript, dikombinasikan dengan Firebase untuk menyimpan dan mengambil data sederhana secara real-time.')">
-                    <div class="card-img-wrapper"><img src="https://cdn.yupra.my.id/yp/nzqc6kn8.jpg" alt="Proyek 2"></div>
-                    <h3>Web App Dasar</h3>
-                    <p>HTML/JS • Firebase</p>
+                <div class="card" style="cursor: pointer;" onclick="openModal('Firebase Web App', 'https://cdn.yupra.my.id/yp/nzqc6kn8.jpg', 'Eksplorasi pembuatan web menggunakan HTML/CSS dasar yang dikoneksikan ke Firebase untuk simpan-ambil data secara real-time.')">
+                    <div class="proj-img"><img src="https://cdn.yupra.my.id/yp/nzqc6kn8.jpg" alt="Web App"></div>
+                    <h3 class="proj-title">Firebase Web App</h3>
+                    <p class="proj-tech">HTML/JS • Firebase</p>
+                    <p class="proj-desc" style="margin-top:5px;">Database real-time interaktif.</p>
                 </div>
-                <div class="card hover-target" onclick="openModal('Eksplorasi Desain UI', 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?q=80&w=800&auto=format&fit=crop', 'Membuat layout halaman web dan elemen grafis yang menarik dengan memanfaatkan Canva. Fokus pada perpaduan warna dan kemudahan membaca informasi.')">
-                    <div class="card-img-wrapper"><img src="https://cdn.yupra.my.id/yp/nzqc6kn8.jpg" alt="Proyek 3"></div>
-                    <h3>Desain UI (Canva)</h3>
-                    <p>Canva • Visual Design</p>
-                </div>
-            </div>
-        </section>
-
-        <section id="process" class="fade-element">
-            <div style="text-align: center;">
-                <h2 class="section-title">Gimana Saya Belajar?</h2>
-            </div>
-            <div class="process-grid">
-                <div class="process-step hover-target">
-                    <i class="ph ph-magnifying-glass process-icon"></i>
-                    <h4 class="process-title">1. Kepo & Nanya AI</h4>
-                    <p class="process-desc">Riset ilmu baru lewat YouTube, Google, atau nanya langsung ke AI.</p>
-                </div>
-                <div class="process-step hover-target">
-                    <i class="ph ph-users-three process-icon"></i>
-                    <h4 class="process-title">2. Join Komunitas</h4>
-                    <p class="process-desc">Sering nimbrung di grup Telegram atau server Discord buat cari solusi *error*.</p>
-                </div>
-                <div class="process-step hover-target">
-                    <i class="ph ph-keyboard process-icon"></i>
-                    <h4 class="process-title">3. Ketik Kodenya</h4>
-                    <p class="process-desc">Langsung praktek ngoding pakai VS Code di PC atau Acode pas lagi di Android.</p>
-                </div>
-                <div class="process-step hover-target">
-                    <i class="ph ph-server process-icon"></i>
-                    <h4 class="process-title">4. Deploy (Hosting)</h4>
-                    <p class="process-desc">Mengunggah bot ke Panel/VPS agar proyek bisa berjalan *online*.</p>
+                <div class="card" style="cursor: pointer;" onclick="openModal('Eksplorasi UI', 'https://cdn.yupra.my.id/yp/nzqc6kn8.jpg', 'Merancang layout website menggunakan Canva. Fokus pada perpaduan warna dark mode dan tipografi rapi.')">
+                    <div class="proj-img"><img src="https://cdn.yupra.my.id/yp/nzqc6kn8.jpg" alt="Desain UI"></div>
+                    <h3 class="proj-title">Eksplorasi UI</h3>
+                    <p class="proj-tech">Canva • Visual Design</p>
+                    <p class="proj-desc" style="margin-top:5px;">Prototyping visual modern.</p>
                 </div>
             </div>
         </section>
 
-        <section id="stats" class="fade-element">
-            <h2 class="section-title">Status Karakter</h2>
-            <div class="rpg-grid">
-                <div class="rpg-card hover-target">
-                    <div class="rpg-header">
-                        <div>
-                            <div class="rpg-class">Class: TKJ Student & Web Dev</div>
-                            <div class="rpg-name">Pirrzaaa</div>
-                        </div>
-                        <div class="rpg-level">Lv. 16</div>
-                    </div>
-                    
-                    <div class="stat-row">
-                        <div class="stat-info"><span>Intelligence (Logic & Node.js)</span><span>65/100</span></div>
-                        <div class="stat-bar-bg"><div class="stat-bar-fill progress-logic"></div></div>
-                    </div>
-                    <div class="stat-row">
-                        <div class="stat-info"><span>Agility (HTML/CSS/JS Coding)</span><span>75/100</span></div>
-                        <div class="stat-bar-bg"><div class="stat-bar-fill progress-agility"></div></div>
-                    </div>
-                    <div class="stat-row">
-                        <div class="stat-info"><span>Stamina (Push Rank MLBB)</span><span>95/100</span></div>
-                        <div class="stat-bar-bg"><div class="stat-bar-fill progress-stamina"></div></div>
-                    </div>
-                    <div class="stat-row">
-                        <div class="stat-info"><span>Creativity (Canva UI Design)</span><span>70/100</span></div>
-                        <div class="stat-bar-bg"><div class="stat-bar-fill progress-creativity"></div></div>
-                    </div>
+        <section id="gallery" class="fade-element">
+            <h2 class="section-title" style="justify-content: center;">Galeri Visual</h2>
+            <div class="gallery-grid">
+                <div class="gallery-item magnetic" onclick="openModal('Coding Setup', 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=800', 'Meja tempur tempat semua baris kode dan logika disusun.')">
+                    <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=800" alt="Coding">
+                    <div class="gallery-overlay"><span>Setup Tempur</span></div>
+                </div>
+                <div class="gallery-item magnetic" onclick="openModal('Anime & Vibes', 'https://images.unsplash.com/photo-1605379399642-870262d3d051?q=80&w=800', 'Inspirasi dan relaksasi dari seri Action Anime favorit.')">
+                    <img src="https://images.unsplash.com/photo-1605379399642-870262d3d051?q=80&w=800" alt="Anime">
+                    <div class="gallery-overlay"><span>Anime Vibe</span></div>
+                </div>
+                <div class="gallery-item magnetic" onclick="openModal('Server Log', 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=800', 'Memantau aktivitas VPS dan log dari Bot Node.js agar berjalan lancar.')">
+                    <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=800" alt="Server">
+                    <div class="gallery-overlay"><span>VPS & Panel</span></div>
+                </div>
+                <div class="gallery-item magnetic" onclick="openModal('Dark Aesthetic', 'https://images.unsplash.com/photo-1618761714954-0b8cd0026356?q=80&w=800', 'Suka tema dark mode elegan dan tidak buat mata lelah.')">
+                    <img src="https://images.unsplash.com/photo-1618761714954-0b8cd0026356?q=80&w=800" alt="Dark aesthetic">
+                    <div class="gallery-overlay"><span>Dark UI</span></div>
                 </div>
             </div>
         </section>
 
         <section id="hobbies" class="fade-element">
-            <div style="text-align: center;">
-                <h2 class="section-title">Dunia Pirrzaaa</h2>
-                <p style="margin-bottom: 30px; color: var(--accent-color); font-size: 0.95rem;">Hal-hal yang bikin saya lupa waktu selain ngoding.</p>
-            </div>
-            <div class="hobby-grid">
-                <div class="hobby-card hover-target">
-                    <div class="hobby-header"><i class="ph ph-sword"></i> Anime Action & OP</div>
-                    <p style="font-size: 0.85rem; color: var(--accent-color);">Paling anti sama genre *romance*! Lebih suka lihat MC yang langsung *Overpower* dan pertarungan epik.</p>
-                    <div class="tag-list">
-                        <span class="tag-pill">Hunter x Hunter (Top 1)</span>
-                        <span class="tag-pill">Jujutsu Kaisen</span>
-                        <span class="tag-pill">One Punch Man</span>
-                        <span class="tag-pill">Sakamoto Days</span>
-                        <span class="tag-pill">Naruto / DBZ</span>
-                        <span class="tag-pill">Kimetsu no Yaiba</span>
-                        <span class="tag-pill">Tokyo Revengers</span>
-                        <span class="tag-pill">Black Clover</span>
+            <h2 class="section-title" style="justify-content: center;">Dunia Pirrzaaa</h2>
+            <div class="grid-2">
+                <div class="card hobby-card">
+                    <div class="hobby-header"><i class="ph ph-sword"></i> Action Anime Only</div>
+                    <p style="font-size: 0.85rem; color: var(--accent-color);">Paling anti genre romance. Suka lihat karakter yang Overpower dan cerita full action.</p>
+                    <div class="hobby-tags">
+                        <span class="hobby-tag">Hunter x Hunter</span>
+                        <span class="hobby-tag">Jujutsu Kaisen</span>
+                        <span class="hobby-tag">Sakamoto Days</span>
+                        <span class="hobby-tag">One Punch Man</span>
+                        <span class="hobby-tag">Naruto / DBZ</span>
+                        <span class="hobby-tag">Kimetsu no Yaiba</span>
                     </div>
                 </div>
-                <div class="hobby-card hover-target">
-                    <div class="hobby-header"><i class="ph ph-game-controller"></i> Push Rank & Sandbox</div>
-                    <p style="font-size: 0.85rem; color: var(--accent-color);">Terkadang santai ngebangun dunia, terkadang butuh adrenalin buat naikin *tier*.</p>
-                    <div class="tag-list">
-                        <span class="tag-pill">Mobile Legends (MLBB)</span>
-                        <span class="tag-pill">Minecraft</span>
-                        <span class="tag-pill">Roblox</span>
+                <div class="card hobby-card">
+                    <div class="hobby-header"><i class="ph ph-game-controller"></i> Gaming Life</div>
+                    <p style="font-size: 0.85rem; color: var(--accent-color);">Push rank tiada henti atau ngebangun dunia bebas tanpa batas.</p>
+                    <div class="hobby-tags">
+                        <span class="hobby-tag">Mobile Legends (MLBB)</span>
+                        <span class="hobby-tag">Minecraft</span>
+                        <span class="hobby-tag">Roblox</span>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section id="faq" class="fade-element">
-            <div style="text-align: center;">
-                <h2 class="section-title">Tanya Jawab Santai</h2>
+        <section id="terminal" class="fade-element">
+            <h2 class="section-title" style="justify-content: center;">System Console</h2>
+            <div class="dash-grid">
+                <div class="dash-box"><p class="dash-label">Uptime</p><p class="dash-val" id="uptime-val">00:00:00</p></div>
+                <div class="dash-box"><p class="dash-label">Latency</p><p class="dash-val" id="ping-val">24ms</p></div>
+                <div class="dash-box"><p class="dash-label">Status</p><p class="dash-val" style="color: var(--terminal-green);">ACTIVE</p></div>
             </div>
-            <div class="faq-container">
-                <div class="faq-item">
-                    <button class="faq-question hover-target">Belajar ngodingnya otodidak atau dari sekolah?<i class="ph ph-caret-down"></i></button>
-                    <div class="faq-answer">Saya ambil jurusan TKJ di SMK untuk belajar dasar jaringan, tapi untuk masalah *coding* (Bot WA, Node.js, Web), saya banyak *explore* sendiri secara otodidak lewat YouTube, Google, dan komunitas Discord/Telegram.</div>
+            
+            <div class="terminal-box card" style="padding:0;">
+                <div class="t-head">
+                    <div class="t-dot" style="background:#ff5f56;"></div>
+                    <div class="t-dot" style="background:#ffbd2e;"></div>
+                    <div class="t-dot" style="background:#27c93f;"></div>
                 </div>
-                <div class="faq-item">
-                    <button class="faq-question hover-target">Kenapa nggak pakai Figma buat desain?<i class="ph ph-caret-down"></i></button>
-                    <div class="faq-answer">Saat ini saya merasa lebih nyaman dan terbiasa menggunakan Canva untuk urusan desain UI dan elemen visual lainnya. Hasilnya tetap rapi dan sangat efisien!</div>
+                <div class="t-body" id="t-body">
+                    <div style="color: var(--terminal-green);">Welcome to Pirrzaaa OS v1.0. Type 'help' to begin.</div>
                 </div>
-                <div class="faq-item">
-                    <button class="faq-question hover-target">Karakter atau anime favorit banget?<i class="ph ph-caret-down"></i></button>
-                    <div class="faq-answer">Hunter x Hunter adalah karya *masterpiece* buat saya! Secara umum, saya sangat suka karakter utama yang *Overpower* (OP) dari awal atau anime yang *full action*. Pokoknya *say no to romance*!</div>
+                <div class="t-input-wrap">
+                    <span style="color: var(--terminal-green);">guest@pirrzaaa:~$</span>
+                    <input type="text" class="t-input" id="t-input" autocomplete="off" spellcheck="false">
                 </div>
             </div>
         </section>
 
         <section id="contact" class="fade-element" style="border: none;">
-            <div style="display: flex; flex-direction: column; align-items: center; text-align: center;">
-                <h2 class="section-title">Mari Terhubung</h2>
-                <p style="margin-bottom: 30px; color: var(--accent-color); font-size: 0.95rem; max-width: 500px;">Mau *sharing* ilmu, diskusi proyek bot WA, atau ngajak mabar ML/Minecraft? Kirim pesan ke saya!</p>
-                <form class="contact-form" style="width: 100%;">
-                    <input type="text" placeholder="Nama / Nickname" class="hover-target" required>
-                    <input type="email" placeholder="Email / Kontak Discord" class="hover-target" required>
-                    <textarea placeholder="Pesan kamu..." class="hover-target" required></textarea>
-                    <button type="submit" class="btn hover-target magnetic" style="margin-top: 10px; width: max-content; align-self: center;">Kirim Pesan</button>
-                </form>
+            <div class="grid-2">
+                <div>
+                    <h2 class="section-title" style="justify-content: flex-start;">Tanya Jawab</h2>
+                    <div class="faq-item">
+                        <button class="faq-q">Belajar ngoding dari mana? <i class="ph ph-caret-down"></i></button>
+                        <div class="faq-a">Di SMK ambil TKJ, tapi buat coding Node.js/Web saya otodidak lewat YouTube, Google, dan komunitas Discord.</div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-q">Kenapa pakai Canva? <i class="ph ph-caret-down"></i></button>
+                        <div class="faq-a">Sangat efisien dan cepat buat ngerancang UI sederhana dengan hasil yang tetap rapi dan estetik.</div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-q">Karakter anime favorit? <i class="ph ph-caret-down"></i></button>
+                        <div class="faq-a">Hunter x Hunter adalah masterpiece! Saya sangat suka MC yang jenius atau langsung Overpower dari awal.</div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h2 class="section-title" style="justify-content: flex-start;">Kirim Pesan</h2>
+                    <form class="contact-form">
+                        <input type="text" placeholder="Nama / Nickname" required>
+                        <input type="email" placeholder="Email / Discord ID" required>
+                        <textarea placeholder="Mau ngajak collab bot atau mabar ML?" required></textarea>
+                        <button type="submit" class="btn-primary magnetic" style="margin-top: 5px; width: 100%; justify-content: center;">Kirim Pesan</button>
+                    </form>
+                </div>
             </div>
         </section>
 
-        <section id="cta" class="fade-element">
-            <h1 class="cta-title">Mari Belajar dan<br>Mabar Bersama.</h1>
-            <a href="mailto:pirrzaaa@example.com" class="btn-large hover-target magnetic">Sapa Pirrzaaa <i class="ph ph-paper-plane-tilt"></i></a>
+        <section id="social-bento" class="fade-element" style="padding-top: 0px; border: none;">
+            <div style="text-align: center; margin-bottom: 30px;">
+                <h2 style="font-family: 'Fira Code', monospace; font-size: 1.4rem; font-weight: 700; color: var(--text-color);">> Connect_With_Me</h2>
+                <p style="font-size: 0.85rem; color: var(--accent-color);">Pilih platform favoritmu untuk menghubungi saya.</p>
+            </div>
+            
+            <div class="bento-grid">
+                <a href="https://wa.me/62812xxxxxx" target="_blank" rel="noopener noreferrer" class="bento-item magnetic">
+                    <i class="ph ph-whatsapp-logo"></i>
+                    <div class="bento-info"><span class="bento-name">WhatsApp</span><span class="bento-handle">+62 812-xxxx-xxxx</span></div>
+                </a>
+                <a href="https://instagram.com/USERNAME_KAMU" target="_blank" rel="noopener noreferrer" class="bento-item magnetic">
+                    <i class="ph ph-instagram-logo"></i>
+                    <div class="bento-info"><span class="bento-name">Instagram</span><span class="bento-handle">@pirrzaaa</span></div>
+                </a>
+                <a href="https://tiktok.com/@USERNAME_KAMU" target="_blank" rel="noopener noreferrer" class="bento-item magnetic">
+                    <i class="ph ph-tiktok-logo"></i>
+                    <div class="bento-info"><span class="bento-name">TikTok</span><span class="bento-handle">@pirrzaaa</span></div>
+                </a>
+                <a href="https://t.me/USERNAME_KAMU" target="_blank" rel="noopener noreferrer" class="bento-item magnetic">
+                    <i class="ph ph-telegram-logo"></i>
+                    <div class="bento-info"><span class="bento-name">Telegram</span><span class="bento-handle">@pirrzaaa</span></div>
+                </a>
+                <a href="https://discord.com/users/ID_KAMU" target="_blank" rel="noopener noreferrer" class="bento-item magnetic">
+                    <i class="ph ph-discord-logo"></i>
+                    <div class="bento-info"><span class="bento-name">Discord</span><span class="bento-handle">pirrzaaa_</span></div>
+                </a>
+                <a href="https://github.com/USERNAME_KAMU" target="_blank" rel="noopener noreferrer" class="bento-item magnetic">
+                    <i class="ph ph-github-logo"></i>
+                    <div class="bento-info"><span class="bento-name">GitHub</span><span class="bento-handle">/pirrzaaa</span></div>
+                </a>
+                <a href="https://threads.net/@USERNAME_KAMU" target="_blank" rel="noopener noreferrer" class="bento-item magnetic">
+                    <i class="ph ph-threads-logo"></i>
+                    <div class="bento-info"><span class="bento-name">Threads</span><span class="bento-handle">@pirrzaaa</span></div>
+                </a>
+                <a href="https://facebook.com/USERNAME_KAMU" target="_blank" rel="noopener noreferrer" class="bento-item magnetic">
+                    <i class="ph ph-facebook-logo"></i>
+                    <div class="bento-info"><span class="bento-name">Facebook</span><span class="bento-handle">/pirrzaaa</span></div>
+                </a>
+            </div>
         </section>
     </div>
 
     <footer class="fade-element">
         <div class="signature">Pirrzaaa.</div>
-        
-        <div class="footer-socials">
-            <a href="#" class="hover-target magnetic" aria-label="WhatsApp"><i class="ph ph-whatsapp-logo"></i></a>
-            <a href="#" class="hover-target magnetic" aria-label="Instagram"><i class="ph ph-instagram-logo"></i></a>
-            <a href="#" class="hover-target magnetic" aria-label="TikTok"><i class="ph ph-tiktok-logo"></i></a>
-            <a href="#" class="hover-target magnetic" aria-label="Telegram"><i class="ph ph-telegram-logo"></i></a>
-            <a href="#" class="hover-target magnetic" aria-label="Discord"><i class="ph ph-discord-logo"></i></a>
-            <a href="#" class="hover-target magnetic" aria-label="GitHub"><i class="ph ph-github-logo"></i></a>
-            <a href="#" class="hover-target magnetic" aria-label="Threads"><i class="ph ph-threads-logo"></i></a>
-            <a href="#" class="hover-target magnetic" aria-label="Facebook"><i class="ph ph-facebook-logo"></i></a>
-        </div>
-
-        <p>&copy; 2026 Pirrzaaa. Dibuat sambil dengerin Lo-Fi & nonton HxH.</p>
+        <p class="footer-text">&copy; 2026 Pirrzaaa. Coded via VS Code & Acode.</p>
     </footer>
 
     <div class="modal" id="project-modal">
         <div class="modal-content">
-            <span class="close-btn hover-target" onclick="closeModal()">&times;</span>
-            <h2 id="modal-title">Judul Proyek</h2>
-            <p style="color: var(--accent-color); font-size: 0.9rem; margin-top: 5px;">Detail & Konsep</p>
-            <img id="modal-img" src="" alt="Detail Gambar">
-            <p id="modal-desc" class="modal-desc">Deskripsi lengkap akan muncul di sini.</p>
+            <span class="close-btn" onclick="closeModal()"><i class="ph ph-x"></i></span>
+            <h2 id="modal-title" class="modal-title">Title</h2>
+            <img id="modal-img" class="modal-img" src="" alt="Project">
+            <p id="modal-desc" style="color: var(--accent-color); font-size: 0.9rem;"></p>
         </div>
     </div>
 
     <script>
-        // 1. Preloader
+        // 1. PRELOADER
         window.addEventListener('load', () => {
             setTimeout(() => {
-                const preloader = document.getElementById('preloader');
-                preloader.style.opacity = '0';
-                setTimeout(() => preloader.style.display = 'none', 500);
-            }, 500);
+                const pl = document.getElementById('preloader');
+                if(pl) { pl.style.opacity = '0'; setTimeout(() => pl.style.display = 'none', 500); }
+            }, 600);
         });
 
-        // 2. Custom Cursor
+        // 2. KURSOR KUSTOM
         const cursor = document.getElementById('cursor');
-        document.addEventListener('mousemove', e => {
-            cursor.style.left = e.clientX + 'px';
-            cursor.style.top = e.clientY + 'px';
-        });
+        const cards = document.querySelectorAll('.card, .bento-item, .gallery-item');
+        const isFinePointer = matchMedia('(pointer: fine)').matches;
 
-        document.querySelectorAll('.hover-target, input, textarea, button, a, .card, .tool-item, .timeline-item, .process-step, .faq-item, .hobby-card, .rpg-card').forEach(el => {
-            el.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
-            el.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
-        });
-
-        // 3. Waktu Real-Time Semarang
-        function updateTime() {
-            const timeElement = document.getElementById('live-time');
-            if(!timeElement) return;
-            const options = { timeZone: 'Asia/Jakarta', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
-            timeElement.innerText = new Date().toLocaleTimeString('en-US', options);
-        }
-        setInterval(updateTime, 1000);
-        updateTime();
-
-        // 4. UI Music Player
-        const audio = document.getElementById('bg-audio');
-        const playBtn = document.getElementById('play-btn');
-        const playIcon = document.getElementById('play-icon');
-        const equalizer = document.getElementById('equalizer');
-        let isPlaying = false;
-        audio.volume = 0.3;
-
-        playBtn.addEventListener('click', () => {
-            if (isPlaying) {
-                audio.pause();
-                playIcon.classList.replace('ph-pause-circle', 'ph-play-circle');
-                equalizer.classList.remove('playing');
-            } else {
-                audio.play();
-                playIcon.classList.replace('ph-play-circle', 'ph-pause-circle');
-                equalizer.classList.add('playing');
-            }
-            isPlaying = !isPlaying;
-        });
-
-        // 5. Scroll Event (Navbar, Progress, BackToTop, RPG Stats Animation)
-        let ticking = false;
-        const navbar = document.getElementById('navbar');
-        const progressBar = document.getElementById('progress-bar');
-        const backToTop = document.getElementById('backToTop');
-        const rpgSection = document.getElementById('stats');
-        let statsAnimated = false;
-        
-        window.addEventListener('scroll', () => {
-            if (!ticking) {
+        if(isFinePointer && cursor) {
+            document.addEventListener('mousemove', e => {
                 requestAnimationFrame(() => {
-                    const currentY = window.scrollY;
-                    if (currentY > 80) navbar.classList.add('nav-hidden'); 
-                    else navbar.classList.remove('nav-hidden');
-                    if (currentY > 500) backToTop.classList.add('visible');
-                    else backToTop.classList.remove('visible');
-                    
-                    const scrollDist = document.documentElement.scrollTop;
-                    const totalH = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-                    progressBar.style.width = (scrollDist / totalH) * 100 + "%";
+                    cursor.style.setProperty('--cx', e.clientX + 'px');
+                    cursor.style.setProperty('--cy', e.clientY + 'px');
+                });
+            });
+            document.querySelectorAll('a, button, input, textarea, .card, .profile-img, .bento-item, .gallery-item').forEach(el => {
+                el.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+                el.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+            });
+        }
 
-                    // Trigger RPG Stats animation
-                    if(rpgSection && !statsAnimated) {
-                        const rect = rpgSection.getBoundingClientRect();
-                        if(rect.top < window.innerHeight * 0.8) {
-                            document.querySelector('.progress-logic').style.width = '65%';
-                            document.querySelector('.progress-agility').style.width = '75%';
-                            document.querySelector('.progress-stamina').style.width = '95%';
-                            document.querySelector('.progress-creativity').style.width = '70%';
-                            statsAnimated = true;
+        // 3. WAKTU, DASHBOARD STATS, & GITHUB MATRIX
+        setInterval(() => {
+            const timeEl = document.getElementById('live-time');
+            if(timeEl) timeEl.innerText = new Date().toLocaleTimeString('en-US', { timeZone: 'Asia/Jakarta', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
+            const pingEl = document.getElementById('ping-val');
+            if(pingEl) pingEl.innerText = Math.floor(Math.random() * 12 + 18) + 'ms';
+        }, 1000);
+        
+        const startTime = Date.now();
+        setInterval(() => {
+            const diff = Math.floor((Date.now() - startTime)/1000);
+            const h = String(Math.floor(diff/3600)).padStart(2,'0'), m = String(Math.floor((diff%3600)/60)).padStart(2,'0'), s = String(diff%60).padStart(2,'0');
+            const upEl = document.getElementById('uptime-val');
+            if(upEl) upEl.innerText = `${h}:${m}:${s}`;
+        }, 1000);
+
+        // Generate GitHub Matrix Random
+        const matrixGrid = document.getElementById('matrix-grid');
+        if(matrixGrid) {
+            for(let i=0; i<75; i++) {
+                const box = document.createElement('div');
+                const rand = Math.random();
+                let level = 0;
+                if(rand > 0.85) level = 4;
+                else if(rand > 0.7) level = 3;
+                else if(rand > 0.5) level = 2;
+                else if(rand > 0.3) level = 1;
+                box.className = `matrix-box lvl-${level}`;
+                matrixGrid.appendChild(box);
+            }
+        }
+
+        // 4. MUSIC PLAYER
+        const aud = document.getElementById('bg-audio'), pBtn = document.getElementById('play-btn'), pIcon = document.getElementById('play-icon'), eq = document.getElementById('equalizer');
+        let isP = false; if(aud) aud.volume = 0.3;
+        if(pBtn) {
+            pBtn.addEventListener('click', () => {
+                if(isP) { aud.pause(); pIcon.classList.replace('ph-pause-circle','ph-play-circle'); eq.classList.remove('playing'); }
+                else { aud.play(); pIcon.classList.replace('ph-play-circle','ph-pause-circle'); eq.classList.add('playing'); }
+                isP = !isP;
+            });
+        }
+
+        // 5. SCROLL EVENTS
+        let ticking = false;
+        const nav = document.getElementById('navbar'), btt = document.getElementById('backToTop'), prog = document.getElementById('progress-bar');
+        const statsCard = document.getElementById('stats-card');
+        let statsDone = false;
+
+        window.addEventListener('scroll', () => {
+            if(!ticking) {
+                requestAnimationFrame(() => {
+                    const y = window.scrollY;
+                    if(nav) nav.classList.toggle('nav-hidden', y > 80);
+                    if(btt) btt.classList.toggle('visible', y > 500);
+                    if(prog) prog.style.width = (y / (document.documentElement.scrollHeight - window.innerHeight)) * 100 + "%";
+                    
+                    if(statsCard && !statsDone) {
+                        const rect = statsCard.getBoundingClientRect();
+                        if(rect.top < window.innerHeight * 0.85) {
+                            document.querySelectorAll('.stat-fill').forEach(bar => { bar.style.width = bar.getAttribute('data-width'); });
+                            statsDone = true;
                         }
                     }
-
                     ticking = false;
                 });
                 ticking = true;
             }
         });
+        if(btt) btt.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
-        // 6. Dark/Light Mode
-        document.getElementById('theme-toggle').addEventListener('click', () => {
-            const html = document.documentElement, icon = document.getElementById('theme-icon');
-            if (html.getAttribute('data-theme') === 'dark') { html.setAttribute('data-theme', 'light'); icon.classList.replace('ph-sun', 'ph-moon'); } 
-            else { html.setAttribute('data-theme', 'dark'); icon.classList.replace('ph-moon', 'ph-sun'); }
-        });
+        // 6. DARK/LIGHT MODE
+        const tToggle = document.getElementById('theme-toggle');
+        if(tToggle) {
+            tToggle.addEventListener('click', () => {
+                const html = document.documentElement, icon = document.getElementById('theme-icon');
+                if(html.getAttribute('data-theme') === 'dark') { html.setAttribute('data-theme', 'light'); icon.classList.replace('ph-sun', 'ph-moon'); }
+                else { html.setAttribute('data-theme', 'dark'); icon.classList.replace('ph-moon', 'ph-sun'); }
+            });
+        }
 
-        // 7. Teks Dinamis
+        // 7. TERMINAL LOGIC
+        const tIn = document.getElementById('t-input'), tBody = document.getElementById('t-body');
+        if(tIn && tBody) {
+            tIn.addEventListener('keydown', e => {
+                if(e.key === 'Enter') {
+                    const val = tIn.value.trim().toLowerCase();
+                    if(!val) return;
+                    
+                    const line = document.createElement('div'); 
+                    line.innerHTML = `<span style="color:var(--terminal-green);">></span> ${val}`; 
+                    tBody.appendChild(line);
+                    
+                    const reply = document.createElement('div');
+                    reply.style.color = "var(--accent-color)"; reply.style.marginBottom = "10px";
+                    
+                    switch(val) {
+                        case 'help': reply.innerText = "Cmds: about, skills, anime, clear"; break;
+                        case 'about': reply.innerText = "Pirrzaaa. SMK TKJ. Node.js Bot WA Creator."; break;
+                        case 'skills': reply.innerText = "HTML, CSS, JS, Node.js, Firebase, Canva."; break;
+                        case 'anime': reply.innerText = "Fav: HxH, JJK. NO ROMANCE ALLOWED!"; break;
+                        case 'clear': tBody.innerHTML = ''; reply.innerText = "Terminal cleared."; break;
+                        default: reply.innerText = `Command '${val}' not found. Type 'help'.`;
+                    }
+                    tBody.appendChild(reply); tIn.value = ''; tBody.scrollTop = tBody.scrollHeight;
+                }
+            });
+        }
+
+        // 8. TEKS DINAMIS TYPEWRITER
         const words = ["Logika.", "Kreatif.", "Otodidak.", "Gamer."];
-        let wordI = 0, charJ = 0, isDeleting = false;
+        let wI = 0, cJ = 0, isDel = false;
         const dynamicText = document.getElementById("dynamic-text");
         function type() {
-            dynamicText.innerHTML = words[wordI].substring(0, charJ);
-            if (!isDeleting && charJ <= words[wordI].length) { charJ++; setTimeout(type, 150); }
-            else if (isDeleting && charJ >= 0) { charJ--; setTimeout(type, 80); }
-            else if (charJ == words[wordI].length + 1) { isDeleting = true; setTimeout(type, 2000); }
-            else if (charJ == -1) { isDeleting = false; wordI = (wordI + 1) % words.length; setTimeout(type, 500); }
+            if(dynamicText) {
+                dynamicText.innerText = words[wI].substring(0, cJ);
+                if (!isDel && cJ <= words[wI].length) { cJ++; setTimeout(type, 150); }
+                else if (isDel && cJ >= 0) { cJ--; setTimeout(type, 80); }
+                else if (cJ == words[wI].length + 1) { isDel = true; setTimeout(type, 2000); }
+                else if (cJ == -1) { isDel = false; wI = (wI + 1) % words.length; setTimeout(type, 500); }
+            }
         }
         setTimeout(type, 1500);
 
-        // 8. Scramble Hover Effect
-        const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*";
-        document.querySelectorAll('.scramble').forEach(link => {
-            link.addEventListener('mouseenter', e => {
-                let iterations = 0;
-                const originalText = e.target.dataset.text;
-                const interval = setInterval(() => {
-                    e.target.innerText = originalText.split("").map((letter, index) => {
-                        if(index < iterations) return originalText[index];
-                        return letters[Math.floor(Math.random() * letters.length)];
-                    }).join("");
-                    if(iterations >= originalText.length) clearInterval(interval);
-                    iterations += 1 / 2;
-                }, 30);
+        // 9. MAGNETIC BUTTONS & SPOTLIGHT
+        if(isFinePointer) {
+            document.querySelectorAll('.magnetic').forEach(btn => {
+                btn.addEventListener('mousemove', e => {
+                    requestAnimationFrame(() => {
+                        const pos = btn.getBoundingClientRect();
+                        const x = e.clientX - pos.left - pos.width / 2;
+                        const y = e.clientY - pos.top - pos.height / 2;
+                        btn.style.transform = `translate3d(${x * 0.15}px, ${y * 0.15}px, 0) scale(1.02)`;
+                    });
+                });
+                btn.addEventListener('mouseleave', () => btn.style.transform = `translate3d(0px, 0px, 0) scale(1)`);
             });
-        });
 
-        // 9. Magnetic Buttons
-        document.querySelectorAll('.magnetic').forEach(btn => {
-            btn.addEventListener('mousemove', e => {
-                const pos = btn.getBoundingClientRect();
-                const x = e.clientX - pos.left - pos.width / 2;
-                const y = e.clientY - pos.top - pos.height / 2;
-                btn.style.transform = `translate(${x * 0.15}px, ${y * 0.15}px) scale(1.02)`;
+            cards.forEach(el => {
+                el.addEventListener('mousemove', e => {
+                    requestAnimationFrame(() => {
+                        const rect = el.getBoundingClientRect();
+                        el.style.setProperty('--x', (e.clientX - rect.left) + 'px');
+                        el.style.setProperty('--y', (e.clientY - rect.top) + 'px');
+                    });
+                });
             });
-            btn.addEventListener('mouseleave', () => {
-                btn.style.transform = `translate(0px, 0px) scale(1)`;
-            });
-        });
+        }
 
-        // 10. SPOTLIGHT EFFECT PADA CARD
-        document.querySelectorAll('.card, .process-step, .hobby-card, .rpg-card').forEach(el => {
-            el.addEventListener('mousemove', e => {
-                const rect = el.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                el.style.setProperty('--x', `${x}px`);
-                el.style.setProperty('--y', `${y}px`);
-            });
-        });
-
-        // 11. FAQ ACCORDION LOGIC
-        document.querySelectorAll('.faq-question').forEach(btn => {
+        // 10. FAQ ACCORDION
+        document.querySelectorAll('.faq-q').forEach(btn => {
             btn.addEventListener('click', () => {
                 const parent = btn.parentElement;
-                document.querySelectorAll('.faq-item').forEach(item => {
-                    if (item !== parent) item.classList.remove('active');
-                });
+                document.querySelectorAll('.faq-item').forEach(item => { if (item !== parent) item.classList.remove('active'); });
                 parent.classList.toggle('active');
             });
         });
 
-        // 12. Fade-In & Fade-Out Saat Scroll
-        const faders = document.querySelectorAll('.fade-element');
-        const appearOnScroll = new IntersectionObserver((entries) => {
+        // 11. FADE-IN SCROLL
+        const obs = new IntersectionObserver((entries, observer) => {
             entries.forEach(entry => {
-                if (entry.isIntersecting) {
+                if(entry.isIntersecting) {
                     entry.target.classList.add('appear');
-                } else {
-                    entry.target.classList.remove('appear');
+                    observer.unobserve(entry.target); 
                 }
             });
-        }, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
-        faders.forEach(fader => appearOnScroll.observe(fader));
+        }, { threshold: 0.1, rootMargin: "0px 0px -30px 0px" });
+        document.querySelectorAll('.fade-element').forEach(el => obs.observe(el));
 
-        // 13. FUNGSI MODAL VIEW PROJECT
+        // 12. MODAL PROJECT & GALLERY
         const modal = document.getElementById('project-modal');
-        function openModal(title, imgSrc, desc) {
-            document.getElementById('modal-title').innerText = title;
-            document.getElementById('modal-img').src = imgSrc;
-            document.getElementById('modal-desc').innerText = desc;
-            modal.classList.add('active');
-            document.body.style.overflow = 'hidden';
+        function openModal(t, i, d) {
+            document.getElementById('modal-title').innerText = t;
+            document.getElementById('modal-img').src = i;
+            document.getElementById('modal-desc').innerText = d;
+            modal.classList.add('active'); document.body.style.overflow = 'hidden';
         }
-        function closeModal() {
-            modal.classList.remove('active');
-            document.body.style.overflow = '';
-        }
-        window.onclick = e => { if (e.target == modal) closeModal(); }
+        function closeModal() { modal.classList.remove('active'); document.body.style.overflow = ''; }
+        if(modal) modal.addEventListener('click', e => { if(e.target === modal) closeModal(); });
 
     </script>
 </body>
