@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://pirrzaaaaa.github.io/Pirrzaa-Web/sitemap.xml
