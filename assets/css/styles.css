@@ -138,7 +138,8 @@ nav.nav-hidden { transform: translateY(-100%); }
 
 /* MOBILE BOTTOM NAV */
 .mobile-nav { 
-    display: none; position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%);
+    display: none; position: fixed; top: auto; right: auto; width: auto;
+    bottom: 15px; left: 50%; transform: translateX(-50%);
     background: var(--glass-bg); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
     border: 1px solid var(--border-color); border-radius: 30px; padding: 10px 25px; 
     z-index: 10002; gap: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: background 0.5s, border-color 0.5s;
