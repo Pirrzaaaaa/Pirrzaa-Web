@@ -2,11 +2,29 @@
 <html lang="id" data-theme="dark">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pirrzaaa OS v1.5 | TKJ Student & Bot Developer</title>
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Pirrzaaa OS v1.6 | TKJ Student & Bot Developer</title>
+
+    <meta name="description" content="Portfolio Pirrzaaa - Siswa SMK TKJ, Node.js WhatsApp Bot Developer, Canva UI Designer. Dark aesthetic dengan Domain Expansion easter egg.">
+    <meta name="author" content="Pirrzaaa">
+    <meta name="theme-color" content="#080808">
+    <meta name="color-scheme" content="dark light">
+
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Pirrzaaa OS | TKJ Student & Bot Developer">
+    <meta property="og:description" content="Siswa SMK TKJ, hobi ngoprek Bot WA pakai Node.js. Anime action lover & MLBB pusher.">
+    <meta property="og:image" content="https://cdn.yupra.my.id/yp/nzqc6kn8.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&gt;_</text></svg>">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.yupra.my.id">
+    <link rel="preconnect" href="https://unpkg.com">
+
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Inter:wght@300;400;500;600;700;800;900&family=Fira+Code:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web" defer></script>
     
     <style>
         /* ==========================================================================
@@ -80,10 +98,28 @@
 
         body { 
             font-family: 'Inter', sans-serif; background-color: var(--bg-color); color: var(--text-color); 
-            font-size: 15px; line-height: 1.6; overflow-x: hidden; transition: background-color 0.5s, color 0.5s, border-color 0.5s;
+            font-size: 15px; line-height: 1.6; overflow-x: hidden; transition: background-color 0.35s, color 0.35s;
             background-image: linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
             background-size: 40px 40px; background-position: center center; position: relative;
+            -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
         }
+
+        /* PERF: skip rendering offscreen sections */
+        section { content-visibility: auto; contain-intrinsic-size: 1px 800px; }
+
+        /* PERF: respect user motion preference */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+            .ambient-glow, .typing-cursor, .wheel, .bar, .marquee-inner, .status-dot { animation: none !important; }
+        }
+
+        /* PERF: pause heavy ambient glow when tab hidden */
+        body.tab-hidden .ambient-glow, body.tab-hidden .marquee-inner { animation-play-state: paused; }
         
         a, button, input, textarea { text-decoration: none; color: inherit; border: none; background: none; font-family: inherit;}
         ul { list-style: none; }
@@ -92,8 +128,8 @@
         /* ==========================================================================
            3. SPECIAL EFFECTS (GLITCH & AMBIENT)
            ========================================================================== */
-        .ambient-glow { position: fixed; inset: -50%; background: var(--glow-color); z-index: 0; pointer-events: none; animation: rotateGlow 50s linear infinite; will-change: transform; transition: background 0.5s; }
-        @keyframes rotateGlow { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .ambient-glow { position: fixed; inset: -50%; background: var(--glow-color); z-index: 0; pointer-events: none; animation: rotateGlow 60s linear infinite; will-change: transform; transform: translateZ(0); }
+        @keyframes rotateGlow { 0% { transform: rotate(0deg) translateZ(0); } 100% { transform: rotate(360deg) translateZ(0); } }
 
         /* Glitch Overlay */
         #glitch-overlay {
@@ -472,7 +508,17 @@
 
         @keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
 
+        .typing-dots { display: inline-block; animation: typingBlink 1.2s infinite; letter-spacing: 3px; }
+        @keyframes typingBlink { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+
         @media (max-width: 768px) {
+            /* PERF: lighten up mobile rendering */
+            body { background-size: 60px 60px; }
+            .ambient-glow { display: none; }
+            nav, .mobile-nav, .music-player, #backToTop, .modal, .chat-header { backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+            .card:hover { transform: none; }
+            .card::before { display: none; }
+
             nav { padding: 15px 20px; }
             .nav-links, .nav-widget { display: none; }
             .mobile-nav { display: flex; }
@@ -556,7 +602,7 @@
             </div>
             
             <div class="profile-img">
-                <img src="https://cdn.yupra.my.id/yp/nzqc6kn8.jpg" alt="Pirrzaaa Profile">
+                <img src="https://cdn.yupra.my.id/yp/nzqc6kn8.jpg" alt="Pirrzaaa Profile" width="110" height="110" decoding="async" fetchpriority="high">
             </div>
             
             <h1 class="hero-title" id="hero-title">Halo, Saya Pirrzaaa.</h1>
@@ -659,19 +705,19 @@
             <h2 class="section-title">Latihan & Proyek</h2>
             <div class="grid-3">
                 <div class="card" style="cursor: pointer;" onclick="openModal('WhatsApp Bot Pro', 'https://cdn.yupra.my.id/yp/nzqc6kn8.jpg', 'Bot WhatsApp multifungsi yang dibangun pakai Node.js. Berjalan 24/7 di VPS/Panel dengan fitur auto-respond pintar.')">
-                    <div class="proj-img"><img src="https://cdn.yupra.my.id/yp/nzqc6kn8.jpg" alt="Bot WA"></div>
+                    <div class="proj-img"><img src="https://cdn.yupra.my.id/yp/nzqc6kn8.jpg" alt="Bot WA" loading="lazy" decoding="async" width="320" height="160"></div>
                     <h3 class="proj-title">WhatsApp Bot Pro</h3>
                     <p class="proj-tech">Node.js • VPS • API</p>
                     <p class="proj-desc" style="margin-top:5px;">Sistem otomasi pesan responsif.</p>
                 </div>
                 <div class="card" style="cursor: pointer;" onclick="openModal('Firebase Web App', 'https://cdn.yupra.my.id/yp/nzqc6kn8.jpg', 'Eksplorasi pembuatan web menggunakan HTML/CSS dasar yang dikoneksikan ke Firebase untuk simpan-ambil data secara real-time.')">
-                    <div class="proj-img"><img src="https://cdn.yupra.my.id/yp/nzqc6kn8.jpg" alt="Web App"></div>
+                    <div class="proj-img"><img src="https://cdn.yupra.my.id/yp/nzqc6kn8.jpg" alt="Web App" loading="lazy" decoding="async" width="320" height="160"></div>
                     <h3 class="proj-title">Firebase Web App</h3>
                     <p class="proj-tech">HTML/JS • Firebase</p>
                     <p class="proj-desc" style="margin-top:5px;">Database real-time interaktif.</p>
                 </div>
                 <div class="card" style="cursor: pointer;" onclick="openModal('Eksplorasi UI', 'https://cdn.yupra.my.id/yp/nzqc6kn8.jpg', 'Merancang layout website menggunakan Canva. Fokus pada perpaduan warna dark mode dan tipografi rapi.')">
-                    <div class="proj-img"><img src="https://cdn.yupra.my.id/yp/nzqc6kn8.jpg" alt="Desain UI"></div>
+                    <div class="proj-img"><img src="https://cdn.yupra.my.id/yp/nzqc6kn8.jpg" alt="Desain UI" loading="lazy" decoding="async" width="320" height="160"></div>
                     <h3 class="proj-title">Eksplorasi UI</h3>
                     <p class="proj-tech">Canva • Visual Design</p>
                     <p class="proj-desc" style="margin-top:5px;">Prototyping visual modern.</p>
@@ -683,19 +729,19 @@
             <h2 class="section-title">My Galery</h2>
             <div class="gallery-grid">
                 <div class="gallery-item magnetic" onclick="openModal('Coding Setup', 'https://cdn.yupra.my.id/yp/nzqc6kn8.jpg', 'Meja tempur tempat semua baris kode dan logika disusun.')">
-                    <img src="https://cdn.yupra.my.id/yp/nzqc6kn8.jpg" alt="Coding">
+                    <img src="https://cdn.yupra.my.id/yp/nzqc6kn8.jpg" alt="Coding" loading="lazy" decoding="async" width="220" height="165">
                     <div class="gallery-overlay"><span>Setup Tempur</span></div>
                 </div>
                 <div class="gallery-item magnetic" onclick="openModal('Anime & Vibes', 'https://cdn.yupra.my.id/yp/nzqc6kn8.jpg', 'Inspirasi dan relaksasi dari seri Action Anime favorit.')">
-                    <img src="https://cdn.yupra.my.id/yp/nzqc6kn8.jpg" alt="Anime">
+                    <img src="https://cdn.yupra.my.id/yp/nzqc6kn8.jpg" alt="Anime" loading="lazy" decoding="async" width="220" height="165">
                     <div class="gallery-overlay"><span>Anime Vibe</span></div>
                 </div>
                 <div class="gallery-item magnetic" onclick="openModal('Server Log', 'https://cdn.yupra.my.id/yp/nzqc6kn8.jpg', 'Memantau aktivitas VPS dan log dari Bot Node.js agar berjalan lancar.')">
-                    <img src="https://cdn.yupra.my.id/yp/nzqc6kn8.jpg" alt="Server">
+                    <img src="https://cdn.yupra.my.id/yp/nzqc6kn8.jpg" alt="Server" loading="lazy" decoding="async" width="220" height="165">
                     <div class="gallery-overlay"><span>VPS & Panel</span></div>
                 </div>
                 <div class="gallery-item magnetic" onclick="openModal('Dark Aesthetic', 'https://cdn.yupra.my.id/yp/nzqc6kn8.jpg', 'Suka tema dark mode elegan dan tidak buat mata lelah.')">
-                    <img src="https://cdn.yupra.my.id/yp/nzqc6kn8.jpg" alt="Dark aesthetic">
+                    <img src="https://cdn.yupra.my.id/yp/nzqc6kn8.jpg" alt="Dark aesthetic" loading="lazy" decoding="async" width="220" height="165">
                     <div class="gallery-overlay"><span>Dark UI</span></div>
                 </div>
             </div>
@@ -776,7 +822,7 @@
                     <div class="t-dot" style="background:#27c93f;"></div>
                 </div>
                 <div class="t-body" id="t-body">
-                    <div style="color: var(--terminal-green);">Welcome to Pirrzaaa OS v1.5. Type 'help' to begin.</div>
+                    <div style="color: var(--terminal-green);">Welcome to Pirrzaaa OS v1.6. Type 'help' to begin.</div>
                 </div>
                 <div class="t-input-wrap">
                     <span style="color: var(--terminal-green);">guest@pirrzaaa:~$</span>
@@ -805,11 +851,12 @@
                 
                 <div>
                     <h2 class="section-title" style="justify-content: flex-start;">Kirim Pesan</h2>
-                    <form class="contact-form">
-                        <input type="text" placeholder="Nama / Nickname" required>
-                        <input type="email" placeholder="Email / Discord ID" required>
-                        <textarea placeholder="Mau ngajak collab bot atau mabar ML?" required></textarea>
-                        <button type="submit" class="btn-primary magnetic" style="margin-top: 5px; width: 100%; justify-content: center;">Kirim Pesan</button>
+                    <form class="contact-form" id="contact-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+                        <input type="text" name="name" placeholder="Nama / Nickname" required>
+                        <input type="email" name="email" placeholder="Email / Discord ID" required>
+                        <textarea name="message" placeholder="Mau ngajak collab bot atau mabar ML?" required></textarea>
+                        <button type="submit" class="btn-primary magnetic" id="contact-submit" style="margin-top: 5px; width: 100%; justify-content: center;">Kirim Pesan</button>
+                        <p id="contact-status" style="font-family:'Fira Code',monospace;font-size:0.75rem;color:var(--accent-color);text-align:center;min-height:1em;"></p>
                     </form>
                 </div>
             </div>
@@ -858,125 +905,244 @@
 
     <footer class="fade-element">
         <div class="signature">Pirrzaaa.</div>
-        <p class="footer-text">&copy; 2026 Pirrzaaa. Coded via VS Code & Acode.</p>
+        <p class="footer-text">&copy; <span id="foot-year">2026</span> Pirrzaaa. Coded via VS Code & Acode.</p>
     </footer>
 
     <div class="modal" id="project-modal">
         <div class="modal-content">
             <span class="close-btn" onclick="closeModal()"><i class="ph ph-x"></i></span>
             <h2 id="modal-title" class="modal-title">Title</h2>
-            <img id="modal-img" class="modal-img" src="" alt="Project">
+            <img id="modal-img" class="modal-img" src="" alt="Project" loading="lazy" decoding="async">
             <p id="modal-desc" style="color: var(--accent-color); font-size: 0.9rem;"></p>
         </div>
     </div>
 
     <script>
+        'use strict';
+
         // ==========================================================================
-        // 1. CORE SYSTEM & PRELOADER
+        // 0. UTILITIES
+        // ==========================================================================
+        const $  = (id) => document.getElementById(id);
+        const $$ = (sel, ctx = document) => ctx.querySelectorAll(sel);
+        const REDUCED_MOTION = matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const isFinePointer  = matchMedia('(pointer: fine)').matches;
+        const isMobile       = matchMedia('(max-width: 768px)').matches;
+
+        // rAF-throttled scheduler (batch DOM writes)
+        const raf = (() => {
+            let q = [], scheduled = false;
+            return (fn) => {
+                q.push(fn);
+                if (!scheduled) {
+                    scheduled = true;
+                    requestAnimationFrame(() => {
+                        const tasks = q; q = []; scheduled = false;
+                        tasks.forEach(t => t());
+                    });
+                }
+            };
+        })();
+
+        // ==========================================================================
+        // 1. PRELOADER (tanpa delay buatan)
         // ==========================================================================
         window.addEventListener('load', () => {
-            setTimeout(() => {
-                const pl = document.getElementById('preloader');
-                if(pl) { pl.style.opacity = '0'; setTimeout(() => pl.style.display = 'none', 500); }
-            }, 600);
-        });
+            const pl = $('preloader');
+            if (!pl) return;
+            pl.style.opacity = '0';
+            setTimeout(() => pl.style.display = 'none', 400);
+        }, { once: true });
 
-        const cursor = document.getElementById('cursor');
-        const isFinePointer = matchMedia('(pointer: fine)').matches;
+        // Auto-update footer year
+        const fy = $('foot-year'); if (fy) fy.textContent = new Date().getFullYear();
 
-        if(isFinePointer && cursor) {
+        // ==========================================================================
+        // 2. CUSTOM CURSOR (desktop only, rAF-throttled, pointer events sekali pasang)
+        // ==========================================================================
+        const cursor = $('cursor');
+        if (isFinePointer && cursor && !REDUCED_MOTION) {
+            let cx = 0, cy = 0, pending = false;
             document.addEventListener('mousemove', e => {
-                requestAnimationFrame(() => {
-                    cursor.style.setProperty('--cx', e.clientX + 'px');
-                    cursor.style.setProperty('--cy', e.clientY + 'px');
-                });
-            });
-            document.querySelectorAll('a, button, input, textarea, .card, .profile-img, .bento-item, .gallery-item, .faq-q, .magnetic').forEach(el => {
-                el.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
-                el.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
-            });
+                cx = e.clientX; cy = e.clientY;
+                if (!pending) {
+                    pending = true;
+                    requestAnimationFrame(() => {
+                        cursor.style.setProperty('--cx', cx + 'px');
+                        cursor.style.setProperty('--cy', cy + 'px');
+                        pending = false;
+                    });
+                }
+            }, { passive: true });
+
+            // Event delegation (1 listener, bukan ratusan)
+            const HOVER_SEL = 'a, button, input, textarea, .card, .profile-img, .bento-item, .gallery-item, .faq-q, .magnetic';
+            document.addEventListener('mouseover', e => {
+                if (e.target.closest(HOVER_SEL)) cursor.classList.add('hovered');
+            }, { passive: true });
+            document.addEventListener('mouseout', e => {
+                if (e.target.closest(HOVER_SEL)) cursor.classList.remove('hovered');
+            }, { passive: true });
+        } else if (cursor) {
+            cursor.style.display = 'none';
         }
 
+        // ==========================================================================
+        // 3. LIVE CLOCK / UPTIME / PING  (beda-beda interval, bukan semua 1s)
+        // ==========================================================================
         const startTime = Date.now();
-        setInterval(() => {
-            const timeEl = document.getElementById('live-time');
-            if(timeEl) timeEl.innerText = new Date().toLocaleTimeString('en-US', { timeZone: 'Asia/Jakarta', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
-            
-            const pingEl = document.getElementById('ping-val');
-            if(pingEl) pingEl.innerText = Math.floor(Math.random() * 10 + 15) + 'ms';
+        const timeEl  = $('live-time');
+        const pingEl  = $('ping-val');
+        const upEl    = $('uptime-val');
 
-            const diff = Math.floor((Date.now() - startTime)/1000);
-            const h = String(Math.floor(diff/3600)).padStart(2,'0'), m = String(Math.floor((diff%3600)/60)).padStart(2,'0'), s = String(diff%60).padStart(2,'0');
-            const upEl = document.getElementById('uptime-val');
-            if(upEl) upEl.innerText = `${h}:${m}:${s}`;
-        }, 1000);
+        const tickClock = () => {
+            if (timeEl) timeEl.textContent = new Date().toLocaleTimeString('en-GB', { timeZone: 'Asia/Jakarta', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
+            const diff = Math.floor((Date.now() - startTime) / 1000);
+            const h = String(Math.floor(diff / 3600)).padStart(2,'0');
+            const m = String(Math.floor((diff % 3600) / 60)).padStart(2,'0');
+            const s = String(diff % 60).padStart(2,'0');
+            if (upEl) upEl.textContent = `${h}:${m}:${s}`;
+        };
+        const tickPing = () => {
+            if (pingEl) pingEl.textContent = Math.floor(Math.random() * 10 + 15) + 'ms';
+        };
+
+        let clockTimer, pingTimer;
+        const startTimers = () => {
+            tickClock(); tickPing();
+            clockTimer = setInterval(tickClock, 1000);
+            pingTimer  = setInterval(tickPing, 5000);
+        };
+        const stopTimers  = () => { clearInterval(clockTimer); clearInterval(pingTimer); };
+        startTimers();
+
+        // Pause timers & heavy animation saat tab gak keliatan
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) { document.body.classList.add('tab-hidden'); stopTimers(); }
+            else { document.body.classList.remove('tab-hidden'); startTimers(); }
+        });
 
         // ==========================================================================
-        // 2. DOMAIN EXPANSION & TERMINAL LOGIC
+        // 4. TERMINAL & DOMAIN EXPANSION
         // ==========================================================================
-        const tIn = document.getElementById('t-input'), tBody = document.getElementById('t-body');
-        const glitchOverlay = document.getElementById('glitch-overlay');
-        const hTitle = document.getElementById('hero-title'), hSub = document.getElementById('hero-subtitle');
-        const pStatus = document.getElementById('p-status');
+        const tIn = $('t-input'), tBody = $('t-body');
+        const glitchOverlay = $('glitch-overlay');
+        const hTitle = $('hero-title'), hSub = $('hero-subtitle');
+        const pStatus = $('p-status');
 
-        if(tIn && tBody) {
+        const TERMINAL_CMDS = {
+            help: () => "Cmds: about, skills, anime, whoami, neofetch, matrix, date, clear, ryoiki",
+            about: () => "Pirrzaaa. SMK TKJ. Node.js WA Bot Developer.",
+            skills: () => "HTML, CSS, JS, Node.js, Firebase, Canva.",
+            anime: () => "Fav: HxH, JJK. NO ROMANCE ALLOWED!",
+            whoami: () => "guest@pirrzaaa — just a curious visitor.",
+            date: () => new Date().toString(),
+            neofetch: () => [
+                " ____  _                         ",
+                "|  _ \\(_)_ __ _ __ ______ _  __ _",
+                "| |_) | | '__| '__|_  / _` |/ _` |",
+                "|  __/| | |  | |  / / (_| | (_| |",
+                "|_|   |_|_|  |_| /___\\__,_|\\__,_|",
+                "",
+                "OS      : Pirrzaaa OS v1.6",
+                "Host    : SMK TKJ",
+                "Shell   : js-console",
+                "Uptime  : " + (upEl ? upEl.textContent : '00:00:00'),
+                "CPU     : Logika @ ∞ GHz",
+                "Hobby   : Bot WA • MLBB • Action Anime"
+            ].join('\n'),
+            matrix: () => { runMatrixRain(); return "Entering the Matrix..."; },
+            clear: () => { tBody.innerHTML = ''; return "Terminal cleared."; },
+            ryoiki: () => { triggerDomainExpansion(); return "__RED__Membuka Domain: Muryoshojo..."; },
+        };
+
+        if (tIn && tBody) {
             tIn.addEventListener('keydown', e => {
-                if(e.key === 'Enter') {
-                    const val = tIn.value.trim();
-                    const cmd = val.toLowerCase();
-                    if(!val) return;
-                    
-                    const line = document.createElement('div'); 
-                    line.innerHTML = `<span style="color:var(--terminal-green);">></span> ${val}`; 
-                    tBody.appendChild(line);
-                    
-                    const reply = document.createElement('div');
-                    reply.style.color = "var(--accent-color)"; reply.style.marginBottom = "10px";
-                    
-                    switch(cmd) {
-                        case 'help': reply.innerText = "Cmds: about, skills, anime, clear, sudo ryoiki"; break;
-                        case 'about': reply.innerText = "Pirrzaaa. SMK TKJ. Node.js WA Bot Developer."; break;
-                        case 'skills': reply.innerText = "HTML, CSS, JS, Node.js, Firebase, Canva."; break;
-                        case 'anime': reply.innerText = "Fav: HxH, JJK. NO ROMANCE ALLOWED!"; break;
-                        case 'clear': tBody.innerHTML = ''; reply.innerText = "Terminal cleared."; break;
-                        
-                        case 'ryoiki':
-                            reply.style.color = "#ff0033";
-                            reply.innerText = "Membuka Domain: Muryoshojo...";
-                            triggerDomainExpansion();
-                            break;
-                            
-                        default: reply.innerText = `Command '${val}' not found. Type 'help'.`;
-                    }
-                    tBody.appendChild(reply); tIn.value = ''; tBody.scrollTop = tBody.scrollHeight;
-                }
+                if (e.key !== 'Enter') return;
+                const val = tIn.value.trim(); if (!val) return;
+                const cmd = val.toLowerCase();
+
+                const line = document.createElement('div');
+                line.innerHTML = `<span style="color:var(--terminal-green);">&gt;</span> ${val.replace(/[<>]/g, '')}`;
+                tBody.appendChild(line);
+
+                const reply = document.createElement('div');
+                reply.style.cssText = "color:var(--accent-color);margin-bottom:10px;white-space:pre-wrap;";
+                const handler = TERMINAL_CMDS[cmd];
+                let out = handler ? handler() : `Command '${val}' not found. Type 'help'.`;
+                if (out && out.startsWith('__RED__')) { reply.style.color = "#ff0033"; out = out.slice(7); }
+                reply.textContent = out;
+
+                tBody.appendChild(reply);
+                tIn.value = '';
+                tBody.scrollTop = tBody.scrollHeight;
             });
         }
 
         function triggerDomainExpansion() {
             glitchOverlay.classList.add('active');
             document.body.classList.add('domain-expansion');
-            if(pStatus) { pStatus.innerText = "DOMAIN_ACTIVE"; pStatus.style.color = "#ff0033"; }
-            if(hTitle) hTitle.innerText = "Ryoiki Tenkai.";
-            if(hSub) hSub.innerHTML = "Selamat Datang di <span style='color:#ff0033'>Kehampaan Komunal.</span>";
+            if (pStatus) { pStatus.textContent = "DOMAIN_ACTIVE"; pStatus.style.color = "#ff0033"; }
+            if (hTitle)  hTitle.textContent = "Ryoiki Tenkai.";
+            if (hSub)    hSub.innerHTML = "Selamat Datang di <span style='color:#ff0033'>Kehampaan Komunal.</span>";
 
-            setTimeout(() => { glitchOverlay.classList.remove('active'); }, 600);
-            
+            setTimeout(() => glitchOverlay.classList.remove('active'), 600);
             setTimeout(() => {
                 document.body.classList.remove('domain-expansion');
-                if(pStatus) { pStatus.innerText = "ACTIVE"; pStatus.style.color = "var(--terminal-green)"; }
-                if(hTitle) hTitle.innerText = "Halo, Saya Pirrzaaa.";
-                if(hSub) hSub.innerHTML = "Karya <span id='dynamic-text'>Logika.</span><span class='typing-cursor'></span>";
-            }, 15000);
+                if (pStatus) { pStatus.textContent = "ACTIVE"; pStatus.style.color = "var(--terminal-green)"; }
+                if (hTitle)  hTitle.textContent = "Halo, Saya Pirrzaaa.";
+                if (hSub)    hSub.innerHTML = "Karya <span id='dynamic-text'>Logika.</span><span class='typing-cursor'></span>";
+            }, 12000);
+        }
+
+        // Matrix rain efek (ringan, auto-off 6s)
+        function runMatrixRain() {
+            if (REDUCED_MOTION) return;
+            const c = document.createElement('canvas');
+            c.style.cssText = 'position:fixed;inset:0;z-index:99998;pointer-events:none;';
+            document.body.appendChild(c);
+            const ctx = c.getContext('2d');
+            const resize = () => { c.width = innerWidth; c.height = innerHeight; };
+            resize();
+            const chars = 'アイウエオカキクケコサシスセソ01'.split('');
+            const cols = Math.floor(c.width / 16);
+            const drops = new Array(cols).fill(1);
+            let running = true;
+            const draw = () => {
+                ctx.fillStyle = 'rgba(0,0,0,0.08)';
+                ctx.fillRect(0, 0, c.width, c.height);
+                ctx.fillStyle = '#00ff88';
+                ctx.font = '14px Fira Code, monospace';
+                for (let i = 0; i < drops.length; i++) {
+                    ctx.fillText(chars[Math.floor(Math.random() * chars.length)], i * 16, drops[i] * 16);
+                    if (drops[i] * 16 > c.height && Math.random() > 0.975) drops[i] = 0;
+                    drops[i]++;
+                }
+                if (running) requestAnimationFrame(draw);
+            };
+            draw();
+            setTimeout(() => { running = false; c.style.transition = 'opacity .5s'; c.style.opacity = '0'; setTimeout(() => c.remove(), 500); }, 6000);
         }
 
         // ==========================================================================
-        // 3. UI CHAT BOT PLAYGROUND LOGIC
+        // 5. KONAMI CODE EASTER EGG (↑↑↓↓←→←→BA)
         // ==========================================================================
-        const chatInput = document.getElementById('chat-input');
-        const chatBody = document.getElementById('chat-body');
-        const chatSendBtn = document.getElementById('chat-send-btn');
+        const KONAMI = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
+        let konamiIdx = 0;
+        document.addEventListener('keydown', e => {
+            const k = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+            konamiIdx = (k === KONAMI[konamiIdx]) ? konamiIdx + 1 : 0;
+            if (konamiIdx === KONAMI.length) {
+                konamiIdx = 0;
+                triggerDomainExpansion();
+                runMatrixRain();
+            }
+        });
 
+        // ==========================================================================
+        // 6. CHAT BOT PLAYGROUND (dengan typing indicator)
+        // ==========================================================================
+        const chatInput = $('chat-input'), chatBody = $('chat-body'), chatSendBtn = $('chat-send-btn');
         const botResponses = {
             '/menu': '📜 **Daftar Perintah:**\n\n1. **/owner** - Info Pembuat\n2. **/skills** - Tech Stack\n3. **/hobi** - Dunia Pirrzaaa\n4. **/ping** - Cek Respon\n5. **/clear** - Bersihkan Chat',
             '/owner': '👤 **Owner Info:**\n\nNama: Pirrzaaa\nStatus: Siswa SMK TKJ & Developer Otodidak.\nHobi ngoding bot & push rank.',
@@ -984,190 +1150,296 @@
             '/hobi': '🎮 **Dunia Pirrzaaa:**\n\n- Game: MLBB, Minecraft\n- Anime: Hunter x Hunter, JJK (Action Only!)\n- Coding: Ngoprek API & Automasi',
             '/ping': '🏓 PONG! Respon bot stabil. (Simulasi JS Local)',
             'halo': 'Hai juga! 👋 Ketik **/menu** buat lihat yang bisa saya lakukan.',
-            'p': 'Hadir! Biasakan salam ya bro. Ketik **/menu**.',
+            'hai':  'Haloo! 👋 Ketik **/menu** dulu yuk.',
+            'p':    'Hadir! Biasakan salam ya bro. Ketik **/menu**.',
             'default': 'Maaf, saya belum paham perintah itu. 😅\nKetik **/menu** untuk bantuan.'
         };
-
-        function getCurrentTime() {
-            return new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-        }
+        const getTime = () => new Date().toLocaleTimeString('en-US', { hour:'2-digit', minute:'2-digit' });
+        const escapeHTML = (s) => s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
         function addMessage(text, sender) {
-            const time = getCurrentTime();
-            const msgRow = document.createElement('div');
-            msgRow.className = `msg-row ${sender}-row`;
-            
-            const formattedText = text.replace(/\n/g, '<br>');
-            const finalHtml = formattedText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-
-            msgRow.innerHTML = `
-                <div class="msg-bubble">
-                    ${finalHtml}
-                    <span class="msg-time">${time}</span>
-                </div>
-            `;
-            
-            chatBody.appendChild(msgRow);
+            const row = document.createElement('div');
+            row.className = `msg-row ${sender}-row`;
+            const safe = escapeHTML(text).replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            row.innerHTML = `<div class="msg-bubble">${safe}<span class="msg-time">${getTime()}</span></div>`;
+            chatBody.appendChild(row);
             chatBody.scrollTop = chatBody.scrollHeight;
+            return row;
         }
 
         function handleChatSend() {
-            const msg = chatInput.value.trim();
-            if(!msg) return;
-
+            const msg = chatInput.value.trim(); if (!msg) return;
             addMessage(msg, 'user');
             chatInput.value = '';
 
+            // Typing indicator
+            const typingRow = document.createElement('div');
+            typingRow.className = 'msg-row bot-row';
+            typingRow.innerHTML = `<div class="msg-bubble"><span class="typing-dots">●&nbsp;●&nbsp;●</span></div>`;
+            chatBody.appendChild(typingRow);
+            chatBody.scrollTop = chatBody.scrollHeight;
+
             setTimeout(() => {
+                typingRow.remove();
                 const cmd = msg.toLowerCase();
                 let response = botResponses[cmd] || botResponses['default'];
-                
-                if(cmd === '/clear') {
-                    chatBody.innerHTML = '';
-                    response = 'Chat dibersihkan! ✨ Ketik **/menu** lagi.';
-                }
-
+                if (cmd === '/clear') { chatBody.innerHTML = ''; response = 'Chat dibersihkan! ✨ Ketik **/menu** lagi.'; }
                 addMessage(response, 'bot');
-            }, 800);
+            }, 600);
         }
-
-        if(chatSendBtn && chatInput) {
+        if (chatSendBtn && chatInput) {
             chatSendBtn.addEventListener('click', handleChatSend);
-            chatInput.addEventListener('keydown', e => { if(e.key === 'Enter') handleChatSend(); });
+            chatInput.addEventListener('keydown', e => { if (e.key === 'Enter') handleChatSend(); });
         }
 
         // ==========================================================================
-        // 4. UI COMPONENTS (MUSIC, MATRIX, THEME, SCROLL)
+        // 7. MATRIX GRID (DocumentFragment — 1x reflow)
         // ==========================================================================
-        
-        const matrixGrid = document.getElementById('matrix-grid');
-        if(matrixGrid) {
-            for(let i=0; i<75; i++) {
+        const matrixGrid = $('matrix-grid');
+        if (matrixGrid) {
+            const frag = document.createDocumentFragment();
+            for (let i = 0; i < 75; i++) {
+                const r = Math.random();
+                const level = r > 0.85 ? 4 : r > 0.7 ? 3 : r > 0.5 ? 2 : r > 0.3 ? 1 : 0;
                 const box = document.createElement('div');
-                const rand = Math.random();
-                let level = 0;
-                if(rand > 0.85) level = 4;
-                else if(rand > 0.7) level = 3;
-                else if(rand > 0.5) level = 2;
-                else if(rand > 0.3) level = 1;
                 box.className = `matrix-box lvl-${level}`;
-                matrixGrid.appendChild(box);
+                frag.appendChild(box);
             }
+            matrixGrid.appendChild(frag);
         }
 
-        const aud = document.getElementById('bg-audio'), pBtn = document.getElementById('play-btn'), pIcon = document.getElementById('play-icon'), eq = document.getElementById('equalizer');
-        let isP = false; if(aud) aud.volume = 0.2; 
-        if(pBtn) {
-            pBtn.addEventListener('click', () => {
-                if(isP) { aud.pause(); pIcon.classList.replace('ph-pause-circle','ph-play-circle'); eq.classList.remove('playing'); }
-                else { aud.play(); pIcon.classList.replace('ph-play-circle','ph-pause-circle'); eq.classList.add('playing'); }
-                isP = !isP;
-            });
-        }
+        // ==========================================================================
+        // 8. MUSIC PLAYER (persist state)
+        // ==========================================================================
+        const aud = $('bg-audio'), pBtn = $('play-btn'), pIcon = $('play-icon'), eq = $('equalizer');
+        if (aud) aud.volume = 0.2;
+        let isP = false;
+        const setPlaying = (state) => {
+            if (!aud) return;
+            isP = state;
+            if (state) { aud.play().catch(()=>{}); pIcon.classList.replace('ph-play-circle','ph-pause-circle'); eq.classList.add('playing'); }
+            else { aud.pause(); pIcon.classList.replace('ph-pause-circle','ph-play-circle'); eq.classList.remove('playing'); }
+            try { localStorage.setItem('prz-music', state ? '1' : '0'); } catch(e) {}
+        };
+        if (pBtn) pBtn.addEventListener('click', () => setPlaying(!isP));
+        // Note: autoplay biasanya di-block, state tetap disimpan buat setelah user klik pertama
 
-        let ticking = false;
-        const nav = document.getElementById('navbar'), btt = document.getElementById('backToTop'), prog = document.getElementById('progress-bar');
-        const statsCard = document.getElementById('stats-card');
-        let statsDone = false;
-
-        window.addEventListener('scroll', () => {
-            if(!ticking) {
-                requestAnimationFrame(() => {
-                    const y = window.scrollY;
-                    if(nav) nav.classList.toggle('nav-hidden', y > 80);
-                    if(btt) btt.classList.toggle('visible', y > 500);
-                    if(prog) prog.style.width = (y / (document.documentElement.scrollHeight - window.innerHeight)) * 100 + "%";
-                    
-                    if(statsCard && !statsDone) {
-                        const rect = statsCard.getBoundingClientRect();
-                        if(rect.top < window.innerHeight * 0.85) {
-                            document.querySelectorAll('.stat-fill').forEach(bar => { bar.style.width = bar.getAttribute('data-width'); });
-                            statsDone = true;
-                        }
-                    }
-                    ticking = false;
-                });
-                ticking = true;
+        // ==========================================================================
+        // 9. THEME TOGGLE (persist ke localStorage)
+        // ==========================================================================
+        const tToggle = $('theme-toggle');
+        const themeIcon = $('theme-icon');
+        const applyTheme = (theme) => {
+            document.documentElement.setAttribute('data-theme', theme);
+            if (themeIcon) {
+                themeIcon.classList.remove('ph-sun', 'ph-moon');
+                themeIcon.classList.add(theme === 'dark' ? 'ph-sun' : 'ph-moon');
             }
-        });
-        if(btt) btt.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
-
-        const tToggle = document.getElementById('theme-toggle');
-        if(tToggle) {
+            const meta = document.querySelector('meta[name="theme-color"]');
+            if (meta) meta.setAttribute('content', theme === 'dark' ? '#080808' : '#fafafa');
+        };
+        try {
+            const saved = localStorage.getItem('prz-theme');
+            if (saved) applyTheme(saved);
+        } catch(e) {}
+        if (tToggle) {
             tToggle.addEventListener('click', () => {
-                if(document.body.classList.contains('domain-expansion')) return;
-                const html = document.documentElement, icon = document.getElementById('theme-icon');
-                if(html.getAttribute('data-theme') === 'dark') { html.setAttribute('data-theme', 'light'); icon.classList.replace('ph-sun', 'ph-moon'); }
-                else { html.setAttribute('data-theme', 'dark'); icon.classList.replace('ph-moon', 'ph-sun'); }
+                if (document.body.classList.contains('domain-expansion')) return;
+                const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+                applyTheme(next);
+                try { localStorage.setItem('prz-theme', next); } catch(e) {}
             });
         }
 
+        // ==========================================================================
+        // 10. SCROLL HANDLER (single rAF, passive, batched)
+        // ==========================================================================
+        const navBar = $('navbar'), btt = $('backToTop'), prog = $('progress-bar');
+        const statsCard = $('stats-card');
+        let statsDone = false, scrollTicking = false;
+
+        const onScroll = () => {
+            const y = window.scrollY;
+            const docH = document.documentElement.scrollHeight - window.innerHeight;
+            raf(() => {
+                if (navBar) navBar.classList.toggle('nav-hidden', y > 80);
+                if (btt)    btt.classList.toggle('visible', y > 500);
+                if (prog)   prog.style.width = (docH > 0 ? (y / docH) * 100 : 0) + '%';
+                if (statsCard && !statsDone) {
+                    const rect = statsCard.getBoundingClientRect();
+                    if (rect.top < window.innerHeight * 0.85) {
+                        $$('.stat-fill').forEach(bar => { bar.style.width = bar.getAttribute('data-width'); });
+                        statsDone = true;
+                    }
+                }
+            });
+            scrollTicking = false;
+        };
+        window.addEventListener('scroll', () => {
+            if (!scrollTicking) { scrollTicking = true; requestAnimationFrame(onScroll); }
+        }, { passive: true });
+
+        if (btt) btt.addEventListener('click', () => window.scrollTo({ top: 0, behavior: REDUCED_MOTION ? 'auto' : 'smooth' }));
+
+        // ==========================================================================
+        // 11. TYPING HEADLINE (pakai setTimeout smart, pause saat domain expansion)
+        // ==========================================================================
         const words = ["Logika.", "Kreatif.", "Otodidak.", "Gamer."];
-        let wI = 0, cJ = 0, isDel = false;
-        const dynamicText = document.getElementById("dynamic-text");
-        function type() {
-            if(document.body.classList.contains('domain-expansion')) return;
-            if(dynamicText) {
-                dynamicText.innerText = words[wI].substring(0, cJ);
-                if (!isDel && cJ <= words[wI].length) { cJ++; setTimeout(type, 150); }
-                else if (isDel && cJ >= 0) { cJ--; setTimeout(type, 80); }
-                else if (cJ == words[wI].length + 1) { isDel = true; setTimeout(type, 2000); }
-                else if (cJ == -1) { isDel = false; wI = (wI + 1) % words.length; setTimeout(type, 500); }
-            }
-        }
-        setTimeout(type, 1500);
+        const dynamicText = () => $('dynamic-text');
+        (function typeLoop() {
+            if (REDUCED_MOTION) { const d = dynamicText(); if (d) d.textContent = words[0]; return; }
+            let wI = 0, cJ = 0, isDel = false;
+            const step = () => {
+                if (document.hidden || document.body.classList.contains('domain-expansion')) {
+                    return setTimeout(step, 500);
+                }
+                const d = dynamicText(); if (!d) return setTimeout(step, 500);
+                d.textContent = words[wI].substring(0, cJ);
+                if (!isDel && cJ <= words[wI].length) { cJ++; setTimeout(step, 140); }
+                else if (isDel && cJ >= 0) { cJ--; setTimeout(step, 70); }
+                else if (cJ === words[wI].length + 1) { isDel = true; setTimeout(step, 1800); }
+                else if (cJ === -1) { isDel = false; wI = (wI + 1) % words.length; setTimeout(step, 400); }
+                else setTimeout(step, 140);
+            };
+            setTimeout(step, 1200);
+        })();
 
-        if(isFinePointer) {
-            document.querySelectorAll('.magnetic').forEach(btn => {
+        // ==========================================================================
+        // 12. MAGNETIC & CARD SPOTLIGHT (desktop only, event delegation)
+        // ==========================================================================
+        if (isFinePointer && !REDUCED_MOTION && !isMobile) {
+            $$('.magnetic').forEach(btn => {
+                let pending = false, mx = 0, my = 0;
                 btn.addEventListener('mousemove', e => {
-                    requestAnimationFrame(() => {
-                        const pos = btn.getBoundingClientRect();
-                        const x = e.clientX - pos.left - pos.width / 2;
-                        const y = e.clientY - pos.top - pos.height / 2;
-                        btn.style.transform = `translate3d(${x * 0.15}px, ${y * 0.15}px, 0) scale(1.02)`;
-                    });
-                });
-                btn.addEventListener('mouseleave', () => btn.style.transform = `translate3d(0px, 0px, 0) scale(1)`);
+                    const pos = btn.getBoundingClientRect();
+                    mx = e.clientX - pos.left - pos.width / 2;
+                    my = e.clientY - pos.top - pos.height / 2;
+                    if (!pending) {
+                        pending = true;
+                        requestAnimationFrame(() => { btn.style.transform = `translate3d(${mx * 0.15}px, ${my * 0.15}px, 0) scale(1.02)`; pending = false; });
+                    }
+                }, { passive: true });
+                btn.addEventListener('mouseleave', () => btn.style.transform = 'translate3d(0,0,0) scale(1)', { passive: true });
             });
 
-            document.querySelectorAll('.card, .bento-item').forEach(el => {
+            $$('.card, .bento-item').forEach(el => {
+                let pending = false, mx = 0, my = 0;
                 el.addEventListener('mousemove', e => {
-                    requestAnimationFrame(() => {
-                        const rect = el.getBoundingClientRect();
-                        el.style.setProperty('--x', (e.clientX - rect.left) + 'px');
-                        el.style.setProperty('--y', (e.clientY - rect.top) + 'px');
-                    });
-                });
+                    const rect = el.getBoundingClientRect();
+                    mx = e.clientX - rect.left; my = e.clientY - rect.top;
+                    if (!pending) {
+                        pending = true;
+                        requestAnimationFrame(() => { el.style.setProperty('--x', mx + 'px'); el.style.setProperty('--y', my + 'px'); pending = false; });
+                    }
+                }, { passive: true });
             });
         }
 
-        document.querySelectorAll('.faq-q').forEach(btn => {
+        // ==========================================================================
+        // 13. FAQ ACCORDION
+        // ==========================================================================
+        $$('.faq-q').forEach(btn => {
             btn.addEventListener('click', () => {
                 const parent = btn.parentElement;
-                document.querySelectorAll('.faq-item').forEach(item => { if (item !== parent) item.classList.remove('active'); });
+                $$('.faq-item').forEach(item => { if (item !== parent) item.classList.remove('active'); });
                 parent.classList.toggle('active');
             });
         });
 
-        const obs = new IntersectionObserver((entries, observer) => {
-            entries.forEach(entry => {
-                if(entry.isIntersecting) {
-                    entry.target.classList.add('appear');
-                    observer.unobserve(entry.target); 
+        // ==========================================================================
+        // 14. INTERSECTION OBSERVER — fade-in on scroll
+        // ==========================================================================
+        if ('IntersectionObserver' in window) {
+            const obs = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('appear');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1, rootMargin: "0px 0px -30px 0px" });
+            $$('.fade-element').forEach(el => obs.observe(el));
+        } else {
+            $$('.fade-element').forEach(el => el.classList.add('appear'));
+        }
+
+        // ==========================================================================
+        // 15. MODAL (click outside, Escape key, focus trap dasar)
+        // ==========================================================================
+        const modal = $('project-modal');
+        window.openModal = (t, i, d) => {
+            $('modal-title').textContent = t;
+            $('modal-img').src = i;
+            $('modal-desc').textContent = d;
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        };
+        window.closeModal = () => {
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        };
+        if (modal) modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+        document.addEventListener('keydown', e => { if (e.key === 'Escape' && modal.classList.contains('active')) closeModal(); });
+
+        // ==========================================================================
+        // 16. GITHUB CONTRIBUTION GRAPH (fallback ke random kalo API gagal)
+        // ==========================================================================
+        (async () => {
+            if (!matrixGrid) return;
+            const GH_USER = 'Pirrzaaaaa'; // ganti kalo username GitHub beda
+            try {
+                const res = await fetch(`https://github-contributions-api.jogruber.de/v4/${GH_USER}?y=last`);
+                if (!res.ok) throw new Error('api fail');
+                const data = await res.json();
+                const days = (data.contributions || []).slice(-75);
+                if (days.length < 10) return;
+                matrixGrid.innerHTML = '';
+                const frag = document.createDocumentFragment();
+                days.forEach(d => {
+                    const box = document.createElement('div');
+                    box.className = `matrix-box lvl-${d.level || 0}`;
+                    box.title = `${d.date}: ${d.count} contributions`;
+                    frag.appendChild(box);
+                });
+                matrixGrid.appendChild(frag);
+            } catch (e) {
+                // silent fallback — random grid tetep jalan
+            }
+        })();
+
+        // ==========================================================================
+        // 17. CONTACT FORM (Formspree-ready, graceful fallback ke mailto)
+        // ==========================================================================
+        const cForm = $('contact-form'), cStatus = $('contact-status'), cBtn = $('contact-submit');
+        if (cForm) {
+            cForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const action = cForm.getAttribute('action') || '';
+                if (action.includes('YOUR_FORM_ID')) {
+                    cStatus.textContent = '> endpoint belum di-set (edit action="" ke Formspree URL)';
+                    cStatus.style.color = '#ff9d00';
+                    return;
+                }
+                cBtn.disabled = true; cStatus.textContent = '> mengirim...';
+                try {
+                    const res = await fetch(action, {
+                        method: 'POST',
+                        body: new FormData(cForm),
+                        headers: { Accept: 'application/json' }
+                    });
+                    if (res.ok) {
+                        cStatus.textContent = '> ✓ pesan terkirim, thanks bro!';
+                        cStatus.style.color = 'var(--terminal-green)';
+                        cForm.reset();
+                    } else throw new Error();
+                } catch {
+                    cStatus.textContent = '> ✗ gagal kirim, coba lagi nanti';
+                    cStatus.style.color = '#ff0033';
+                } finally {
+                    cBtn.disabled = false;
                 }
             });
-        }, { threshold: 0.1, rootMargin: "0px 0px -30px 0px" });
-        document.querySelectorAll('.fade-element').forEach(el => obs.observe(el));
-
-        const modal = document.getElementById('project-modal');
-        function openModal(t, i, d) {
-            document.getElementById('modal-title').innerText = t;
-            document.getElementById('modal-img').src = i;
-            document.getElementById('modal-desc').innerText = d;
-            modal.classList.add('active'); document.body.style.overflow = 'hidden';
         }
-        function closeModal() { modal.classList.remove('active'); document.body.style.overflow = ''; }
-        if(modal) modal.addEventListener('click', e => { if(e.target === modal) closeModal(); });
 
     </script>
 </body>
