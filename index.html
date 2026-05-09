@@ -3,10 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark light">
+    <meta name="theme-color" content="#080808">
+    <meta name="description" content="Pirrzaaa OS v1.5 - Portofolio siswa SMK TKJ, Bot WA Developer, Node.js & Firebase enthusiast.">
     <title>Pirrzaaa OS v1.5 | TKJ Student & Bot Developer</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Inter:wght@300;400;500;600;700;800;900&family=Fira+Code:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- Preconnect ke origin eksternal untuk percepat handshake -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.yupra.my.id" crossorigin>
+    <link rel="dns-prefetch" href="https://unpkg.com">
+
+    <!-- Font: preload + non-blocking, fallback via <noscript> -->
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Inter:wght@400;600;700;800;900&family=Fira+Code:wght@400;600;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Inter:wght@400;600;700;800;900&family=Fira+Code:wght@400;600;700&display=swap" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Inter:wght@400;600;700;800;900&family=Fira+Code:wght@400;600;700&display=swap"></noscript>
+
+    <!-- Ikon: defer biar gak block render -->
+    <script src="https://unpkg.com/@phosphor-icons/web" defer></script>
     
     <style>
         /* ==========================================================================
@@ -68,21 +82,36 @@
         }
 
         /* ==========================================================================
-           2. RESET & GLOBAL STYLES
+           2. RESET & GLOBAL STYLES (DIOPTIMALKAN)
            ========================================================================== */
         * { margin: 0; padding: 0; box-sizing: border-box; outline: none; }
-        html { scroll-behavior: smooth; overflow-x: hidden; }
-        
+        html { scroll-behavior: smooth; overflow-x: hidden; text-rendering: optimizeSpeed; -webkit-text-size-adjust: 100%; }
+
         ::-webkit-scrollbar { width: 5px; height: 5px; }
         ::-webkit-scrollbar-track { background: var(--bg-color); }
         ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--terminal-green); }
 
-        body { 
-            font-family: 'Inter', sans-serif; background-color: var(--bg-color); color: var(--text-color); 
-            font-size: 15px; line-height: 1.6; overflow-x: hidden; transition: background-color 0.5s, color 0.5s, border-color 0.5s;
+        img { max-width: 100%; height: auto; display: block; }
+
+        body {
+            font-family: 'Inter', sans-serif; background-color: var(--bg-color); color: var(--text-color);
+            font-size: 15px; line-height: 1.6; overflow-x: hidden;
+            transition: background-color 0.4s ease, color 0.4s ease;
             background-image: linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
             background-size: 40px 40px; background-position: center center; position: relative;
+            -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Respect user preferences: matikan animasi berat jika user request */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+            .ambient-glow, .stat-fill::after, .marquee-inner, .track-name { animation: none !important; }
         }
         
         a, button, input, textarea { text-decoration: none; color: inherit; border: none; background: none; font-family: inherit;}
@@ -90,10 +119,22 @@
         .container { max-width: 1000px; margin: 0 auto; padding: 0 25px; position: relative; z-index: 1; }
 
         /* ==========================================================================
-           3. SPECIAL EFFECTS (GLITCH & AMBIENT)
+           3. SPECIAL EFFECTS (GLITCH & AMBIENT) — DIOPTIMALKAN
            ========================================================================== */
-        .ambient-glow { position: fixed; inset: -50%; background: var(--glow-color); z-index: 0; pointer-events: none; animation: rotateGlow 50s linear infinite; will-change: transform; transition: background 0.5s; }
-        @keyframes rotateGlow { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        /* Ambient glow: pakai transform + contain untuk isolasi layer & hemat GPU.
+           Durasi dinaikkan supaya GPU gak overwork. Akan dipause lewat JS saat tab hidden. */
+        .ambient-glow {
+            position: fixed; inset: -50%; background: var(--glow-color);
+            z-index: 0; pointer-events: none;
+            animation: rotateGlow 90s linear infinite;
+            will-change: transform; transform: translateZ(0);
+            contain: strict;
+        }
+        @keyframes rotateGlow { to { transform: rotate(360deg); } }
+        /* Di layar kecil / perangkat hemat daya, matikan glow */
+        @media (max-width: 600px), (prefers-reduced-motion: reduce) {
+            .ambient-glow { display: none; }
+        }
 
         /* Glitch Overlay */
         #glitch-overlay {
@@ -112,24 +153,27 @@
 
         @media (pointer: fine) {
             body, a, button, input, textarea { cursor: none; }
-            .cursor { 
+            .cursor {
                 width: 12px; height: 12px; border: 2px solid var(--terminal-green); position: fixed; top: 0; left: 0; border-radius: 50%;
-                pointer-events: none; z-index: 99999; mix-blend-mode: difference; 
-                transform: translate3d(calc(var(--cx) - 50%), calc(var(--cy) - 50%), 0); 
-                transition: width 0.2s, height 0.2s, background-color 0.2s, border-radius 0.2s, border-color 0.5s; will-change: transform;
+                pointer-events: none; z-index: 99999;
+                transform: translate3d(var(--cx, -100px), var(--cy, -100px), 0);
+                transition: width 0.2s, height 0.2s, background-color 0.2s, border-radius 0.2s;
+                will-change: transform; contain: strict;
             }
             .cursor.hovered { width: 40px; height: 40px; background-color: var(--terminal-green-dim); border: 1px dashed var(--terminal-green); }
         }
-        @media (pointer: coarse) { .cursor { display: none !important; } }
+        @media (pointer: coarse), (prefers-reduced-motion: reduce) { .cursor { display: none !important; } body, a, button, input, textarea { cursor: auto !important; } }
 
         /* ==========================================================================
            4. NAVIGASI
            ========================================================================== */
-        nav { 
-            display: flex; justify-content: space-between; align-items: center; 
-            padding: 15px 35px; position: fixed; width: 100%; top: 0; 
-            background: var(--glass-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); 
-            z-index: 1000; border-bottom: 1px solid var(--border-color); transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), background 0.5s, border-color 0.5s; 
+        nav {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 15px 35px; position: fixed; width: 100%; top: 0;
+            background: var(--glass-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            z-index: 1000; border-bottom: 1px solid var(--border-color);
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: transform; contain: layout style;
         }
         nav.nav-hidden { transform: translateY(-100%); }
         .logo { font-family: 'Fira Code', monospace; font-size: 1.1rem; font-weight: 700; letter-spacing: 1px; transition: color 0.5s; }
@@ -148,11 +192,12 @@
         #theme-toggle:hover { color: var(--terminal-green); transform: rotate(30deg); }
 
         /* MOBILE BOTTOM NAV */
-        .mobile-nav { 
+        .mobile-nav {
             display: none; position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%);
-            background: var(--glass-bg); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-            border: 1px solid var(--border-color); border-radius: 30px; padding: 10px 25px; 
-            z-index: 10002; gap: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: background 0.5s, border-color 0.5s;
+            background: var(--glass-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color); border-radius: 30px; padding: 10px 25px;
+            z-index: 10002; gap: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            contain: layout style;
         }
         .mobile-nav a { display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--accent-color); transition: 0.3s, color 0.5s; }
         .mobile-nav a i { font-size: 1.4rem; }
@@ -221,30 +266,33 @@
         /* ==========================================================================
            6. MARQUEE
            ========================================================================== */
-        .marquee { width: 100%; border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); background: var(--card-bg); padding: 12px 0; overflow: hidden; white-space: nowrap; font-family: 'Fira Code', monospace; transition: border-color 0.5s, background 0.5s; }
-        .marquee-inner { display: inline-block; font-size: 0.8rem; font-weight: 600; color: var(--accent-color); letter-spacing: 2px; animation: scrollText 35s linear infinite; }
-        .marquee-inner span { color: var(--terminal-green); margin: 0 15px; font-weight: 800; transition: color 0.5s;}
-        @keyframes scrollText { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        .marquee { width: 100%; border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); background: var(--card-bg); padding: 12px 0; overflow: hidden; white-space: nowrap; font-family: 'Fira Code', monospace; contain: content; }
+        .marquee-inner { display: inline-block; font-size: 0.8rem; font-weight: 600; color: var(--accent-color); letter-spacing: 2px; animation: scrollText 35s linear infinite; will-change: transform; }
+        .marquee-inner span { color: var(--terminal-green); margin: 0 15px; font-weight: 800; }
+        @keyframes scrollText { to { transform: translate3d(-50%, 0, 0); } }
 
         /* ==========================================================================
            7. LAYOUT UMUM
            ========================================================================== */
-        section { padding: 90px 0; border-bottom: 1px solid var(--border-color); position: relative; transition: border-color 0.5s; }
+        section { padding: 90px 0; border-bottom: 1px solid var(--border-color); position: relative; content-visibility: auto; contain-intrinsic-size: 1px 800px; }
         .section-title { font-family: 'Fira Code', monospace; font-size: clamp(1.6rem, 3vw, 2rem); font-weight: 700; margin-bottom: 45px; text-transform: uppercase; letter-spacing: -1px; display: flex; align-items: center; gap: 10px; justify-content: center; width: 100%; transition: color 0.5s;}
         .section-title::before { content: '~/'; color: var(--terminal-green); font-size: 0.9em; transition: color 0.5s;}
 
         .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
         .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 25px; }
 
-        .card { 
-            background: var(--card-bg); border: 1px solid var(--border-color); padding: 25px; 
-            border-radius: 16px; position: relative; overflow: hidden; transition: 0.4s, border-color 0.5s, background 0.5s; 
-            display: flex; flex-direction: column; height: 100%; backdrop-filter: blur(10px);
+        .card {
+            background: var(--card-bg); border: 1px solid var(--border-color); padding: 25px;
+            border-radius: 16px; position: relative; overflow: hidden;
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+            display: flex; flex-direction: column; height: 100%;
+            contain: layout style;
         }
         .card::before {
-            content: ''; position: absolute; top: var(--y, 50%); left: var(--x, 50%); transform: translate(-50%, -50%);
+            content: ''; position: absolute; top: var(--y, 50%); left: var(--x, 50%); transform: translate(-50%, -50%) translateZ(0);
             width: 400px; height: 400px; background: radial-gradient(circle, var(--terminal-green-dim) 0%, transparent 60%);
-            opacity: 0; transition: opacity 0.3s, background 0.5s; pointer-events: none; z-index: 0;
+            opacity: 0; transition: opacity 0.3s ease; pointer-events: none; z-index: 0;
+            will-change: opacity;
         }
         .card:hover::before { opacity: 1; }
         .card > * { position: relative; z-index: 1; }
@@ -285,8 +333,8 @@
         .stat-row { margin-bottom: 15px; }
         .stat-label { display: flex; justify-content: space-between; font-size: 0.75rem; font-weight: 600; margin-bottom: 6px; font-family: 'Fira Code', monospace; color: var(--text-color);}
         .stat-bar { height: 6px; background: var(--border-color); border-radius: 10px; overflow: hidden; transition: background 0.5s; }
-        .stat-fill { height: 100%; background: var(--terminal-green); width: 0%; transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1), background 0.5s; position: relative;}
-        .stat-fill::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent); animation: shimmer 2s infinite; }
+        .stat-fill { height: 100%; background: var(--terminal-green); width: 0%; transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1); position: relative; will-change: width; }
+        .stat-fill.filled::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent); animation: shimmer 2.2s ease-in-out infinite; will-change: transform; }
 
         .proj-img { width: 100%; height: 160px; border-radius: 8px; overflow: hidden; margin-bottom: 15px; background: var(--border-color); transition: background 0.5s; }
         .proj-img img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(100%); transition: 0.5s; }
@@ -326,7 +374,7 @@
         [data-theme="light"] .terminal-box { background: #f0f0f0; }
         .t-head { background: var(--border-color); padding: 10px 15px; display: flex; gap: 8px; align-items: center; transition: background 0.5s; }
         .t-dot { width: 12px; height: 12px; border-radius: 50%; }
-        .t-body { padding: 20px; font-family: 'Fira Code', monospace; font-size: 0.85rem; height: 220px; overflow-y: auto; color: var(--text-color); }
+        .t-body { padding: 20px; font-family: 'Fira Code', monospace; font-size: 0.85rem; height: 220px; overflow-y: auto; color: var(--text-color); overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
         .t-input-wrap { display: flex; gap: 10px; padding: 15px 20px; border-top: 1px solid var(--border-color); font-family: 'Fira Code', monospace; font-size: 0.85rem; background: var(--card-bg); align-items: center; transition: border-color 0.5s, background 0.5s; }
         .t-input { width: 100%; background: none; border: none; color: var(--terminal-green); font-family: inherit; font-size: inherit; outline: none; transition: color 0.5s;}
 
@@ -334,7 +382,7 @@
         .chat-window {
             border: 1px solid var(--border-color); border-radius: 16px; background: var(--card-bg);
             overflow: hidden; display: flex; flex-direction: column; height: 400px; max-width: 600px; margin: 0 auto;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1); transition: border-color 0.5s, background 0.5s;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1); contain: layout style;
         }
         .chat-header {
             padding: 15px 20px; background: var(--glass-bg); border-bottom: 1px solid var(--border-color);
@@ -350,7 +398,7 @@
         .bot-status { font-size: 0.7rem; color: var(--terminal-green); display: flex; align-items: center; gap: 5px; transition: color 0.5s; }
         .bot-status::before { content:''; width: 6px; height: 6px; background: var(--terminal-green); border-radius: 50%; transition: background 0.5s; }
 
-        .chat-body { padding: 20px; flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; background: var(--bg-color); transition: background 0.5s; }
+        .chat-body { padding: 20px; flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; background: var(--bg-color); overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
         
         .msg-row { display: flex; width: 100%; }
         .msg-row.user-row { justify-content: flex-end; }
@@ -428,10 +476,11 @@
         .signature { font-family: 'Caveat', cursive; font-size: 3rem; color: var(--terminal-green); margin-bottom: 10px; transform: rotate(-5deg); display: inline-block; transition: color 0.5s;}
         .footer-text { font-size: 0.8rem; color: var(--accent-color); font-family: 'Fira Code', monospace;}
         
-        .music-player { 
-            position: fixed; bottom: 25px; left: 25px; display: flex; align-items: center; gap: 12px; 
-            padding: 10px 18px; background: var(--glass-bg); border: 1px solid var(--border-color); 
-            border-radius: 30px; backdrop-filter: blur(10px); z-index: 1000; transition: 0.3s, border-color 0.5s, background 0.5s; cursor: pointer;
+        .music-player {
+            position: fixed; bottom: 25px; left: 25px; display: flex; align-items: center; gap: 12px;
+            padding: 10px 18px; background: var(--glass-bg); border: 1px solid var(--border-color);
+            border-radius: 30px; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+            z-index: 1000; transition: border-color 0.3s ease; cursor: pointer; contain: layout style;
         }
         .music-player:hover { border-color: var(--terminal-green); }
         .play-btn { font-size: 1.6rem; transition: 0.2s, color 0.5s; display: flex; align-items: center; color: var(--text-color); }
@@ -445,18 +494,20 @@
         .playing .bar:nth-child(2) { animation-delay: 0.2s; } .playing .bar:nth-child(3) { animation-delay: 0.4s; }
         @keyframes bounceBar { 0% { height: 3px; } 100% { height: 12px; } }
         
-        #backToTop { 
-            position: fixed; bottom: 25px; right: 25px; width: 45px; height: 45px; 
-            background: var(--glass-bg); border: 1px solid var(--border-color); border-radius: 50%; 
+        #backToTop {
+            position: fixed; bottom: 25px; right: 25px; width: 45px; height: 45px;
+            background: var(--glass-bg); border: 1px solid var(--border-color); border-radius: 50%;
             display: flex; justify-content: center; align-items: center; font-size: 1.2rem; color: var(--text-color);
-            z-index: 1000; opacity: 0; pointer-events: none; transition: 0.3s, border-color 0.5s, background 0.5s; cursor: pointer; backdrop-filter: blur(10px);
+            z-index: 1000; opacity: 0; pointer-events: none;
+            transition: opacity 0.3s ease, transform 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+            cursor: pointer; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
         }
         #backToTop.visible { opacity: 1; pointer-events: all; }
         #backToTop:hover { border-color: var(--terminal-green); color: var(--terminal-green); transform: translateY(-5px); }
 
-        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); z-index: 10005; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: 0.4s; padding: 20px; }
+        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 10005; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.35s ease; padding: 20px; }
         .modal.active { opacity: 1; pointer-events: all; }
-        .modal-content { background: var(--bg-color); border: 1px solid var(--border-color); border-radius: 12px; padding: 25px; max-width: 600px; width: 100%; transform: scale(0.95) translateY(20px); transition: 0.4s, background 0.5s, border-color 0.5s; position: relative; }
+        .modal-content { background: var(--bg-color); border: 1px solid var(--border-color); border-radius: 12px; padding: 25px; max-width: 600px; width: 100%; transform: scale(0.95) translateY(20px); transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1); position: relative; will-change: transform; }
         .modal.active .modal-content { transform: scale(1) translateY(0); }
         .close-btn { position: absolute; top: 15px; right: 20px; font-size: 1.8rem; cursor: pointer; transition: 0.3s, color 0.5s; color: var(--text-color);}
         .close-btn:hover { color: var(--terminal-green); transform: rotate(90deg); }
@@ -467,8 +518,9 @@
         /* ==========================================================================
            12. ANIMASI & RESPONSIVE
            ========================================================================== */
-        .fade-element { opacity: 0; transform: translateY(30px); transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1); will-change: opacity, transform; }
+        .fade-element { opacity: 0; transform: translateY(30px); transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1); will-change: opacity, transform; }
         .fade-element.appear { opacity: 1; transform: translateY(0); }
+        .fade-element.appear { will-change: auto; }
 
         @keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
 
@@ -513,9 +565,9 @@
         <div class="equalizer" id="equalizer">
             <div class="bar"></div><div class="bar"></div><div class="bar"></div>
         </div>
-        <audio id="bg-audio" loop preload="auto">
-            <source src="https://cdn.yupra.my.id/yp/p13xa93u" type="audio/mpeg">
-        </audio>
+        <audio id="bg-audio" loop preload="none">
+                <source src="https://cdn.yupra.my.id/yp/p13xa93u" type="audio/mpeg">
+            </audio>
     </div>
 
     <button id="backToTop" aria-label="Kembali ke atas"><i class="ph ph-caret-up"></i></button>
@@ -556,7 +608,7 @@
             </div>
             
             <div class="profile-img">
-                <img src="https://cdn.yupra.my.id/yp/nzqc6kn8.jpg" alt="Pirrzaaa Profile">
+                <img src="https://cdn.yupra.my.id/yp/nzqc6kn8.jpg" alt="Pirrzaaa Profile" width="110" height="110" fetchpriority="high" decoding="async">
             </div>
             
             <h1 class="hero-title" id="hero-title">Halo, Saya Pirrzaaa.</h1>
@@ -659,19 +711,19 @@
             <h2 class="section-title">Latihan & Proyek</h2>
             <div class="grid-3">
                 <div class="card" style="cursor: pointer;" onclick="openModal('WhatsApp Bot Pro', 'https://cdn.yupra.my.id/yp/nzqc6kn8.jpg', 'Bot WhatsApp multifungsi yang dibangun pakai Node.js. Berjalan 24/7 di VPS/Panel dengan fitur auto-respond pintar.')">
-                    <div class="proj-img"><img src="https://cdn.yupra.my.id/yp/nzqc6kn8.jpg" alt="Bot WA"></div>
+                    <div class="proj-img"><img src="https://cdn.yupra.my.id/yp/nzqc6kn8.jpg" alt="Bot WA" loading="lazy" decoding="async" width="400" height="160"></div>
                     <h3 class="proj-title">WhatsApp Bot Pro</h3>
                     <p class="proj-tech">Node.js • VPS • API</p>
                     <p class="proj-desc" style="margin-top:5px;">Sistem otomasi pesan responsif.</p>
                 </div>
                 <div class="card" style="cursor: pointer;" onclick="openModal('Firebase Web App', 'https://cdn.yupra.my.id/yp/nzqc6kn8.jpg', 'Eksplorasi pembuatan web menggunakan HTML/CSS dasar yang dikoneksikan ke Firebase untuk simpan-ambil data secara real-time.')">
-                    <div class="proj-img"><img src="https://cdn.yupra.my.id/yp/nzqc6kn8.jpg" alt="Web App"></div>
+                    <div class="proj-img"><img src="https://cdn.yupra.my.id/yp/nzqc6kn8.jpg" alt="Web App" loading="lazy" decoding="async" width="400" height="160"></div>
                     <h3 class="proj-title">Firebase Web App</h3>
                     <p class="proj-tech">HTML/JS • Firebase</p>
                     <p class="proj-desc" style="margin-top:5px;">Database real-time interaktif.</p>
                 </div>
                 <div class="card" style="cursor: pointer;" onclick="openModal('Eksplorasi UI', 'https://cdn.yupra.my.id/yp/nzqc6kn8.jpg', 'Merancang layout website menggunakan Canva. Fokus pada perpaduan warna dark mode dan tipografi rapi.')">
-                    <div class="proj-img"><img src="https://cdn.yupra.my.id/yp/nzqc6kn8.jpg" alt="Desain UI"></div>
+                    <div class="proj-img"><img src="https://cdn.yupra.my.id/yp/nzqc6kn8.jpg" alt="Desain UI" loading="lazy" decoding="async" width="400" height="160"></div>
                     <h3 class="proj-title">Eksplorasi UI</h3>
                     <p class="proj-tech">Canva • Visual Design</p>
                     <p class="proj-desc" style="margin-top:5px;">Prototyping visual modern.</p>
@@ -683,19 +735,19 @@
             <h2 class="section-title">My Galery</h2>
             <div class="gallery-grid">
                 <div class="gallery-item magnetic" onclick="openModal('Coding Setup', 'https://cdn.yupra.my.id/yp/nzqc6kn8.jpg', 'Meja tempur tempat semua baris kode dan logika disusun.')">
-                    <img src="https://cdn.yupra.my.id/yp/nzqc6kn8.jpg" alt="Coding">
+                    <img src="https://cdn.yupra.my.id/yp/nzqc6kn8.jpg" alt="Coding" loading="lazy" decoding="async" width="400" height="300">
                     <div class="gallery-overlay"><span>Setup Tempur</span></div>
                 </div>
                 <div class="gallery-item magnetic" onclick="openModal('Anime & Vibes', 'https://cdn.yupra.my.id/yp/nzqc6kn8.jpg', 'Inspirasi dan relaksasi dari seri Action Anime favorit.')">
-                    <img src="https://cdn.yupra.my.id/yp/nzqc6kn8.jpg" alt="Anime">
+                    <img src="https://cdn.yupra.my.id/yp/nzqc6kn8.jpg" alt="Anime" loading="lazy" decoding="async" width="400" height="300">
                     <div class="gallery-overlay"><span>Anime Vibe</span></div>
                 </div>
                 <div class="gallery-item magnetic" onclick="openModal('Server Log', 'https://cdn.yupra.my.id/yp/nzqc6kn8.jpg', 'Memantau aktivitas VPS dan log dari Bot Node.js agar berjalan lancar.')">
-                    <img src="https://cdn.yupra.my.id/yp/nzqc6kn8.jpg" alt="Server">
+                    <img src="https://cdn.yupra.my.id/yp/nzqc6kn8.jpg" alt="Server" loading="lazy" decoding="async" width="400" height="300">
                     <div class="gallery-overlay"><span>VPS & Panel</span></div>
                 </div>
                 <div class="gallery-item magnetic" onclick="openModal('Dark Aesthetic', 'https://cdn.yupra.my.id/yp/nzqc6kn8.jpg', 'Suka tema dark mode elegan dan tidak buat mata lelah.')">
-                    <img src="https://cdn.yupra.my.id/yp/nzqc6kn8.jpg" alt="Dark aesthetic">
+                    <img src="https://cdn.yupra.my.id/yp/nzqc6kn8.jpg" alt="Dark aesthetic" loading="lazy" decoding="async" width="400" height="300">
                     <div class="gallery-overlay"><span>Dark UI</span></div>
                 </div>
             </div>
@@ -865,118 +917,147 @@
         <div class="modal-content">
             <span class="close-btn" onclick="closeModal()"><i class="ph ph-x"></i></span>
             <h2 id="modal-title" class="modal-title">Title</h2>
-            <img id="modal-img" class="modal-img" src="" alt="Project">
+            <img id="modal-img" class="modal-img" src="" alt="Project" loading="lazy" decoding="async">
             <p id="modal-desc" style="color: var(--accent-color); font-size: 0.9rem;"></p>
         </div>
     </div>
 
     <script>
+        'use strict';
+
         // ==========================================================================
         // 1. CORE SYSTEM & PRELOADER
         // ==========================================================================
+        const $ = (id) => document.getElementById(id);
+        const PREFERS_REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const IS_FINE_POINTER = window.matchMedia('(pointer: fine)').matches;
+
         window.addEventListener('load', () => {
             setTimeout(() => {
-                const pl = document.getElementById('preloader');
-                if(pl) { pl.style.opacity = '0'; setTimeout(() => pl.style.display = 'none', 500); }
-            }, 600);
+                const pl = $('preloader');
+                if (pl) { pl.style.opacity = '0'; setTimeout(() => pl.remove(), 500); }
+            }, 400);
+        }, { once: true });
+
+        // Pause state — saat tab hidden, stop animasi + interval supaya gak makan CPU
+        let pageVisible = !document.hidden;
+        document.addEventListener('visibilitychange', () => {
+            pageVisible = !document.hidden;
+            document.body.classList.toggle('is-hidden', !pageVisible);
         });
 
-        const cursor = document.getElementById('cursor');
-        const isFinePointer = matchMedia('(pointer: fine)').matches;
+        // ==========================================================================
+        // 2. CURSOR (satu delegated listener, tanpa per-element mouseenter/leave)
+        // ==========================================================================
+        const cursor = $('cursor');
+        if (IS_FINE_POINTER && cursor && !PREFERS_REDUCED) {
+            let cx = 0, cy = 0, raf = 0;
+            const update = () => {
+                cursor.style.setProperty('--cx', (cx - 6) + 'px');
+                cursor.style.setProperty('--cy', (cy - 6) + 'px');
+                raf = 0;
+            };
+            window.addEventListener('mousemove', (e) => {
+                cx = e.clientX; cy = e.clientY;
+                if (!raf) raf = requestAnimationFrame(update);
+            }, { passive: true });
 
-        if(isFinePointer && cursor) {
-            document.addEventListener('mousemove', e => {
-                requestAnimationFrame(() => {
-                    cursor.style.setProperty('--cx', e.clientX + 'px');
-                    cursor.style.setProperty('--cy', e.clientY + 'px');
-                });
-            });
-            document.querySelectorAll('a, button, input, textarea, .card, .profile-img, .bento-item, .gallery-item, .faq-q, .magnetic').forEach(el => {
-                el.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
-                el.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
-            });
+            const HOVER_SEL = 'a, button, input, textarea, .card, .profile-img, .bento-item, .gallery-item, .faq-q, .magnetic';
+            document.addEventListener('mouseover', (e) => {
+                if (e.target.closest && e.target.closest(HOVER_SEL)) cursor.classList.add('hovered');
+            }, { passive: true });
+            document.addEventListener('mouseout', (e) => {
+                if (e.target.closest && e.target.closest(HOVER_SEL)) cursor.classList.remove('hovered');
+            }, { passive: true });
+        } else if (cursor) {
+            cursor.style.display = 'none';
         }
 
+        // ==========================================================================
+        // 3. CLOCK / UPTIME / PING (single interval, stop saat hidden)
+        // ==========================================================================
         const startTime = Date.now();
-        setInterval(() => {
-            const timeEl = document.getElementById('live-time');
-            if(timeEl) timeEl.innerText = new Date().toLocaleTimeString('en-US', { timeZone: 'Asia/Jakarta', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
-            
-            const pingEl = document.getElementById('ping-val');
-            if(pingEl) pingEl.innerText = Math.floor(Math.random() * 10 + 15) + 'ms';
+        const timeEl = $('live-time'), pingEl = $('ping-val'), upEl = $('uptime-val');
+        const timeFmt = new Intl.DateTimeFormat('en-US', { timeZone: 'Asia/Jakarta', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
 
-            const diff = Math.floor((Date.now() - startTime)/1000);
-            const h = String(Math.floor(diff/3600)).padStart(2,'0'), m = String(Math.floor((diff%3600)/60)).padStart(2,'0'), s = String(diff%60).padStart(2,'0');
-            const upEl = document.getElementById('uptime-val');
-            if(upEl) upEl.innerText = `${h}:${m}:${s}`;
-        }, 1000);
+        const tickClock = () => {
+            if (!pageVisible) return;
+            if (timeEl) timeEl.textContent = timeFmt.format(new Date());
+            const diff = (Date.now() - startTime) / 1000 | 0;
+            const h = String(diff / 3600 | 0).padStart(2, '0');
+            const m = String((diff % 3600) / 60 | 0).padStart(2, '0');
+            const s = String(diff % 60).padStart(2, '0');
+            if (upEl) upEl.textContent = `${h}:${m}:${s}`;
+        };
+        // Ping diupdate lebih jarang (3s) — gak perlu tiap detik
+        const tickPing = () => { if (pageVisible && pingEl) pingEl.textContent = (15 + (Math.random() * 10 | 0)) + 'ms'; };
+        tickClock(); tickPing();
+        setInterval(tickClock, 1000);
+        setInterval(tickPing, 3000);
 
         // ==========================================================================
-        // 2. DOMAIN EXPANSION & TERMINAL LOGIC
+        // 4. TERMINAL & DOMAIN EXPANSION
         // ==========================================================================
-        const tIn = document.getElementById('t-input'), tBody = document.getElementById('t-body');
-        const glitchOverlay = document.getElementById('glitch-overlay');
-        const hTitle = document.getElementById('hero-title'), hSub = document.getElementById('hero-subtitle');
-        const pStatus = document.getElementById('p-status');
+        const tIn = $('t-input'), tBody = $('t-body');
+        const glitchOverlay = $('glitch-overlay');
+        const hTitle = $('hero-title'), hSub = $('hero-subtitle');
+        const pStatus = $('p-status');
 
-        if(tIn && tBody) {
+        if (tIn && tBody) {
             tIn.addEventListener('keydown', e => {
-                if(e.key === 'Enter') {
-                    const val = tIn.value.trim();
-                    const cmd = val.toLowerCase();
-                    if(!val) return;
-                    
-                    const line = document.createElement('div'); 
-                    line.innerHTML = `<span style="color:var(--terminal-green);">></span> ${val}`; 
-                    tBody.appendChild(line);
-                    
-                    const reply = document.createElement('div');
-                    reply.style.color = "var(--accent-color)"; reply.style.marginBottom = "10px";
-                    
-                    switch(cmd) {
-                        case 'help': reply.innerText = "Cmds: about, skills, anime, clear, sudo ryoiki"; break;
-                        case 'about': reply.innerText = "Pirrzaaa. SMK TKJ. Node.js WA Bot Developer."; break;
-                        case 'skills': reply.innerText = "HTML, CSS, JS, Node.js, Firebase, Canva."; break;
-                        case 'anime': reply.innerText = "Fav: HxH, JJK. NO ROMANCE ALLOWED!"; break;
-                        case 'clear': tBody.innerHTML = ''; reply.innerText = "Terminal cleared."; break;
-                        
-                        case 'ryoiki':
-                            reply.style.color = "#ff0033";
-                            reply.innerText = "Membuka Domain: Muryoshojo...";
-                            triggerDomainExpansion();
-                            break;
-                            
-                        default: reply.innerText = `Command '${val}' not found. Type 'help'.`;
-                    }
-                    tBody.appendChild(reply); tIn.value = ''; tBody.scrollTop = tBody.scrollHeight;
+                if (e.key !== 'Enter') return;
+                const val = tIn.value.trim();
+                if (!val) return;
+                const cmd = val.toLowerCase();
+
+                const frag = document.createDocumentFragment();
+                const line = document.createElement('div');
+                line.innerHTML = `<span style="color:var(--terminal-green);">></span> `;
+                line.appendChild(document.createTextNode(val));
+                frag.appendChild(line);
+
+                const reply = document.createElement('div');
+                reply.style.cssText = 'color:var(--accent-color);margin-bottom:10px;';
+
+                switch (cmd) {
+                    case 'help': reply.textContent = "Cmds: about, skills, anime, clear, sudo ryoiki"; break;
+                    case 'about': reply.textContent = "Pirrzaaa. SMK TKJ. Node.js WA Bot Developer."; break;
+                    case 'skills': reply.textContent = "HTML, CSS, JS, Node.js, Firebase, Canva."; break;
+                    case 'anime': reply.textContent = "Fav: HxH, JJK. NO ROMANCE ALLOWED!"; break;
+                    case 'clear': tBody.innerHTML = ''; reply.textContent = "Terminal cleared."; break;
+                    case 'ryoiki':
+                        reply.style.color = '#ff0033';
+                        reply.textContent = 'Membuka Domain: Muryoshojo...';
+                        triggerDomainExpansion();
+                        break;
+                    default: reply.textContent = `Command '${val}' not found. Type 'help'.`;
                 }
+                frag.appendChild(reply);
+                tBody.appendChild(frag);
+                tIn.value = '';
+                tBody.scrollTop = tBody.scrollHeight;
             });
         }
 
         function triggerDomainExpansion() {
-            glitchOverlay.classList.add('active');
+            if (glitchOverlay) glitchOverlay.classList.add('active');
             document.body.classList.add('domain-expansion');
-            if(pStatus) { pStatus.innerText = "DOMAIN_ACTIVE"; pStatus.style.color = "#ff0033"; }
-            if(hTitle) hTitle.innerText = "Ryoiki Tenkai.";
-            if(hSub) hSub.innerHTML = "Selamat Datang di <span style='color:#ff0033'>Kehampaan Komunal.</span>";
-
-            setTimeout(() => { glitchOverlay.classList.remove('active'); }, 600);
-            
+            if (pStatus) { pStatus.textContent = 'DOMAIN_ACTIVE'; pStatus.style.color = '#ff0033'; }
+            if (hTitle) hTitle.textContent = 'Ryoiki Tenkai.';
+            if (hSub) hSub.innerHTML = "Selamat Datang di <span style='color:#ff0033'>Kehampaan Komunal.</span>";
+            setTimeout(() => glitchOverlay && glitchOverlay.classList.remove('active'), 600);
             setTimeout(() => {
                 document.body.classList.remove('domain-expansion');
-                if(pStatus) { pStatus.innerText = "ACTIVE"; pStatus.style.color = "var(--terminal-green)"; }
-                if(hTitle) hTitle.innerText = "Halo, Saya Pirrzaaa.";
-                if(hSub) hSub.innerHTML = "Karya <span id='dynamic-text'>Logika.</span><span class='typing-cursor'></span>";
+                if (pStatus) { pStatus.textContent = 'ACTIVE'; pStatus.style.color = 'var(--terminal-green)'; }
+                if (hTitle) hTitle.textContent = 'Halo, Saya Pirrzaaa.';
+                if (hSub) hSub.innerHTML = "Karya <span id='dynamic-text'>Logika.</span><span class='typing-cursor'></span>";
             }, 15000);
         }
 
         // ==========================================================================
-        // 3. UI CHAT BOT PLAYGROUND LOGIC
+        // 5. CHAT BOT PLAYGROUND
         // ==========================================================================
-        const chatInput = document.getElementById('chat-input');
-        const chatBody = document.getElementById('chat-body');
-        const chatSendBtn = document.getElementById('chat-send-btn');
-
+        const chatInput = $('chat-input'), chatBody = $('chat-body'), chatSendBtn = $('chat-send-btn');
         const botResponses = {
             '/menu': '📜 **Daftar Perintah:**\n\n1. **/owner** - Info Pembuat\n2. **/skills** - Tech Stack\n3. **/hobi** - Dunia Pirrzaaa\n4. **/ping** - Cek Respon\n5. **/clear** - Bersihkan Chat',
             '/owner': '👤 **Owner Info:**\n\nNama: Pirrzaaa\nStatus: Siswa SMK TKJ & Developer Otodidak.\nHobi ngoding bot & push rank.',
@@ -987,187 +1068,245 @@
             'p': 'Hadir! Biasakan salam ya bro. Ketik **/menu**.',
             'default': 'Maaf, saya belum paham perintah itu. 😅\nKetik **/menu** untuk bantuan.'
         };
-
-        function getCurrentTime() {
-            return new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-        }
+        const chatTimeFmt = new Intl.DateTimeFormat('en-US', { hour: '2-digit', minute: '2-digit' });
 
         function addMessage(text, sender) {
-            const time = getCurrentTime();
+            const time = chatTimeFmt.format(new Date());
             const msgRow = document.createElement('div');
             msgRow.className = `msg-row ${sender}-row`;
-            
-            const formattedText = text.replace(/\n/g, '<br>');
-            const finalHtml = formattedText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-
-            msgRow.innerHTML = `
-                <div class="msg-bubble">
-                    ${finalHtml}
-                    <span class="msg-time">${time}</span>
-                </div>
-            `;
-            
+            const html = text.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            msgRow.innerHTML = `<div class="msg-bubble">${html}<span class="msg-time">${time}</span></div>`;
             chatBody.appendChild(msgRow);
             chatBody.scrollTop = chatBody.scrollHeight;
         }
-
         function handleChatSend() {
             const msg = chatInput.value.trim();
-            if(!msg) return;
-
+            if (!msg) return;
             addMessage(msg, 'user');
             chatInput.value = '';
-
             setTimeout(() => {
                 const cmd = msg.toLowerCase();
                 let response = botResponses[cmd] || botResponses['default'];
-                
-                if(cmd === '/clear') {
-                    chatBody.innerHTML = '';
-                    response = 'Chat dibersihkan! ✨ Ketik **/menu** lagi.';
-                }
-
+                if (cmd === '/clear') { chatBody.innerHTML = ''; response = 'Chat dibersihkan! ✨ Ketik **/menu** lagi.'; }
                 addMessage(response, 'bot');
-            }, 800);
+            }, 600);
         }
-
-        if(chatSendBtn && chatInput) {
+        if (chatSendBtn && chatInput) {
             chatSendBtn.addEventListener('click', handleChatSend);
-            chatInput.addEventListener('keydown', e => { if(e.key === 'Enter') handleChatSend(); });
+            chatInput.addEventListener('keydown', e => { if (e.key === 'Enter') handleChatSend(); });
         }
 
         // ==========================================================================
-        // 4. UI COMPONENTS (MUSIC, MATRIX, THEME, SCROLL)
+        // 6. MATRIX GRID (build sekali, docFragment)
         // ==========================================================================
-        
-        const matrixGrid = document.getElementById('matrix-grid');
-        if(matrixGrid) {
-            for(let i=0; i<75; i++) {
+        const matrixGrid = $('matrix-grid');
+        if (matrixGrid) {
+            const frag = document.createDocumentFragment();
+            for (let i = 0; i < 75; i++) {
+                const r = Math.random();
+                const level = r > 0.85 ? 4 : r > 0.7 ? 3 : r > 0.5 ? 2 : r > 0.3 ? 1 : 0;
                 const box = document.createElement('div');
-                const rand = Math.random();
-                let level = 0;
-                if(rand > 0.85) level = 4;
-                else if(rand > 0.7) level = 3;
-                else if(rand > 0.5) level = 2;
-                else if(rand > 0.3) level = 1;
                 box.className = `matrix-box lvl-${level}`;
-                matrixGrid.appendChild(box);
+                frag.appendChild(box);
             }
+            matrixGrid.appendChild(frag);
         }
 
-        const aud = document.getElementById('bg-audio'), pBtn = document.getElementById('play-btn'), pIcon = document.getElementById('play-icon'), eq = document.getElementById('equalizer');
-        let isP = false; if(aud) aud.volume = 0.2; 
-        if(pBtn) {
+        // ==========================================================================
+        // 7. MUSIC PLAYER
+        // ==========================================================================
+        const aud = $('bg-audio'), pBtn = $('play-btn'), pIcon = $('play-icon'), eq = $('equalizer');
+        let isP = false;
+        if (aud) aud.volume = 0.2;
+        if (pBtn && aud) {
             pBtn.addEventListener('click', () => {
-                if(isP) { aud.pause(); pIcon.classList.replace('ph-pause-circle','ph-play-circle'); eq.classList.remove('playing'); }
-                else { aud.play(); pIcon.classList.replace('ph-play-circle','ph-pause-circle'); eq.classList.add('playing'); }
+                if (isP) {
+                    aud.pause();
+                    pIcon.classList.replace('ph-pause-circle', 'ph-play-circle');
+                    eq.classList.remove('playing');
+                } else {
+                    aud.play().catch(() => {});
+                    pIcon.classList.replace('ph-play-circle', 'ph-pause-circle');
+                    eq.classList.add('playing');
+                }
                 isP = !isP;
             });
-        }
-
-        let ticking = false;
-        const nav = document.getElementById('navbar'), btt = document.getElementById('backToTop'), prog = document.getElementById('progress-bar');
-        const statsCard = document.getElementById('stats-card');
-        let statsDone = false;
-
-        window.addEventListener('scroll', () => {
-            if(!ticking) {
-                requestAnimationFrame(() => {
-                    const y = window.scrollY;
-                    if(nav) nav.classList.toggle('nav-hidden', y > 80);
-                    if(btt) btt.classList.toggle('visible', y > 500);
-                    if(prog) prog.style.width = (y / (document.documentElement.scrollHeight - window.innerHeight)) * 100 + "%";
-                    
-                    if(statsCard && !statsDone) {
-                        const rect = statsCard.getBoundingClientRect();
-                        if(rect.top < window.innerHeight * 0.85) {
-                            document.querySelectorAll('.stat-fill').forEach(bar => { bar.style.width = bar.getAttribute('data-width'); });
-                            statsDone = true;
-                        }
-                    }
-                    ticking = false;
-                });
-                ticking = true;
-            }
-        });
-        if(btt) btt.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
-
-        const tToggle = document.getElementById('theme-toggle');
-        if(tToggle) {
-            tToggle.addEventListener('click', () => {
-                if(document.body.classList.contains('domain-expansion')) return;
-                const html = document.documentElement, icon = document.getElementById('theme-icon');
-                if(html.getAttribute('data-theme') === 'dark') { html.setAttribute('data-theme', 'light'); icon.classList.replace('ph-sun', 'ph-moon'); }
-                else { html.setAttribute('data-theme', 'dark'); icon.classList.replace('ph-moon', 'ph-sun'); }
+            // Auto pause saat tab hidden, biar gak boros bandwidth
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden && isP) aud.pause();
+                else if (!document.hidden && isP) aud.play().catch(() => {});
             });
         }
 
-        const words = ["Logika.", "Kreatif.", "Otodidak.", "Gamer."];
-        let wI = 0, cJ = 0, isDel = false;
-        const dynamicText = document.getElementById("dynamic-text");
-        function type() {
-            if(document.body.classList.contains('domain-expansion')) return;
-            if(dynamicText) {
-                dynamicText.innerText = words[wI].substring(0, cJ);
-                if (!isDel && cJ <= words[wI].length) { cJ++; setTimeout(type, 150); }
-                else if (isDel && cJ >= 0) { cJ--; setTimeout(type, 80); }
-                else if (cJ == words[wI].length + 1) { isDel = true; setTimeout(type, 2000); }
-                else if (cJ == -1) { isDel = false; wI = (wI + 1) % words.length; setTimeout(type, 500); }
-            }
-        }
-        setTimeout(type, 1500);
+        // ==========================================================================
+        // 8. SCROLL HANDLER (passive + rAF throttling, single listener)
+        // ==========================================================================
+        const nav = $('navbar'), btt = $('backToTop'), prog = $('progress-bar');
+        const statsCard = $('stats-card');
+        let statsDone = false, ticking = false;
+        let lastY = 0;
+        const docH = () => document.documentElement.scrollHeight - window.innerHeight;
 
-        if(isFinePointer) {
-            document.querySelectorAll('.magnetic').forEach(btn => {
-                btn.addEventListener('mousemove', e => {
-                    requestAnimationFrame(() => {
-                        const pos = btn.getBoundingClientRect();
-                        const x = e.clientX - pos.left - pos.width / 2;
-                        const y = e.clientY - pos.top - pos.height / 2;
-                        btn.style.transform = `translate3d(${x * 0.15}px, ${y * 0.15}px, 0) scale(1.02)`;
-                    });
-                });
-                btn.addEventListener('mouseleave', () => btn.style.transform = `translate3d(0px, 0px, 0) scale(1)`);
-            });
-
-            document.querySelectorAll('.card, .bento-item').forEach(el => {
-                el.addEventListener('mousemove', e => {
-                    requestAnimationFrame(() => {
-                        const rect = el.getBoundingClientRect();
-                        el.style.setProperty('--x', (e.clientX - rect.left) + 'px');
-                        el.style.setProperty('--y', (e.clientY - rect.top) + 'px');
-                    });
-                });
-            });
-        }
-
-        document.querySelectorAll('.faq-q').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const parent = btn.parentElement;
-                document.querySelectorAll('.faq-item').forEach(item => { if (item !== parent) item.classList.remove('active'); });
-                parent.classList.toggle('active');
-            });
-        });
-
-        const obs = new IntersectionObserver((entries, observer) => {
-            entries.forEach(entry => {
-                if(entry.isIntersecting) {
-                    entry.target.classList.add('appear');
-                    observer.unobserve(entry.target); 
+        const onScroll = () => {
+            if (ticking) return;
+            ticking = true;
+            requestAnimationFrame(() => {
+                const y = window.scrollY;
+                if (nav) nav.classList.toggle('nav-hidden', y > 80 && y > lastY);
+                if (btt) btt.classList.toggle('visible', y > 500);
+                if (prog) {
+                    const h = docH();
+                    prog.style.width = h > 0 ? ((y / h) * 100) + '%' : '0%';
                 }
+                if (statsCard && !statsDone) {
+                    const rect = statsCard.getBoundingClientRect();
+                    if (rect.top < window.innerHeight * 0.85) {
+                        document.querySelectorAll('.stat-fill').forEach(bar => {
+                            bar.style.width = bar.getAttribute('data-width');
+                            bar.classList.add('filled');
+                        });
+                        statsDone = true;
+                    }
+                }
+                lastY = y;
+                ticking = false;
             });
-        }, { threshold: 0.1, rootMargin: "0px 0px -30px 0px" });
+        };
+        window.addEventListener('scroll', onScroll, { passive: true });
+        onScroll();
+
+        if (btt) btt.addEventListener('click', () => window.scrollTo({ top: 0, behavior: PREFERS_REDUCED ? 'auto' : 'smooth' }));
+
+        // ==========================================================================
+        // 9. THEME TOGGLE (persist di localStorage)
+        // ==========================================================================
+        const tToggle = $('theme-toggle'), themeIcon = $('theme-icon');
+        try {
+            const saved = localStorage.getItem('pirr-theme');
+            if (saved === 'light') {
+                document.documentElement.setAttribute('data-theme', 'light');
+                if (themeIcon) themeIcon.classList.replace('ph-sun', 'ph-moon');
+            }
+        } catch (_) {}
+        if (tToggle) {
+            tToggle.addEventListener('click', () => {
+                if (document.body.classList.contains('domain-expansion')) return;
+                const html = document.documentElement;
+                const isDark = html.getAttribute('data-theme') === 'dark';
+                html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+                if (themeIcon) themeIcon.classList.replace(isDark ? 'ph-sun' : 'ph-moon', isDark ? 'ph-moon' : 'ph-sun');
+                try { localStorage.setItem('pirr-theme', isDark ? 'light' : 'dark'); } catch (_) {}
+            });
+        }
+
+        // ==========================================================================
+        // 10. TYPING ANIMATION (pause saat hidden/reduced-motion)
+        // ==========================================================================
+        if (!PREFERS_REDUCED) {
+            const words = ["Logika.", "Kreatif.", "Otodidak.", "Gamer."];
+            let wI = 0, cJ = 0, isDel = false;
+            const type = () => {
+                if (!pageVisible || document.body.classList.contains('domain-expansion')) {
+                    setTimeout(type, 500); return;
+                }
+                const dyn = $('dynamic-text');
+                if (!dyn) return;
+                dyn.textContent = words[wI].substring(0, cJ);
+                if (!isDel && cJ <= words[wI].length) { cJ++; setTimeout(type, 140); }
+                else if (isDel && cJ >= 0) { cJ--; setTimeout(type, 70); }
+                else if (cJ === words[wI].length + 1) { isDel = true; setTimeout(type, 1800); }
+                else if (cJ === -1) { isDel = false; wI = (wI + 1) % words.length; setTimeout(type, 400); }
+            };
+            setTimeout(type, 1500);
+        }
+
+        // ==========================================================================
+        // 11. MAGNETIC BUTTONS & CARD GLOW (rAF throttled, passive)
+        // ==========================================================================
+        if (IS_FINE_POINTER && !PREFERS_REDUCED) {
+            let magRaf = 0, magTarget = null, magE = null;
+            const applyMag = () => {
+                magRaf = 0;
+                if (!magTarget || !magE) return;
+                const pos = magTarget.getBoundingClientRect();
+                const x = (magE.clientX - pos.left - pos.width / 2) * 0.15;
+                const y = (magE.clientY - pos.top - pos.height / 2) * 0.15;
+                magTarget.style.transform = `translate3d(${x}px, ${y}px, 0) scale(1.02)`;
+            };
+            document.querySelectorAll('.magnetic').forEach(btn => {
+                btn.style.willChange = 'transform';
+                btn.addEventListener('mousemove', (e) => {
+                    magTarget = btn; magE = e;
+                    if (!magRaf) magRaf = requestAnimationFrame(applyMag);
+                }, { passive: true });
+                btn.addEventListener('mouseleave', () => {
+                    btn.style.transform = 'translate3d(0,0,0) scale(1)';
+                    magTarget = null;
+                }, { passive: true });
+            });
+
+            // Card glow follow — pakai rAF per elemen paling tidak mahal kalau throttled
+            let glowRaf = 0, glowTarget = null, glowE = null;
+            const applyGlow = () => {
+                glowRaf = 0;
+                if (!glowTarget || !glowE) return;
+                const rect = glowTarget.getBoundingClientRect();
+                glowTarget.style.setProperty('--x', (glowE.clientX - rect.left) + 'px');
+                glowTarget.style.setProperty('--y', (glowE.clientY - rect.top) + 'px');
+            };
+            document.querySelectorAll('.card, .bento-item').forEach(el => {
+                el.addEventListener('mousemove', (e) => {
+                    glowTarget = el; glowE = e;
+                    if (!glowRaf) glowRaf = requestAnimationFrame(applyGlow);
+                }, { passive: true });
+            });
+        }
+
+        // ==========================================================================
+        // 12. FAQ (event delegation)
+        // ==========================================================================
+        document.addEventListener('click', (e) => {
+            const q = e.target.closest('.faq-q');
+            if (!q) return;
+            const parent = q.parentElement;
+            document.querySelectorAll('.faq-item.active').forEach(item => {
+                if (item !== parent) item.classList.remove('active');
+            });
+            parent.classList.toggle('active');
+        });
+
+        // ==========================================================================
+        // 13. INTERSECTION OBSERVER (fade-in on scroll)
+        // ==========================================================================
+        const obs = new IntersectionObserver((entries, observer) => {
+            for (const entry of entries) {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('appear');
+                    observer.unobserve(entry.target);
+                }
+            }
+        }, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' });
         document.querySelectorAll('.fade-element').forEach(el => obs.observe(el));
 
-        const modal = document.getElementById('project-modal');
+        // ==========================================================================
+        // 14. MODAL
+        // ==========================================================================
+        const modal = $('project-modal');
         function openModal(t, i, d) {
-            document.getElementById('modal-title').innerText = t;
-            document.getElementById('modal-img').src = i;
-            document.getElementById('modal-desc').innerText = d;
-            modal.classList.add('active'); document.body.style.overflow = 'hidden';
+            $('modal-title').textContent = t;
+            $('modal-img').src = i;
+            $('modal-desc').textContent = d;
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
         }
         function closeModal() { modal.classList.remove('active'); document.body.style.overflow = ''; }
-        if(modal) modal.addEventListener('click', e => { if(e.target === modal) closeModal(); });
+        if (modal) {
+            modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+            document.addEventListener('keydown', e => { if (e.key === 'Escape' && modal.classList.contains('active')) closeModal(); });
+        }
+        // Expose agar onclick inline di markup tetap jalan
+        window.openModal = openModal;
+        window.closeModal = closeModal;
 
     </script>
 </body>
