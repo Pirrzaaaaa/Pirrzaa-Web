@@ -14,11 +14,10 @@ export const config = {
   // ===== Pairing Code =====
   usePairingCode: true,
   pairingNumber: "", // diminta lewat prompt jika kosong
-  // Custom 8-char pairing code (A-Z, 0-9). null = pakai random dari WhatsApp (lebih aman).
-  // CATATAN: Tidak semua server/fork Baileys memvalidasi custom code dengan benar.
-  // Kalau pakai "RYUUZAAA" lalu WA tolak, ganti ke null. Bot akan auto-fallback ke random
-  // jika custom code ditolak server.
-  pairingCode: null,
+  // Custom 8-char pairing code (A-Z atau 0-9 saja, tepat 8 karakter).
+  // Kalau null/invalid → library pakai default "BLCKRO53".
+  // Yang harus diketik di HP = pairingCode di config ini.
+  pairingCode: "RYUUZAAA",
 
   // ===== Sesi & Database =====
   sessionDir: "./session",
