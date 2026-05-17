@@ -14,7 +14,11 @@ export const config = {
   // ===== Pairing Code =====
   usePairingCode: true,
   pairingNumber: "", // diminta lewat prompt jika kosong
-  pairingCode: "RYUUZAAA",
+  // Custom 8-char pairing code (A-Z, 0-9). null = pakai random dari WhatsApp (lebih aman).
+  // CATATAN: Tidak semua server/fork Baileys memvalidasi custom code dengan benar.
+  // Kalau pakai "RYUUZAAA" lalu WA tolak, ganti ke null. Bot akan auto-fallback ke random
+  // jika custom code ditolak server.
+  pairingCode: null,
 
   // ===== Sesi & Database =====
   sessionDir: "./session",
