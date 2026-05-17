@@ -12,6 +12,7 @@ import {
   fetchLatestBaileysVersion,
   DisconnectReason,
   makeCacheableSignalKeyStore,
+  Browsers,
 } from "@blckrose/baileys";
 import { Boom } from "@hapi/boom";
 import pino from "pino";
@@ -67,7 +68,9 @@ async function startBot() {
         creds: state.creds,
         keys: makeCacheableSignalKeyStore(state.keys, baileysLogger),
       },
-      browser: [config.botName, "Chrome", "1.0.0"],
+      // PENTING: pakai browser identifier yang dikenal WA. Custom string
+      // (mis. "Ryuuzaa MD") sering bikin pairing code direject server.
+      browser: Browsers.macOS("Chrome"),
       syncFullHistory: false,
       markOnlineOnConnect: !!config.autoOnline,
     });
@@ -75,15 +78,25 @@ async function startBot() {
     sock.ev.on("creds.update", saveCreds);
 
     // 4. Pairing code request (jika belum register)
+    let pairingOK = false;
     if (config.usePairingCode && !sock.authState.creds.registered) {
-      await requestPairingCode(sock);
+      const code = await requestPairingCode(sock);
+      pairingOK = !!code;
+      if (!pairingOK) {
+        logger.warn(
+          "Pairing code gagal. Fallback ke QR-CODE — scan QR yang muncul di terminal.",
+        );
+      }
     }
 
     // 5. Connection update
     sock.ev.on("connection.update", (update) => {
       const { connection, lastDisconnect, qr } = update;
 
-      if (qr && !config.usePairingCode) {
+      // Tampilkan QR jika:
+      //  - usePairingCode=false, ATAU
+      //  - pairing code gagal request (fallback)
+      if (qr && (!config.usePairingCode || !pairingOK)) {
         logger.info("Scan QR berikut dengan WhatsApp di HP:");
         qrcode.generate(qr, { small: true });
       }

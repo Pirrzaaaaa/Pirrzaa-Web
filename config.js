@@ -14,9 +14,16 @@ export const config = {
   // ===== Pairing Code =====
   usePairingCode: true,
   pairingNumber: "", // diminta lewat prompt jika kosong
-  // Custom 8-char pairing code (A-Z atau 0-9 saja, tepat 8 karakter).
-  // Kalau null/invalid → library pakai default "BLCKRO53".
-  // Yang harus diketik di HP = pairingCode di config ini.
+  // Custom 8-char pairing code (A-Z atau 0-9, tepat 8 karakter).
+  // 
+  // CATATAN PENTING:
+  // - WhatsApp kadang menolak custom code "kreatif" seperti "RYUUZAAA".
+  //   Yang paling reliable: kombinasi huruf+angka acak, mis. "K7M3P9X2".
+  // - Kalau "RYUUZAAA" terus-menerus salah meski sudah benar ngetik:
+  //     1) Coba ganti ke null (pakai default library)
+  //     2) Atau ganti ke kombinasi acak: "RYU12345", "RYUZA001", dll
+  //     3) Atau set usePairingCode = false → pakai QR
+  // - Bot akan otomatis fallback ke QR jika pairing gagal.
   pairingCode: "RYUUZAAA",
 
   // ===== Sesi & Database =====
